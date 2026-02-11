@@ -236,7 +236,10 @@ function AdminProducts() {
                     </thead>
                     <tbody>
                         {filteredProducts.map((producto) => (
-                            <tr key={producto.PRD_ID} className={styles.filaOrdenDetail}>
+                        <tr
+                            key={producto.PRD_ID}
+                            className={styles.filaOrdenDetail}
+                        >
                             <td data-label="ID Product">
                                 {producto.PRD_ID}
                             </td>
