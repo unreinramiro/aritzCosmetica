@@ -40,9 +40,9 @@
     overflow-y: scroll;
 }
 
-.productsUserTable thead {
-    border-bottom: 2px solid #000;
-}
+    .productsUserTable thead {
+        border-bottom: 1px solid #eee;
+    }
 
 .productsUserTable thead tr th {
     font-weight: 400;
@@ -104,6 +104,14 @@
         gap: 10px;
     }
 
+.filterIcon{
+    font-size: 2rem;
+}
+
+.filter h5 {
+    margin: 0;
+}
+
 .addPrdBtn {
     border: none;
     display: flex;
@@ -134,4 +142,114 @@
 .filaOrdenDetail:hover{
     background-color: aliceblue;
     cursor: pointer;
+}
+
+
+@media (max-width: 992px) {
+
+    .iconsDiv {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .iconsDivUserPoducts {
+        width: 100%;
+    }
+
+    /* Filtros */
+
+    .filtrosContainer {
+        margin-top: 20px;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .filter {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+
+        .filter h5{
+            margin: 0;
+        }
+
+        .filterIcon {
+            font-size: 1.5rem;
+        }
+
+    .filterGroup {
+        flex-direction: column;
+    }
+
+    /* Parte de la tabla */
+
+    .containerTableOrders {
+        min-height: 65vh;
+        max-height: auto;
+    }
+
+    .productsUserTable{
+        max-height: 100%;
+    }
+
+    .productsUserTable,
+    .productsUserTable thead,
+    .productsUserTable tbody,
+    .productsUserTable th,
+    .productsUserTable td,
+    .productsUserTable tr {
+        display: block;
+        width: 100%;
+    }
+
+        .productsUserTable thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+    .filaOrdenDetail {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        padding: 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .productsUserTable td {
+        border: none;
+        position: relative;
+        padding-left: 50%; /* Espacio para el título simulado */
+        padding-top: 10px;
+        padding-bottom: 10px;
+        text-align: right; /* Alineamos el contenido a la derecha */
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between; /* Separa titulo del contenido */
+        align-items: center;
+    }
+
+        .productsUserTable td:last-child {
+            border-bottom: 0;
+        }
+
+        .productsUserTable td::before {
+            content: attr(data-label); /* Toma el texto del atributo HTML */
+            position: relative; /* O absolute si prefieres fijarlo */
+            font-weight: 700;
+            text-align: left;
+            color: #333;
+            flex-basis: 40%; /* Ocupa el 40% del ancho */
+        }
+
+    .productsUserTable thead {
+        border-bottom: none;
+    }
+
 }

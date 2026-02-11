@@ -103,7 +103,7 @@ ul{
     gap: 40px;
 }
 
-.logueo{
+.logueo {
     display: flex;
     cursor: pointer;
     width: 150px;
@@ -215,7 +215,7 @@ ul{
         text-shadow: none;
     }
         .item p{
-            flex-basis: 80%;
+            flex-basis: 100%;
             text-align: start;
         }
 

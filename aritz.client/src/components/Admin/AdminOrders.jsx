@@ -125,7 +125,7 @@ function AdminOrders() {
                     aria-controls="collapseExample"
                 >
                     <CiFilter
-                        size={40}
+                        className={styles.filterIcon}
                     />
                     <h5>Filtros:</h5>
                 </div>
@@ -311,22 +311,25 @@ function AdminOrders() {
                                     <td
                                         data-bs-toggle="modal"
                                         data-bs-target="#staticBackdrop"
+                                        data-label="Nro Orden"
                                     >
                                         {order.ORD_ID}
                                     </td>
                                     <td
                                         data-bs-toggle="modal"
                                         data-bs-target="#staticBackdrop"
+                                        data-label="Fecha"
                                     >
                                         {formatDate(order.ORD_ORDER_DATE)}hs
                                     </td>
                                     <td
                                         data-bs-toggle="modal"
                                         data-bs-target="#staticBackdrop"
+                                        data-label="Cliente"
                                     >
                                         {order.ClientFullName}
                                     </td>
-                                    <td>
+                                    <td data-label="Estado">
                                         <div className="input-group flex-nowrap">
                                             <select
                                                 className="form-select"
@@ -345,10 +348,11 @@ function AdminOrders() {
                                     <td
                                         data-bs-toggle="modal"
                                         data-bs-target="#staticBackdrop"
+                                        data-label="Monto total"
                                     >
                                         ${formatPrice(order.ORD_TOTAL_AMOUNT)}
                                     </td>
-                                    <td>
+                                    <td data-label="Comprobante">
                                         {order.ReceiptPath
                                             ?
                                             <a
