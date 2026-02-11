@@ -49,7 +49,7 @@ function ModalOrder({ orderId, orderTotalAmount, orderStatus }) {
                     <div className="modal-body d-flex flex-column gap-3">
                         {ord.map((or) => (
                             <div
-                                className="d-flex justify-content-evenly"
+                                className={`${styles.divItemDetailOrder} d-flex justify-content-evenly`}
                                 key={or.ORD_ID}
                             >
                                 <div className={styles.orderDetailImgContainer}>
@@ -60,7 +60,7 @@ function ModalOrder({ orderId, orderTotalAmount, orderStatus }) {
                                         <p className="d-flex justify-content-between">Id:<b>#{or.IdOrderDetail}</b></p>
                                     </div>
                                     <div>
-                                        <p className="d-flex justify-content-start">{or.ProductName}</p>
+                                        <p className="d-flex justify-content-between">Name: <b>{or.ProductName}</b></p>
                                     </div>
                                     <div className="d-flex flex-column">
                                         <p className="d-flex justify-content-between">Cantidad: <b>{or.Quantity}</b></p>

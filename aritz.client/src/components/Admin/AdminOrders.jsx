@@ -285,9 +285,11 @@ function AdminOrders() {
             <div className={styles.containerTableOrders}>
                 {filteredOrders.length <= 0
                     ?
-                    <div>
-                        <h1>No se encontraron coincidencias...</h1>
-                        <LuSearchX size={510} />
+                    <div className={styles.containerLupita}>
+                        <h2>No se encontraron coincidencias...</h2>
+                        <LuSearchX
+                            className={styles.lupita}
+                        />
                     </div>
                     :
                     <table className={styles.productsUserTable}>
