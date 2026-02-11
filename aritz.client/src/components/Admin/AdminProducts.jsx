@@ -132,11 +132,11 @@ function AdminProducts() {
                     Agregar Producto
                 </button>
                 <button
-                    className={styles.addPrdBtn}
+                    className={styles.refreshBtn}
                     style={{ width: "50px" }}
                     onClick={handleRefreshPrd}
                 >
-                    <LuRefreshCw size={20} />
+                    <LuRefreshCw/> 
                 </button>
                 <div
                     className={styles.filter}
@@ -146,7 +146,7 @@ function AdminProducts() {
                     aria-controls="collapseExample"
                 >
                     <CiFilter
-                        size={40}
+                        className={styles.filterIcon}
                     />
                     <h5>Filtros:</h5>
                 </div>
@@ -217,9 +217,9 @@ function AdminProducts() {
             <div className={styles.containerTableOrders}>
             {filteredProducts.length <= 0
                 ?
-                <div className={styles.containerTableOrders}>
+                <div className={styles.containerLupita}>
                     <h1>No se encontraron coincidencias...</h1>
-                    <LuSearchX size={510} />
+                        <LuSearchX className={styles.lupita} />
                 </div>
                 :
                 
@@ -236,26 +236,26 @@ function AdminProducts() {
                     </thead>
                     <tbody>
                         {filteredProducts.map((producto) => (
-                        <tr key={producto.PRD_ID}>
-                            <td>
+                            <tr key={producto.PRD_ID} className={styles.filaOrdenDetail}>
+                            <td data-label="ID Product">
                                 {producto.PRD_ID}
                             </td>
-                            <td>
+                            <td data-label="Categoria">
                                 {producto.Category.CAT_NAME}
                             </td>
-                            <td>
+                            <td data-label="Producto">
                                 {producto.PRD_NAME}
                             </td>
-                            <td>
+                            <td data-label="Precio">
                                 $ {producto.PRD_PRICE}
                             </td>
-                            <td>
+                            <td data-label="En stock">
                                 {producto.PRD_QUANTITY}
                             </td>
-                            <td>
+                            <td data-label="Estado">
                                 {producto.PRD_IS_ACTIVE ? 'Si' : 'No'}
                             </td>
-                            <td>
+                            <td data-label="Editar">
                                 <FaEdit
                                     size={20}
                                     style={{ cursor: "pointer" }}
@@ -264,7 +264,7 @@ function AdminProducts() {
                                     onClick={() => setSelectedProduct(producto)}
                                 />
                             </td>
-                            <td>
+                            <td data-label="Borrar">
                                 <MdDeleteForever
                                         className={styles.delIcon}
                                         size={25}
