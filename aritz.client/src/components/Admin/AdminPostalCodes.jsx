@@ -93,8 +93,11 @@ function AdminPostalCodes() {
                                 editContactId == postalCode.Id 
                                     ?
                                 (
-                                        <tr key={postalCode.Id}>
-                                            <td>
+                                        <tr
+                                            key={postalCode.Id}
+                                            className={styles.filaPostalCode}
+                                        >
+                                            <td data-label="Provincia">
                                                 <input
                                                     type="Text"
                                                     name="Name"
@@ -102,7 +105,7 @@ function AdminPostalCodes() {
                                                     onChange={handleEditFormChange}
                                                 />
                                             </td>
-                                            <td>
+                                            <td data-label="MinZipCode">
                                                 <input
                                                     type="Number" 
                                                     name="MinZipCode" 
@@ -110,7 +113,7 @@ function AdminPostalCodes() {
                                                     onChange={handleEditFormChange}
                                                 />
                                             </td>   
-                                            <td>
+                                            <td data-label="MaxZipCode">
                                                 <input 
                                                     type="Number" 
                                                     name="MaxZipCode" 
@@ -118,7 +121,7 @@ function AdminPostalCodes() {
                                                     onChange={handleEditFormChange}
                                                 />
                                             </td>
-                                            <td>
+                                            <td data-label="Precio">
                                                 <input 
                                                     type="Number" 
                                                     name="Price" 
@@ -126,7 +129,10 @@ function AdminPostalCodes() {
                                                     onChange={handleEditFormChange}
                                                 />
                                             </td>
-                                            <td className="d-flex justify-content-center align-center">
+                                            <td
+                                                data-label="Guardar/Cancelar"
+                                                className="d-flex justify-content-center align-center"
+                                            >
                                                 <FaCheck
                                                     size={20}
                                                     color="green"
@@ -146,12 +152,15 @@ function AdminPostalCodes() {
                                 )
                                     :
                                 (
-                                    <tr key={postalCode.Id}>
-                                        <td>{postalCode.Name}</td>
-                                        <td>{postalCode.MinZipCode}</td>
-                                        <td>{postalCode.MaxZipCode}</td>
-                                        <td>${postalCode.Price}</td>
-                                        <td>
+                                    <tr 
+                                        key={postalCode.Id}
+                                        className={styles.filaPostalCode}
+                                    >
+                                        <td data-label="Provincia">{postalCode.Name}</td>
+                                        <td data-label="MinZipCode">{postalCode.MinZipCode}</td>
+                                        <td data-label="MaxZipCode">{postalCode.MaxZipCode}</td>
+                                        <td data-label="Precio">${postalCode.Price}</td>
+                                        <td data-label="Editar">
                                             <FaEdit
                                                 size={20}
                                                 style={{ cursor: "pointer" }}
