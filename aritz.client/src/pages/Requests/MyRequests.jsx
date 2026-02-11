@@ -134,7 +134,7 @@ function MyRequests() {
                                 key={order.ORD_ID}
                                 className={styles.filaOrdenDetailUser}
                             >
-                                <td>
+                                <td data-label="Nro Orden">
                                     <NavLink
                                         to={`/user/my-requests/my-order/${order.ORD_ID}`}
                                         className={styles.orderNavlink}
@@ -142,11 +142,11 @@ function MyRequests() {
                                         {order.ORD_ID}
                                     </NavLink> 
                                 </td>
-                                <td>{formatDate(order.ORD_ORDER_DATE)}</td>
-                                <td>${formatPrice(order.ORD_TOTAL_AMOUNT)}</td>
-                                <td>{order.ORD_STATUS}</td>
-                                <td>{order.PaymentMethod}</td>
-                                <td>
+                                <td data-label="Fecha">{formatDate(order.ORD_ORDER_DATE)}</td>
+                                <td data-label="Monto total">${formatPrice(order.ORD_TOTAL_AMOUNT)}</td>
+                                <td data-label="Estado">{order.ORD_STATUS}</td>
+                                <td data-label="Forma de pago">{order.PaymentMethod}</td>
+                                <td data-label="Comprobante">
                                     {order.ReceiptPath ? (
                                         <div className={styles.fileRefreshDownload}>
                                             <a

@@ -219,8 +219,8 @@ ul{
         width: 100%;
         transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
         font-size: 1.1rem !important;
-        border-bottom: 1px solid black;
-        border-top: .2px solid black;
+        border-bottom: 1px solid #eee;
+        border-top: 1.5px solid #eee;
         padding: 40px;
     }
 

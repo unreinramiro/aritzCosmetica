@@ -17,8 +17,8 @@
     overflow-y: scroll;
 }
 
-.requestsTable thead{
-    border-bottom: 2px solid #000;
+.requestsTable thead {
+    border-bottom: 1px solid #eee;
 }
 
 .requestsTable thead tr th {
@@ -84,4 +84,77 @@
 .filaOrdenDetailUser:hover {
     background-color: aliceblue;
     cursor: pointer;
+}
+
+@media (max-width: 992px) {
+
+    /* 1. Forzamos a la tabla y sus elementos a comportarse como bloques */
+    .requestsTable,
+    .requestsTable thead,
+    .requestsTable tbody,
+    .requestsTable th,
+    .requestsTable td,
+    .requestsTable tr {
+        display: block;
+        width: 100%;
+    }
+
+        /* 2. Ocultamos el encabezado original (los títulos de columnas) */
+        .requestsTable thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+    /* 3. Estilamos cada fila como una "Tarjeta" */
+    .filaOrdenDetailUser {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        padding: 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    /* 4. Estilamos las celdas para que parezcan renglones */
+    .requestsTable td {
+        border: none;
+        position: relative;
+        padding-left: 50%; /* Espacio para el título simulado */
+        padding-top: 10px;
+        padding-bottom: 10px;
+        text-align: right; /* Alineamos el contenido a la derecha */
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between; /* Separa titulo del contenido */
+        align-items: center;
+    }
+
+        /* Quitamos el borde del último item para que quede limpio */
+        .requestsTable td:last-child {
+            border-bottom: 0;
+        }
+
+        /* 5. Magia: Usamos el atributo data-label como título a la izquierda */
+        .requestsTable td::before {
+            content: attr(data-label); /* Toma el texto del atributo HTML */
+            position: relative; /* O absolute si prefieres fijarlo */
+            font-weight: 700;
+            text-align: left;
+            color: #333;
+            flex-basis: 40%; /* Ocupa el 40% del ancho */
+        }
+
+    /* Ajustes específicos para inputs y botones en móvil */
+    .fileInput span {
+        justify-content: flex-end !important;
+    }
+
+    .fileRefreshDownload {
+        justify-content: flex-end;
+    }
+
+    .requestsTable thead {
+        border-bottom: none;
+    }
 }
