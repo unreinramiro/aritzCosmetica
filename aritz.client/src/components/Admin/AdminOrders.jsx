@@ -342,6 +342,7 @@ function AdminOrders() {
                                             >
                                                 <option value="Pendiente">Pendiente</option>
                                                 <option value="En curso">En curso</option>
+                                                <option value="Eviado">Enviado</option>
                                                 <option value="Finalizado">Finalizado</option>
                                                 <option value="Cancelado">Cancelado</option>
                                             </select>

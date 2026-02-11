@@ -379,6 +379,23 @@ namespace Aritz.Server.Controllers
                 return StatusCode(500, new { Message = "Error al actualizar", Error = ex.Message });
             }
 
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.USR_ID == order.ORD_USR_ID); //Busco el usuario por la orden de compra
+
+            var userMail = user.USR_EMAIL;
+
+            var emailBodyBuilder = new System.Text.StringBuilder();
+            emailBodyBuilder.AppendLine($"<h2>Estado de tu orden #{order.ORD_ID}</h2>");
+            emailBodyBuilder.AppendLine($"<p><strong>Estado:</strong>El estado de tu pedido paso a {dto.OrderStatus}</p>");
+            emailBodyBuilder.AppendLine($"<footer><strong><span>©</span>Aritz. All Rights Reserved.</strong></footer>");
+
+            var usuarioEmail = userMail;
+
+            _ = _emailService.SendEmailAsync(
+                usuarioEmail,
+                $"Avances en tu pedido #{order.ORD_ID}",
+                emailBodyBuilder.ToString()
+            );
+
             return Ok(new { Message = "Estado actualizado correctamente" });
         }
         public class OrderDto
