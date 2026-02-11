@@ -97,8 +97,8 @@ const Header = () => {
                                     isActive ? `${styles.item} nav-link active` : `${styles.item} nav-link`
                                 }
                                 to="/">
-                                <FaHome />
-                                Inicio
+                                <FaHome className={styles.iconHomeContactProduct} />
+                                <p>Inicio</p>
                             </NavLink>
                         </li>
                         <li className={`${styles.navItem} d-flex`}>
@@ -106,8 +106,8 @@ const Header = () => {
                                 className={({ isActive }) =>
                                     isActive ? `${styles.item} nav-link active` : `${styles.item} nav-link`
                                 } to="/product">
-                                <FaBoxOpen />
-                                Productos
+                                <FaBoxOpen className={styles.iconHomeContactProduct} />
+                                <p>Productos</p>
                             </NavLink>
                             <div className={`${styles.dropdown}`}>
                                 {categoryRows.map((group, rowIndex) => (
@@ -145,8 +145,8 @@ const Header = () => {
                                     isActive ? `${styles.item} nav-link active` : `${styles.item} nav-link`
                                 }
                                 to="/contact">
-                                <FaEnvelope />
-                                Contacto
+                                <FaEnvelope className={styles.iconHomeContactProduct} />
+                                <p>Contacto</p>
                             </NavLink>
                         </li>
                     </ul>

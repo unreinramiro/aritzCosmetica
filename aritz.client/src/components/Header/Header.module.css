@@ -1,7 +1,6 @@
 .navbar {
     height: 10vh;
     background-color: transparent;
-
 }
 
 .aritzLogo {
@@ -25,7 +24,7 @@ a.nav-link {
     gap: 5px !important;
     border-radius: 5%;
     font-family: Calibri;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    text-shadow: none;
 }
 
 
@@ -187,7 +186,7 @@ ul{
     }
 
     .containerNavUl {
-        margin-bottom: 30px;
+        margin: 10px 0;
     }
 
     .navUl {
@@ -204,10 +203,28 @@ ul{
             width: 100%;
         }
 
+        .navUl li {
+            display: flex;
+            flex-direction: column;
+        }
 
     .item {
         font-size: 1.3rem !important;
+        text-align: center;
+        justify-content: center;
+        text-shadow: none;
     }
+        .item p{
+            flex-basis: 80%;
+            text-align: start;
+        }
+
+
+        .iconHomeContactProduct {
+            justify-content: flex-start;
+            flex-basis: 20%;
+            color: #000;
+        }
 
     .logAndCart {
         display: none;
@@ -244,14 +261,6 @@ ul{
         flex-direction: column;
     }
 
-    .navUl li {
-        display: flex;
-        flex-direction: column;
-    }
-
-        .navUl li a {
-            justify-content: start;
-        }
 
     .dropdown {
         position: relative;

@@ -131,7 +131,6 @@ function Filters({ setCategoriesFilter, setPriceFilter, setAzFilter }) {
                         >
                             <input
                                 type="radio"
-                                value="Mayor Precio"
                                 checked={alfabeticFilter === 'za'}
                                 onChange={() => handleAzChange('za')}
                             />  Nombre Z - A

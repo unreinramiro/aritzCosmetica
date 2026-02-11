@@ -68,18 +68,18 @@ function Products() {
             // Asegúrate que en tu objeto producto la propiedad sea PRD_CAT_ID o p.Category.CAT_ID
         }
 
-        // 3. ORDENAMIENTO POR PRECIO (Lógica nueva)
-        if (filterPrice === 'biggest') {
-            result.sort((a, b) => b.PRD_PRICE - a.PRD_PRICE); // Mayor a menor
-        } else if (filterPrice === 'smallest') {
-            result.sort((a, b) => a.PRD_PRICE - b.PRD_PRICE); // Menor a mayor
-        }
-
-        //5. Filtro alfabeticamente
+        //3. Filtro alfabeticamente
         if (filteredAz === 'az') {
             result.sort((a, b) => a.PRD_NAME.localeCompare(b.PRD_NAME));
         } else if (filteredAz === 'za') {
             result.sort((a, b) => b.PRD_NAME.localeCompare(a.PRD_NAME));
+        }
+
+        // 4. ORDENAMIENTO POR PRECIO (Lógica nueva)
+        if (filterPrice === 'biggest') {
+            result.sort((a, b) => b.PRD_PRICE - a.PRD_PRICE); // Mayor a menor
+        } else if (filterPrice === 'smallest') {
+            result.sort((a, b) => a.PRD_PRICE - b.PRD_PRICE); // Menor a mayor
         }
 
         setFilteredProducts(result);
@@ -204,7 +204,9 @@ function Products() {
                                     ?
                                     <div className={`d-flex flex-column align-items-center ${styles.containerLupita}`}>
                                         <h3 className="text-center">No se encontraron coincidencias...</h3>
-                                        <LuSearchX className={styles.lupita} />
+                                        <LuSearchX
+                                            className={styles.lupita}
+                                        />
                                     </div>
                                     :
 
