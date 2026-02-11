@@ -1,11 +1,12 @@
 import styles from '../Products.module.css'
 import axiosInstance from "../../../api/axiosConfig";
 import { useState, useEffect } from 'react';
-function Filters({ setCategoriesFilter, setPriceFilter }) {
+function Filters({ setCategoriesFilter, setPriceFilter, setAzFilter }) {
 
     const [categories, setCategories] = useState([]);
     const [filteredPrice, setFilteredPrice] = useState('all');
-    const [selectedCategories, setSelectedCategories] = useState([]); 
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [alfabeticFilter, setAlfabeticFilter] = useState('');
 
     const fetchCategories = async () => {
         try {
@@ -40,6 +41,11 @@ function Filters({ setCategoriesFilter, setPriceFilter }) {
         // 2. Enviamos al padre
         setPriceFilter(order);
     };
+
+    const handleAzChange = (az) => {
+        setAlfabeticFilter(az);
+        setAzFilter(az);
+    }
 
     return (
         <div className="accordion" id="accordionExample">
@@ -111,7 +117,25 @@ function Filters({ setCategoriesFilter, setPriceFilter }) {
                 </h2>
                 <div id="collapseThree" className="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div className="accordion-body">
-                        <strong>This is the third item’s accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classNamees that we use to style each element. These classNamees control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                        <label
+                            className="d-flex gap-2"
+                        >
+                            <input
+                                type="radio"
+                                checked={alfabeticFilter === 'az'}
+                                onChange={() => handleAzChange('az')}
+                            /> Nombre A - Z
+                        </label>
+                        <label
+                            className="d-flex gap-2"
+                        >
+                            <input
+                                type="radio"
+                                value="Mayor Precio"
+                                checked={alfabeticFilter === 'za'}
+                                onChange={() => handleAzChange('za')}
+                            />  Nombre Z - A
+                        </label>
                     </div>
                 </div>
             </div>

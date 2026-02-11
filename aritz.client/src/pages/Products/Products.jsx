@@ -29,6 +29,7 @@ function Products() {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterCats, setFilterCats] = useState([]); // Array de IDs de categorías
     const [filterPrice, setFilterPrice] = useState(''); // 'biggest' o 'smallest'
+    const [filteredAz, setFilteredAz] = useState('az'); // Arranca de la A a la Z
 
     // Estado para el scroll y mostrar solo 8 productos
     const [visibleCount, setVisibleCount] = useState(8);
@@ -74,11 +75,18 @@ function Products() {
             result.sort((a, b) => a.PRD_PRICE - b.PRD_PRICE); // Menor a mayor
         }
 
+        //5. Filtro alfabeticamente
+        if (filteredAz === 'az') {
+            result.sort((a, b) => a.PRD_NAME.localeCompare(b.PRD_NAME));
+        } else if (filteredAz === 'za') {
+            result.sort((a, b) => b.PRD_NAME.localeCompare(a.PRD_NAME));
+        }
+
         setFilteredProducts(result);
 
         setVisibleCount(8);
 
-    }, [searchTerm, products, filterCats, filterPrice]);
+    }, [searchTerm, products, filterCats, filterPrice, filteredAz]);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -170,6 +178,7 @@ function Products() {
                             <Filters
                                 setCategoriesFilter={setFilterCats}
                                 setPriceFilter={setFilterPrice}
+                                setAzFilter={setFilteredAz}
                             />
                     </ul>
                 </aside>

@@ -180,13 +180,13 @@ ul{
 
 /* Responsive: Ajusta para pantallas pequeñas */
 @media (max-width: 992px) {
-    .navbar{
+    .navbar {
         display: flex;
         flex-direction: column;
         height: auto;
     }
 
-    .containerNavUl{
+    .containerNavUl {
         margin-bottom: 30px;
     }
 
@@ -224,12 +224,12 @@ ul{
         padding: 40px;
     }
 
-        .logCartActive{
-            display: flex;
-            overflow: inherit;
-        }
+    .logCartActive {
+        display: flex;
+        overflow: inherit;
+    }
 
-    .logueo{
+    .logueo {
         width: 100%;
         justify-content: space-between;
     }
@@ -244,7 +244,7 @@ ul{
         flex-direction: column;
     }
 
-    .navUl li{
+    .navUl li {
         display: flex;
         flex-direction: column;
     }
@@ -256,7 +256,7 @@ ul{
     .dropdown {
         position: relative;
         left: 0;
-        top: 0; 
+        top: 0;
         display: none;
         flex-direction: column;
         gap: 20px;
@@ -267,8 +267,11 @@ ul{
             width: 100%;
         }
 
-        .dropdown ul li ul{
-            text-align: center;
-        }
+            .dropdown ul li ul {
+                text-align: center;
+            }
 
+    .logueo {
+        justify-content: center;
+    }
 }
