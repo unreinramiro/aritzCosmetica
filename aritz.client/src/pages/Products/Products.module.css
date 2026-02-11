@@ -119,7 +119,7 @@
 @media (max-width: 992px) {
     .productsPage {
         flex-direction: column; /* El aside y el grid se colocan en una columna */
-        padding: 0;
+        padding: 10px;
     }
 
     .filters {

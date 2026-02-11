@@ -381,22 +381,41 @@ namespace Aritz.Server.Controllers
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.USR_ID == order.ORD_USR_ID); //Busco el usuario por la orden de compra
 
-            var userMail = user.USR_EMAIL;
+            if (dto.CancelOrderByUser)
+            {
+                var emailBodyBuilder = new System.Text.StringBuilder();
+                emailBodyBuilder.AppendLine($"<h3>Cancelaron la compra #{order.ORD_ID}</h3>");
+                emailBodyBuilder.AppendLine($"<p>El cliente {user.USR_NAME} {user.USR_SURNAME} cancelo la compra.</p>");
+                emailBodyBuilder.AppendLine($"<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
 
-            var emailBodyBuilder = new System.Text.StringBuilder();
-            emailBodyBuilder.AppendLine($"<h2>Estado de tu orden #{order.ORD_ID}</h2>");
-            emailBodyBuilder.AppendLine($"<p><strong>Estado:</strong>El estado de tu pedido paso a {dto.OrderStatus}</p>");
-            emailBodyBuilder.AppendLine($"<footer><strong><span>©</span>Aritz. All Rights Reserved.</strong></footer>");
+                var adminEmail = _configuration["EmailSettings:SenderEmail"];
 
-            var usuarioEmail = userMail;
+                _ = _emailService.SendEmailAsync(
+                    adminEmail,
+                    $"Cancelaron la orden #{order.ORD_ID}",
+                    emailBodyBuilder.ToString()
+                );
+            }
+            else
+            {
+                var userMail = user.USR_EMAIL;
 
-            _ = _emailService.SendEmailAsync(
-                usuarioEmail,
-                $"Avances en tu pedido #{order.ORD_ID}",
-                emailBodyBuilder.ToString()
-            );
+                var emailBodyBuilder = new System.Text.StringBuilder();
+                emailBodyBuilder.AppendLine($"<h3>Estado de tu orden #{order.ORD_ID}</h3>");
+                emailBodyBuilder.AppendLine($"<p><strong>Estado:</strong>El estado de tu pedido paso a {dto.OrderStatus}</p>");
+                emailBodyBuilder.AppendLine($"<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
+
+                var usuarioEmail = userMail;
+
+                _ = _emailService.SendEmailAsync(
+                    usuarioEmail,
+                    $"Avances en tu pedido #{order.ORD_ID}",
+                    emailBodyBuilder.ToString()
+                );
+            }
 
             return Ok(new { Message = "Estado actualizado correctamente" });
+
         }
         public class OrderDto
         {
@@ -417,6 +436,7 @@ namespace Aritz.Server.Controllers
         {
             public int OrderId { get; set; }
             public string OrderStatus { get; set; }
+            public bool CancelOrderByUser { get; set; }
         }
     }
 }

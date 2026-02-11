@@ -92,7 +92,8 @@ function AdminOrders() {
 
             const bodyData = {
                 OrderId: orderId,
-                OrderStatus: newStatus
+                OrderStatus: newStatus,
+                CancelOrderByUser: false
             };
 
             const response = await axiosInstance.put(`Order/${orderId}/updOrdStatus`, bodyData);

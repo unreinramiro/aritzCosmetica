@@ -23,7 +23,7 @@ function MyRequestDetail() {
     const [uploading, setUploading] = useState({}); // Estado de carga por orden
     const { userId } = useSession();
     const [path, setPath] = useState(false);
-    const [shippingCost, setShippingCost] = useState(0); 
+    const [shippingCost, setShippingCost] = useState(0);
 
     useEffect(() => {
         // Obtengo el detalle de la orden
@@ -132,7 +132,8 @@ function MyRequestDetail() {
         try {
             const bodyData = {
                 OrderId: id,
-                OrderStatus: 'Cancelado'
+                OrderStatus: 'Cancelado',
+                CancelOrderByUser: true
             }
             const response = await axiosInstance.put(`Order/${id}/updOrdStatus`, bodyData);
             setStatus('Cancelado'); 
@@ -187,27 +188,29 @@ function MyRequestDetail() {
                         <hr></hr>
                         <p>Total del pedido: ${formatPrice(totalAmount)}</p>
                     </div>
-                    <div className={styles.Comprobante}>
-                        <b>{path ? 'Comprobante subido' : 'Subi tu comprobante aca'}</b>
-                        {path ? (
-                            <div className={styles.fileRefreshDownload}>
-                                <a
-                                    href={`${axiosInstance.defaults.baseURL}Order/${id}/download-receipt`}
-                                    rel="noopener noreferrer"
-                                    className={styles.downloadLink}
-                                >
-                                    Descargar comprobante
-                                </a>
-                                <label className={styles.fileInput}>
-                                    <BiRefresh className={styles.refreshIcon} size={30} />
-                                    <input
-                                        type="file"
-                                        onChange={(e) => handleFileUpload(id, e)}
-                                        disabled={uploading[id]}
-                                    />
-                                </label>
-                            </div>
-                        ) : (
+                    {status != 'Cancelado'
+                        ?
+                        <div className={styles.Comprobante}>
+                            <b>{path ? 'Comprobante subido' : 'Subi tu comprobante aca'}</b>
+                            {path ? (
+                                <div className={styles.fileRefreshDownload}>
+                                    <a
+                                        href={`${axiosInstance.defaults.baseURL}Order/${id}/download-receipt`}
+                                        rel="noopener noreferrer"
+                                        className={styles.downloadLink}
+                                    >
+                                        Descargar comprobante
+                                    </a>
+                                    <label className={styles.fileInput}>
+                                        <BiRefresh className={styles.refreshIcon} size={30} />
+                                        <input
+                                            type="file"
+                                            onChange={(e) => handleFileUpload(id, e)}
+                                            disabled={uploading[id]}
+                                        />
+                                    </label>
+                                </div>
+                            ) : (
                                 <label className={styles.fileInput}>
                                     <input
                                         type="file"
@@ -226,8 +229,12 @@ function MyRequestDetail() {
                                         </span>
                                     )}
                                 </label>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                        :
+                        ''
+                    }
+                    
                     {status != 'Cancelado'
                         ?
                     <div className={styles.cancelPedido}>
