@@ -86,8 +86,17 @@
         color: rgb(128, 98, 51);
     }
 
-/* Animaciones */
+.containerLupita{
+    width: 100vw;
+    height: 50vh;
+}
 
+.lupita{
+    width: 70%;
+    height: 70%;
+}
+
+/* Animaciones */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -114,8 +123,10 @@
     }
 
     .filters {
-        width: 100%; /* El aside ocupa todo el ancho */
-        margin-bottom: 20px; /* Espaciado debajo del aside */
+        width: 100%;
+        max-width: 100%;
+        min-width: auto;
+        margin-bottom: 20px;
         padding: 0;
     }
 

@@ -202,9 +202,9 @@ function Products() {
                             >
                                 {filteredProducts.length <= 0
                                     ?
-                                    <div className="d-flex flex-column align-items-center">
-                                        <h1>No se encontraron coincidencias...</h1>
-                                        <LuSearchX size={510} />
+                                    <div className={`d-flex flex-column align-items-center ${styles.containerLupita}`}>
+                                        <h3 className="text-center">No se encontraron coincidencias...</h3>
+                                        <LuSearchX className={styles.lupita} />
                                     </div>
                                     :
 
