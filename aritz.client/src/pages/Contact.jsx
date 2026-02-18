@@ -12,7 +12,6 @@ function Contact() {
     const navigate = useNavigate()
 
     const [contactFormData, setContactFormData] = useState({
-        id: userId,
         name: '',
         surname: '',
         cellphone: '',
@@ -30,7 +29,12 @@ function Contact() {
 
         if (isLoggedIn) {
             try {
-                const response = await axiosInstance.post('Contact/sendContactForm', contactFormData, userId);
+                const dataToSend = {
+                    ...contactFormData,
+                    userId: userId // Aquí aseguramos que se envíe con el nombre correcto y el valor actual
+                };
+
+                const response = await axiosInstance.post('Contact/sendContactForm', dataToSend);
                 Swal.fire({
                     icon: "success",
                     title: "Email enviado correctamente"
