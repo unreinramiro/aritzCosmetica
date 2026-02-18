@@ -53,7 +53,11 @@ function Home() {
                 transition={{ duration: 1.3 }}
                 viewport={{ once: true, amount: 0.3 }}
             >
-                <LocationMap />
+                <LocationMap
+                    title="Visítanos"
+                    description="Estamos en el corazón de la ciudad"
+                    location="Los Manantiales 63, X5194 Villa Gral. Belgrano, Córdoba"
+                />
             </motion.div>
 
             <motion.div

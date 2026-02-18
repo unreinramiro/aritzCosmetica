@@ -9,7 +9,6 @@
     justify-content: end;
     gap: 5px;
     padding: 10px;
-    margin-top: 50px;
 }
 
     .mapContainer h2 {
@@ -24,7 +23,6 @@
     }
 
 .descriptionContainer {
-    width: 30%;
     height: 60%;
     align-content: center;
 }
