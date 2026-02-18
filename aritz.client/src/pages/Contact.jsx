@@ -1,19 +1,69 @@
 ﻿import { useState } from "react";
 import LocationMap from "../components/LocationMap/LocationMap";
+import axiosInstance from "../api/axiosConfig";
+import Swal from 'sweetalert2'; // Importar SweetAlert2
+import { useSession } from "../context/SessionContext";
+import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // 1. Importar el hook
 
 function Contact() {
 
+    const { userId, isLoggedIn } = useSession();
+    const navigate = useNavigate()
+
     const [contactFormData, setContactFormData] = useState({
+        id: userId,
         name: '',
         surname: '',
         cellphone: '',
-        email: '',
-        comments: ''
+        comments: '',
+        affair: ''
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setContactFormData({ ...contactFormData, [e.target.name]: e.target.value })
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (isLoggedIn) {
+            try {
+                const response = await axiosInstance.post('Contact/sendContactForm', contactFormData, userId);
+                Swal.fire({
+                    icon: "success",
+                    title: "Email enviado correctamente"
+                });
+                setContactFormData({
+                    name: '',
+                    surname: '',
+                    cellphone: '',
+                    email: '',
+                    affair: '',
+                    comments: ''
+                });
+            } catch (e) {
+                console.log("Error al enviar el mail: ", e);
+                Swal.fire({
+                    icon: "error",
+                    title: "Hubo un error al enviar el mensaje"
+                });
+            }
+        } else {
+            Swal.fire({
+                icon: "warning", // 'warning' queda mejor que 'error' aquí
+                title: "Acceso restringido",
+                text: "Primero debe iniciar sesión o registrarse para enviar un mensaje",
+                confirmButtonText: "Ir a Login",
+                showCancelButton: true,
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate('/login');
+                }
+            });
+        }
     }
 
     return (
@@ -22,7 +72,7 @@ function Contact() {
                 <h4 className="text-center">CONTACTO</h4>
             </div>
             <div>
-                <form className="container">
+                <form className="container" onSubmit={handleSubmit}>
                     <div className="row mb-3 g-3">
                         <div className="col-12 col-md-4">
                             <label
@@ -74,22 +124,21 @@ function Contact() {
                             />
                         </div>
                     </div>
+
                     <div className="row mb-3">
                         <div>
                             <label
-                                htmlFor="exampleFormControlInput1"
+                                htmlFor="exampleFormControlTextarea1"
                                 className="form-label"
                             >
-                                Email
+                                Asunto
                             </label>
                             <input
-                                type="email"
+                                type="text"
                                 className="form-control"
-                                id="exampleFormControlInput1"
-                                placeholder="name@example.com"
-                                name="email"
+                                name="affair"
                                 onChange={handleChange}
-                                value={contactFormData.email}
+                                value={contactFormData.affair}
                             />
                         </div>
                     </div>
@@ -114,7 +163,8 @@ function Contact() {
                     </div>
                     <button
                         className="btn btn-primary"
-                        type="submit">
+                        type="submit"
+                    >
                         Enviar
                     </button>
                 </form>
