@@ -148,9 +148,15 @@ p {
     color: #666;
 }
 
+/* Modal Categoria */
+.addCat:hover {
+    background-color: #e9ecef; /* Efecto hover */
+    border-color: #0d6efd;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
 @media (max-width: 992px) {
-
     .divItemDetailOrder {
         flex-direction: column;
         gap: 20px;

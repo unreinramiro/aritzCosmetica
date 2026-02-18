@@ -2,6 +2,8 @@ import styles from '../Admin/Modal.module.css'
 import { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosConfig";
 import Swal from 'sweetalert2'; // Importar SweetAlert2
+import { FaEdit } from "react-icons/fa";
+import { IoMdAddCircle } from "react-icons/io";
 
 function ModalProducts() {
 
@@ -49,9 +51,25 @@ function ModalProducts() {
                             aria-label="Close"
                         ></button>
                     </div>
-                    <div className="modal-body d-flex flex-column align-items-center">
-                       
-                        dsad
+                    <div className="modal-body d-flex flex-column align-items-center gap-4">
+                        {categories.map((cat) => (
+                            <div className="d-flex justify-content-between align-center w-100">
+                                <div className="d-flex gap-4">
+                                    <p>{cat.CAT_ID}</p>
+                                    <p>{cat.CAT_NAME}</p>
+                                </div>
+                                <FaEdit
+                                    size={20}
+                                    style={{ cursor: "pointer" }}
+                                />
+                            </div>
+                        ))}
+                        <div className={`d-flex align-items-center gap-2 ${styles.addCat}`}>
+                            <IoMdAddCircle
+                                size={30}
+                            />
+                            Agregar una categoria
+                        </div>
                     </div>
                     <div className="modal-footer">
                         <button
