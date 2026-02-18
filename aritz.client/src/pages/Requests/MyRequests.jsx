@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+ï»¿import { useState, useEffect } from "react";
 import CenteredContainer from "../../components/CenteredContainer/CenteredContainer";
 import styles from './MyRequests.module.css';
 import axiosInstance from "../../api/axiosConfig";
@@ -6,7 +6,7 @@ import { useSession } from "../../context/SessionContext";
 import Swal from 'sweetalert2';
 import { AiOutlineUpload } from "react-icons/ai";
 import { BiRefresh } from "react-icons/bi";
-import { format } from 'date-fns'; // Importa la función format
+import { format } from 'date-fns'; // Importa la funciÃ³n format
 import { useLocation, Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { BiConfused } from "react-icons/bi";
@@ -42,7 +42,7 @@ function MyRequests() {
         if (!file) {
             Swal.fire({
                 title: 'Error al subir el comprobante de pago',
-                text: 'Subí un comprobante válido',
+                text: 'SubÃ­ un comprobante vÃ¡lido',
                 icon: 'error',
                 confirmButtonText: 'Aceptar',
             });
@@ -79,7 +79,7 @@ function MyRequests() {
             );
 
             Swal.fire({
-                title: '¡Éxito!',
+                title: 'Â¡Ã‰xito!',
                 text: 'Comprobante subido exitosamente',
                 icon: 'success',
                 confirmButtonText: 'Aceptar',
@@ -88,7 +88,7 @@ function MyRequests() {
             console.error('Error al subir el comprobante:', error);
             Swal.fire({
                 title: 'Error al subir el comprobante',
-                text: 'Ocurrió un error al subir el archivo',
+                text: 'OcurriÃ³ un error al subir el archivo',
                 icon: 'error',
                 confirmButtonText: 'Aceptar',
             });
@@ -147,44 +147,54 @@ function MyRequests() {
                                 <td data-label="Estado">{order.ORD_STATUS}</td>
                                 <td data-label="Forma de pago">{order.PaymentMethod}</td>
                                 <td data-label="Comprobante">
-                                    {order.ReceiptPath ? (
-                                        <div className={styles.fileRefreshDownload}>
-                                            <a
-                                                href={`${axiosInstance.defaults.baseURL}Order/${order.ORD_ID}/download-receipt`}
-                                                rel="noopener noreferrer"
-                                                className={styles.downloadLink}
-                                            >
-                                                Descargar comprobante
-                                            </a>
-                                            <label className={styles.fileInput}>
-                                                <BiRefresh className={styles.refreshIcon} size={30} />
-                                                <input
-                                                    type="file"
-                                                    onChange={(e) => handleFileUpload(order.ORD_ID, e)}
-                                                    disabled={uploading[order.ORD_ID]}
-                                                    />
-                                            </label>
-                                        </div>
-                                    ) : (
-                                        <label className={styles.fileInput}>
-                                            <input
-                                                type="file"
-                                                onChange={(e) => handleFileUpload(order.ORD_ID, e)}
-                                                disabled={uploading[order.ORD_ID]}
-                                            />
-                                            {uploading[order.ORD_ID] ? (
-                                                <span className={styles.loading}>
-                                                    <div className="spinner-border" role="status">
-                                                        <span className="visually-hidden">Loading...</span>
+                                    {order.ORD_STATUS != 'Cancelado'
+                                        ?
+                                        (
+                                                order.ReceiptPath ? (
+                                                    <div className={styles.fileRefreshDownload}>
+                                                        <a
+                                                            href={`${axiosInstance.defaults.baseURL}Order/${order.ORD_ID}/download-receipt`}
+                                                            rel="noopener noreferrer"
+                                                            className={styles.downloadLink}
+                                                        >
+                                                            Descargar comprobante
+                                                        </a>
+                                                        <label className={styles.fileInput}>
+                                                            <BiRefresh className={styles.refreshIcon} size={30} />
+                                                            <input
+                                                                type="file"
+                                                                onChange={(e) => handleFileUpload(order.ORD_ID, e)}
+                                                                disabled={uploading[order.ORD_ID]}
+                                                            />
+                                                        </label>
                                                     </div>
-                                                </span>
-                                            ) : (
-                                                <span className="d-flex justify-content-center align-items-center gap-2">
-                                                    <AiOutlineUpload /> Cargar comprobante
-                                                </span>
-                                            )}
-                                        </label>
-                                    )}
+                                                ) : (
+                                                    <label className={styles.fileInput}>
+                                                        <input
+                                                            type="file"
+                                                            onChange={(e) => handleFileUpload(order.ORD_ID, e)}
+                                                            disabled={uploading[order.ORD_ID]}
+                                                        />
+                                                        {uploading[order.ORD_ID] ? (
+                                                            <span className={styles.loading}>
+                                                                <div className="spinner-border" role="status">
+                                                                    <span className="visually-hidden">Loading...</span>
+                                                                </div>
+                                                            </span>
+                                                        ) : (
+                                                            <span className="d-flex justify-content-center align-items-center gap-2">
+                                                                <AiOutlineUpload /> Cargar comprobante
+                                                            </span>
+                                                        )}
+                                                    </label>
+                                                )
+                                        )
+                                            :
+                                        (
+                                        <p>Sin Comprobante...</p>
+                                        )
+                                    }
+
                                 </td>
                             </tr>
                         ))}
