@@ -137,7 +137,7 @@
     display: flex;
     justify-content: start;
     gap: 10px;
-    height: 120px;
+    height: 150px;
 }
 
 .imgItem {
@@ -148,12 +148,14 @@
     .imgItem img {
         aspect-ratio: 1/1;
         object-position: top;
+        height: 100%;
     }
 
 .detailItem{
     display: flex;
     width: 100%;
     justify-content: space-between;
+    text-align: start;
 }
 
 

@@ -50,12 +50,20 @@ const Header = () => {
         }
     }
 
-    // 1. Filtramos primero: Solo categorías con productos
-    const activeCategories = categories.filter(
-        cat => cat.Products && cat.Products.length > 0 && !(cat.Products.PRD_QUANTITY <= 0 || cat.Products.PRD_IS_ACTIVE == 0)
+    const processedCategories = categories.map(cat => {
+
+        const validProducts = cat.Products.filter(prod =>
+            prod.PRD_QUANTITY > 0 && prod.PRD_IS_ACTIVE !== 0
+        );
+
+        return { ...cat, Products: validProducts };
+    });
+
+    const activeCategories = processedCategories.filter(
+        cat => cat.Products.length > 0
     );
 
-    // 2. Función auxiliar para dividir el array en grupos de 3
+    // Función auxiliar para dividir el array en grupos de 3
     const chunkArray = (array, size) => {
         const chunks = [];
         for (let i = 0; i < array.length; i += size) {
@@ -64,7 +72,6 @@ const Header = () => {
         return chunks;
     };
 
-    // Creamos los grupos (Filas)
     const categoryRows = chunkArray(activeCategories, 3);
 
     return (

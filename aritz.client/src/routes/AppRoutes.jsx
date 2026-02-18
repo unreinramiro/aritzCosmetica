@@ -18,6 +18,7 @@ import AdminManage from '../components/Admin/AdminManage';
 import AdminProducts from '../components/Admin/AdminProducts';
 import AdminUsers from '../components/Admin/AdminUsers';
 import AdminPostalCodes from '../components/Admin/AdminPostalCodes';
+import Failure from '../pages/Checkout/Failure';
 
 const AppRoutes = () => {
     return (
@@ -31,6 +32,7 @@ const AppRoutes = () => {
             <Route path="/checkout/payment-method" element={<ShippingMehod />} />
             <Route path="/checkout/pay" element={<PaymentInfo />} />
             <Route path="/checkout/pay-success" element={<Success />} />
+            <Route path="/checkout/pay-failure" element={<Failure />} />
             <Route path="/product/product-detail/:id" element={<ProductDetail />} />
             <Route path="/user/my-requests" element={<MyRequests />} />
             <Route path="/user/my-requests/my-order/:id" element={<MyRequestDetail />} />
