@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+Ôªøimport { useState, useEffect } from "react";
 import BreadCrum from "../../components/BreadCrum/BreadCrum";
 import CenteredContainer from "../../components/CenteredContainer/CenteredContainer";
 import styles from "./MyAccount.module.css";
@@ -70,7 +70,7 @@ function MyAccount() {
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
         if (passwordData.newPassword !== passwordData.confirmNewPassword) {
-            Swal.fire({ icon: 'error', title: 'Las contraseÒas no coinciden' });
+            Swal.fire({ icon: 'error', title: 'Las contrase√±as no coinciden' });
             return;
         }
         try {
@@ -81,15 +81,15 @@ function MyAccount() {
                 newPassword: passwordData.newPassword
             });
             Swal.fire({
-                title: 'CÛdigo enviado al mail',
+                title: 'C√≥digo enviado al mail',
                 text: 'Revisa tu correo para confirmar el cambio de clave.',
                 icon: 'info'
             });
             if (response) {
                 const { value: code } = await Swal.fire({
-                    title: "Ingresa el cÛdigo de confirmaciÛn",
+                    title: "Ingresa el c√≥digo de confirmaci√≥n",
                     input: "text",
-                    inputPlaceholder: "CÛdigo de 6 dÌgitos",
+                    inputPlaceholder: "C√≥digo de 6 d√≠gitos",
                     inputAttributes: {
                         maxlength: 10,
                         autocapitalize: "off",
@@ -99,11 +99,11 @@ function MyAccount() {
                 });
 
                 if (!code) {
-                    Swal.fire({ icon: "info", title: "OperaciÛn cancelada" });
+                    Swal.fire({ icon: "info", title: "Operaci√≥n cancelada" });
                     return;
                 }
 
-                // Enviar cÛdigo (y la nueva contraseÒa si tu backend no la guardÛ temporalmente)
+                // Enviar c√≥digo (y la nueva contrase√±a si tu backend no la guard√≥ temporalmente)
                 try {
                     const confirmResponse = await axiosInstance.post("Account/confirmPasswordChange", {
                         userId,
@@ -114,10 +114,10 @@ function MyAccount() {
                     setPasswordData({ currentPassword: "", newPassword: "", confirmNewPassword: "" });
                     toggleEditMode("account");
                 } catch (err) {
-                    Swal.fire({ icon: "error", title: "Error", text: err.response?.data?.Message || "CÛdigo inv·lido o expirado" });
+                    Swal.fire({ icon: "error", title: "Error", text: err.response?.data?.Message || "C√≥digo inv√°lido o expirado" });
                 }
             }
-            // AquÌ podrÌas mostrar un input para ingresar el cÛdigo de verificaciÛn
+            // Aqu√≠ podr√≠as mostrar un input para ingresar el c√≥digo de verificaci√≥n
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Error', text: err.response?.data?.Message || 'Error al cambiar la clave' });
         }
@@ -254,7 +254,7 @@ function MyAccount() {
                               :
                               <div className={styles.noEditContainer}>
                                   <p>Email: {account.USR_EMAIL}</p>
-                                  <p>Contrasenia: ***********</p>
+                                  <p>Contrase√±a: ***********</p>
                               </div>
                           }
                       </label>

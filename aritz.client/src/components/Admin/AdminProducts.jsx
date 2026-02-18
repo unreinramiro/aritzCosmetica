@@ -4,6 +4,7 @@ import axiosInstance from '../../api/axiosConfig';
 import { useState, useEffect } from "react";
 import Modal from './Modal';
 import ModalProducts from './ModalProducts';
+import ModalCategories from './ModalCategories';
 import { CiSearch, CiFilter } from "react-icons/ci";
 import { LuSearchX } from "react-icons/lu";
 import { IoMdAdd } from "react-icons/io";
@@ -130,6 +131,13 @@ function AdminProducts() {
                         size={20}
                     />
                     Agregar Producto
+                </button>
+                <button
+                    data-bs-toggle="modal"
+                    data-bs-target="#staticBackdropCategories"
+                    className={styles.addPrdBtn}
+                >
+                    Categorias
                 </button>
                 <button
                     className={styles.refreshBtn}
@@ -299,7 +307,9 @@ function AdminProducts() {
 
             <ModalProducts
                 refresh={setRefreshPrd}
-            /> 
+            />
+
+            <ModalCategories />
 
             <DelProduct
                 prdDelId={selectedProduct?.PRD_ID}

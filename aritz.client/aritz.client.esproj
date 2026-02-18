@@ -20,7 +20,6 @@
     <Folder Include="src\components\Admin\" />
     <Folder Include="src\components\CardHome\" />
     <Folder Include="src\components\LocationMap\" />
-    <Folder Include="src\pages\Account\" />
     <Folder Include="src\pages\Products\Filters\" />
   </ItemGroup>
 </Project>

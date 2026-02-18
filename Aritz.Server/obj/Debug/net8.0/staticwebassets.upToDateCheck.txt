@@ -119,3 +119,6 @@ wwwroot\uploads\receipts\receipt_48_7092fd5c-6959-4fe3-adce-69907a81b404.pdf
 wwwroot\images\gallery_af3d70a7-3c3e-40b3-b356-7666f00704a4.jpeg
 wwwroot\images\prod_aa3354d5-bc4a-4e96-9275-18240e550a18.jpg
 wwwroot\images\prod_b08d2be8-2fa3-46a1-ad33-b7b46cc96a0c.jpeg
+wwwroot\uploads\receipts\receipt_49_eda6f650-e32f-4b0d-b4d3-6c965cc402db.pdf
+wwwroot\uploads\receipts\receipt_49_560d8d7e-cfc9-415a-bad5-1cf3a7c75c94.jpeg
+wwwroot\uploads\receipts\receipt_49_4adc40ab-2812-4e9f-941e-5a505eb16b35.jpg
