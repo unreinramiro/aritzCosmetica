@@ -19,6 +19,7 @@ import AdminProducts from '../components/Admin/AdminProducts';
 import AdminUsers from '../components/Admin/AdminUsers';
 import AdminPostalCodes from '../components/Admin/AdminPostalCodes';
 import Failure from '../pages/Checkout/Failure';
+import Pending from '../pages/Checkout/Pending';
 
 const AppRoutes = () => {
     return (
@@ -33,6 +34,7 @@ const AppRoutes = () => {
             <Route path="/checkout/pay" element={<PaymentInfo />} />
             <Route path="/checkout/pay-success" element={<Success />} />
             <Route path="/checkout/pay-failure" element={<Failure />} />
+            <Route path="/checkout/pay-pending" element={<Pending />} />
             <Route path="/product/product-detail/:id" element={<ProductDetail />} />
             <Route path="/user/my-requests" element={<MyRequests />} />
             <Route path="/user/my-requests/my-order/:id" element={<MyRequestDetail />} />
