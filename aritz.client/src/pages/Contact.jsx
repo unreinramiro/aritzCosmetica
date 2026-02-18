@@ -5,6 +5,7 @@ import Swal from 'sweetalert2'; // Importar SweetAlert2
 import { useSession } from "../context/SessionContext";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; // 1. Importar el hook
+import styles from "./Contact.module.css";
 
 function Contact() {
 
@@ -71,7 +72,7 @@ function Contact() {
     }
 
     return (
-        <div className="d-flex flex-column justify-content-center container gap-5 p-3">
+        <div className={`d-flex flex-column justify-content-center container gap-5 p-3 ${styles.inputAnimate}`}>
             <div>
                 <h4 className="text-center">CONTACTO</h4>
             </div>
