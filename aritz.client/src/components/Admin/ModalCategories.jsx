@@ -14,6 +14,11 @@ function ModalProducts() {
     const [editCatId, setEditCatId] = useState(null);
     const [editCatName, setEditCatName] = useState('');
 
+    const [activeAddCat, setActiveAddCat] = useState(false);
+    const [lastCatId, setLastCatId] = useState(0);
+
+    const [newCat, setNewCat] = useState('');
+
     useEffect(() => {
         fetchCategories();
     }, []);
@@ -62,13 +67,45 @@ function ModalProducts() {
         try {
             const response = await axiosInstance.get('Products/by-category'); // Realiza una solicitud GET a /api/products
             setCategories(response.data); // Actualiza el estado con los datos obtenidos
-            console.log('Categorias obtenidas:', response.data);
+            const cantCats = response.data.length
+            console.log("Cant Categorias: ", cantCats);
+
+            console.log("Ultimo ID del ultimo elemento del array", response.data[cantCats - 1].CAT_ID)
+            setLastCatId(response.data[cantCats - 1].CAT_ID); //Cambiamos el estado al ultimo ID de las cats existentes
         } catch (err) {
             console.error("Error al obtener los productos", err); // Muestra el error en consola
             setError(err.message); // Guarda el mensaje de error en el estado
         }
     }
 
+    const handleNewCategory = (event) => {
+        event.preventDefault();
+        const fieldValue = event.target.value; // Obtego el valor del atributo
+
+        setNewCat(fieldValue);
+    };
+
+    const handleInsertCat = async () => {
+        try {
+            const dataToSend = {
+                catId: lastCatId + 1,
+                catName: newCat
+            }
+            const response = await axiosInstance.post('Categories/insertCategory', dataToSend);
+
+            fetchCategories();
+            setActiveAddCat(false);
+
+            Swal.fire({
+                title: 'Categoria insertada con exito!',
+                icon: 'success',
+                confirmButtonText: 'Continuar'
+            })
+
+        } catch (e) {
+            console.log("No se pudo insertar la categoria", e);
+        }
+    }
 
     return (
 
@@ -154,27 +191,61 @@ function ModalProducts() {
                                 )
                             
                         ))}
-                        <div className={`d-flex align-items-center gap-2 ${styles.addCat}`}>
-                            <IoMdAddCircle
-                                size={30}
-                            />
-                            Agregar una categoria
-                        </div>
+                        {activeAddCat
+                            ?
+                            (
+                                <div
+                                    className="d-flex justify-content-between align-center w-100 gap-1"
+                                >
+                                    <div className="d-flex gap-2 justify-content-center">
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            placeholder="Id"
+                                            readOnly
+                                            value={lastCatId+1}
+                                        />
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="catName"
+                                            placeholder="Nombre de la categoria"
+                                            value={newCat}
+                                            onChange={handleNewCategory}
+                                        />
+                                    </div>
+                                    <div className="d-flex flex-column">
+                                        <FaCheck
+                                            size={20}
+                                            color="green"
+                                            style={{ cursor: "pointer", marginRight: "10px" }}
+                                            title="Guardar"
+                                            onClick={handleInsertCat}
+                                        />
+                                        <FaTimes
+                                            size={20}
+                                            color="red"
+                                            style={{ cursor: "pointer" }}
+                                            title="Cancelar"
+                                            onClick={() => setActiveAddCat(false)}
+                                        />
+                                    </div>
+                                </div>
+                            )
+                    :
+                    (
+                    <div
+                        className={`d-flex align-items-center gap-2 ${styles.addCat}`}
+                        onClick={() => setActiveAddCat(true)}
+                    >
+                        <IoMdAddCircle
+                            size={30}
+                        />
+                        Agregar una categoria
                     </div>
-                    <div className="modal-footer">
-                        <button
-                            type="button"
-                            className="btn btn-secondary"
-                            data-bs-dismiss="modal"
-                        >
-                            Close
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-primary"
-                        >
-                            Agregar Producto
-                        </button>
+                    ) 
+                }
+
                     </div>
                 </div>
             </div>

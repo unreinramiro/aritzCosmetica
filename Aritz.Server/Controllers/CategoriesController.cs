@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Aritz.Server.Data; // Tu namespace del DbContext
+﻿using Aritz.Server.Data; // Tu namespace del DbContext
 using Aritz.Server.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Aritz.Server.Controllers.ProductsController;
 
 namespace Aritz.Server.Controllers
 {
@@ -27,6 +28,18 @@ namespace Aritz.Server.Controllers
 
             await _context.SaveChangesAsync();
             return Ok(new { Message = "Categoría actualizada correctamente" });
+        }
+
+        [HttpPost("insertCategory")]
+        public async Task<IActionResult> InsertCategory([FromBody] DtoCategory dtoCategory)
+        {
+            var category = await _context.Categories.FindAsync(dtoCategory.catId);
+            if(category != null) { return BadRequest("Ya existe una categoria con ese ID"); }
+
+            _context.Categories.Add(new Category { CAT_NAME = dtoCategory.catName});
+            await _context.SaveChangesAsync();
+
+            return Ok($"Se agrego la categoria {dtoCategory.catName} con ID {dtoCategory.catId} correctamente ");
         }
 
         public class DtoCategory 
