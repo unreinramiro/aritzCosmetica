@@ -2,18 +2,31 @@ import styles from '../Admin/Modal.module.css'
 import { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosConfig";
 import Swal from 'sweetalert2'; // Importar SweetAlert2
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaTimes, FaCheck } from "react-icons/fa";
 import { IoMdAddCircle } from "react-icons/io";
 
 function ModalProducts() {
 
 
     const [categories, setCategories] = useState([]);
+    const [error, setError] = useState('');
+
+    const [editCatId, setEditCatId] = useState(null);
+    const [editCatName, setEditCatName] = useState('');
 
     useEffect(() => {
         fetchCategories();
     }, []);
 
+    const handleEditClick = (event, cat) => {
+        event.preventDefault();
+        setEditCatId(cat.CAT_ID);
+        setEditCatName(cat.CAT_NAME);
+    };
+
+    const handleCancelClick = () => {
+        setEditCatId(null);
+    };
    
     const fetchCategories = async () => {
         try {
@@ -53,16 +66,60 @@ function ModalProducts() {
                     </div>
                     <div className="modal-body d-flex flex-column align-items-center gap-4">
                         {categories.map((cat) => (
-                            <div className="d-flex justify-content-between align-center w-100">
-                                <div className="d-flex gap-4">
-                                    <p>{cat.CAT_ID}</p>
-                                    <p>{cat.CAT_NAME}</p>
+                            editCatId == cat.CAT_ID
+                                ?
+                                (
+                                    <div
+                                        className="d-flex justify-content-between align-center w-100 gap-1"
+                                        key={cat.CAT_ID}
+                                    >
+                                        <div className="d-flex gap-2 justify-content-center">
+                                            <input
+                                                type="number"
+                                                value={cat.CAT_ID}
+                                                className="form-control"
+                                            />
+                                            <input
+                                                type="text"
+                                                value={cat.CAT_NAME}
+                                                className="form-control"
+                                            />
+                                        </div>
+                                        <div className="d-flex flex-column">
+                                            <FaCheck
+                                                size={20}
+                                                color="green"
+                                                style={{ cursor: "pointer", marginRight: "10px" }}
+                                                title="Guardar"
+                                            />
+                                            <FaTimes
+                                                size={20}
+                                                color="red"
+                                                style={{ cursor: "pointer" }}
+                                                title="Cancelar"
+                                                onClick={handleCancelClick}
+                                            />
+                                        </div>
+                                    </div>
+                                )
+                                :
+                                (
+                                <div
+                                    className = "d-flex justify-content-between align-center w-100"
+                                    key = {cat.CAT_ID}
+                                >
+                                    <div className="d-flex gap-4">
+                                        <p>{cat.CAT_ID}</p>
+                                        <p>{cat.CAT_NAME}</p>
+                                    </div>
+                                    <FaEdit
+                                        size={20}
+                                        style={{ cursor: "pointer" }}
+                                        onClick={(event) => handleEditClick(event, cat)}
+                                    />
                                 </div>
-                                <FaEdit
-                                    size={20}
-                                    style={{ cursor: "pointer" }}
-                                />
-                            </div>
+                                )
+                            
                         ))}
                         <div className={`d-flex align-items-center gap-2 ${styles.addCat}`}>
                             <IoMdAddCircle
