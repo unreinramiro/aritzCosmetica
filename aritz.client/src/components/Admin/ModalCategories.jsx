@@ -24,8 +24,38 @@ function ModalProducts() {
         setEditCatName(cat.CAT_NAME);
     };
 
+    const handleEditFormChange = (event) => {
+        event.preventDefault();
+        const fieldValue = event.target.value; // Obtego el valor del atributo
+
+        var newCatName = fieldValue;
+
+        setEditCatName(newCatName);
+    };
+
     const handleCancelClick = () => {
         setEditCatId(null);
+    };
+
+    const handleSaveClick = async () => {
+        try {
+            await axiosInstance.post('Categories/updCategory', {
+                catId: editCatId,
+                catName: editCatName
+            });
+
+            fetchCategories();
+            setEditCatId(null);
+
+            Swal.fire({
+                title: 'Categoria actualizada correctamente!',
+                icon: 'success',
+                confirmButtonText: 'Continuar'
+            })
+
+        } catch (error) {
+            console.error("Error al guardar", error);
+        }
     };
    
     const fetchCategories = async () => {
@@ -81,8 +111,10 @@ function ModalProducts() {
                                             />
                                             <input
                                                 type="text"
-                                                value={cat.CAT_NAME}
+                                                value={editCatName}
+                                                onChange={handleEditFormChange}
                                                 className="form-control"
+                                                name="catName"
                                             />
                                         </div>
                                         <div className="d-flex flex-column">
@@ -91,6 +123,7 @@ function ModalProducts() {
                                                 color="green"
                                                 style={{ cursor: "pointer", marginRight: "10px" }}
                                                 title="Guardar"
+                                                onClick={handleSaveClick}
                                             />
                                             <FaTimes
                                                 size={20}
