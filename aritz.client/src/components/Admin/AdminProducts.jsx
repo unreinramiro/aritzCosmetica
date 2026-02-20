@@ -1,4 +1,4 @@
-import styles from '../Admin/AdminManage.module.css'
+ï»¿import styles from '../Admin/AdminManage.module.css'
 import { FaEdit } from "react-icons/fa";
 import axiosInstance from '../../api/axiosConfig';
 import { useState, useEffect } from "react";
@@ -42,7 +42,7 @@ function AdminProducts() {
             );
         }
 
-        // 2. Filtro por categorías seleccionadas
+        // 2. Filtro por categorÃ­as seleccionadas
         if (selectedCategories.length > 0) {
             result = result.filter(p =>
                 selectedCategories.includes(p.Category.CAT_ID)
@@ -64,11 +64,11 @@ function AdminProducts() {
             const response = await axiosInstance.get('products'); // Realiza una solicitud GET a /api/products
             setProducts(response.data); // Actualiza el estado con los datos obtenidos
             console.log(products);
-            setLoading(false); // Indica que ya terminó la carga
+            setLoading(false); // Indica que ya terminÃ³ la carga
         } catch (err) {
             console.error("Error al obtener los productos", err); // Muestra el error en consola
             setError(err.message); // Guarda el mensaje de error en el estado
-            setLoading(false); // Indica que ya terminó la carga, incluso si hubo error
+            setLoading(false); // Indica que ya terminÃ³ la carga, incluso si hubo error
         }
     };
 
@@ -83,7 +83,7 @@ function AdminProducts() {
         }
     }
 
-    // Función para agrupar en bloques de 3
+    // FunciÃ³n para agrupar en bloques de 3
     const groupCategories = (items, size = 3) => {
         const groups = [];
         for (let i = 0; i < items.length; i += size) {

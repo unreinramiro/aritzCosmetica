@@ -1,4 +1,4 @@
-import styles from '../Admin/Modal.module.css'
+ï»¿import styles from '../Admin/Modal.module.css'
 import { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosConfig";
 import Swal from 'sweetalert2'; // Importar SweetAlert2
@@ -21,7 +21,10 @@ function ModalProducts() {
     const [activeAddCat, setActiveAddCat] = useState(false);
     const [lastCatId, setLastCatId] = useState(0);
 
-    const [newCat, setNewCat] = useState('');
+    const [newCat, setNewCat] = useState({
+        catName: "",
+        catDescription: ""
+    });
 
     useEffect(() => {
         fetchCategories();
@@ -92,16 +95,22 @@ function ModalProducts() {
 
     const handleNewCategory = (event) => {
         event.preventDefault();
+
+        const fieldName = event.target.getAttribute("name");
         const fieldValue = event.target.value; // Obtego el valor del atributo
 
-        setNewCat(fieldValue);
+        const newFormData = { ...newCat };
+        newFormData[fieldName] = fieldValue;
+
+        setNewCat(newFormData);
     };
 
     const handleInsertCat = async () => {
         try {
             const dataToSend = {
                 catId: lastCatId + 1,
-                catName: newCat
+                catName: newCat.catName,
+                catDescription: newCat.catDescription
             }
             const response = await axiosInstance.post('Categories/insertCategory', dataToSend);
 
@@ -133,14 +142,14 @@ function ModalProducts() {
 
                 await axiosInstance.delete(`Categories/deleteCategory/${catId}`);
 
-                await Swal.fire("¡Eliminado!", "La categoría ha sido eliminada.", "success");
+                await Swal.fire("Â¡Eliminado!", "La categorÃ­a ha sido eliminada.", "success");
 
                 fetchCategories();
             }
 
         } catch (e) {
             console.log("No se pudo borrar la categoria", e);
-            Swal.fire("Error", "Ocurrió un error al intentar eliminar.", "error");
+            Swal.fire("Error", "OcurriÃ³ un error al intentar eliminar.", "error");
         }
     }
 
@@ -253,19 +262,20 @@ function ModalProducts() {
                                 >
                                     <div className="d-flex gap-2 justify-content-center">
                                         <input
-                                            type="number"
-                                            className="form-control"
-                                            placeholder="Id"
-                                            readOnly
-                                            value={lastCatId+1}
-                                        />
-                                        <input
                                             type="text"
                                             className="form-control"
                                             name="catName"
                                             placeholder="Nombre de la categoria"
-                                            value={newCat}
+                                            value={newCat.catName}
                                             onChange={handleNewCategory}
+                                        />
+                                        <input
+                                            type="text"
+                                            value={newCat.catDescription}
+                                            onChange={handleNewCategory}
+                                            className="form-control"
+                                            name="catDescription"
+                                            placeholder="Descripcion"
                                         />
                                     </div>
                                     <div className="d-flex flex-column">
