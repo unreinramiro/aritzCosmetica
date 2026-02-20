@@ -1,4 +1,8 @@
-p{
+.timeLapseContainer{
+    padding: 20px;
+}
+
+p {
     margin: 0 !important;
 }
 
@@ -9,6 +13,7 @@ p{
 @media (max-width: 992px) {
 
     .timeLapseContainer{
+        padding: 5px;
         font-size: .6rem;
     }
 

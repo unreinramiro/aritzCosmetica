@@ -111,15 +111,32 @@ function ShippingInfo() {
 
     const handleShipData = async (e) => {
         e.preventDefault();
-        try {
             const { name, value } = e.target;
             setShipData(prev => ({
                 ...prev,
                 [name]: value
             }));
-        } catch (error) {
-            alert(error.response?.data?.Message || 'Error en formulario');
-        }
+            if (name === 'codpostal') {
+
+
+                if (value.length === 4) {
+                    try {
+                        const response = await axiosInstance.get(`Shipping/calculate?zipCode=${value}`);
+                        const price = response.data.Price;
+
+                        setZipPrice(price);
+
+                        // Opcional: Feedback visual pequeño (console.log)
+                        console.log("Precio actualizado automáticamente:", price);
+                    } catch (error) {
+                        console.error("Error calculando envío automático", error);
+                        setZipPrice(0); // Si falla, reseteamos a 0
+                    }
+                } else {
+                    // Si el usuario borra números y quedan menos de 4, reseteamos el precio
+                    setZipPrice(0);
+                }
+            }
     }
 
     useEffect(() => {
