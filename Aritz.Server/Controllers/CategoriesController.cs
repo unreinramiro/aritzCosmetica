@@ -30,7 +30,7 @@ namespace Aritz.Server.Controllers
             return Ok(new { Message = "Categoría actualizada correctamente" });
         }
 
-        [HttpPost("insertCategory")]
+        [HttpPost("insertCategory/{prdDelId}")]
         public async Task<IActionResult> InsertCategory([FromBody] DtoCategory dtoCategory)
         {
             var category = await _context.Categories.FindAsync(dtoCategory.catId);
@@ -40,6 +40,19 @@ namespace Aritz.Server.Controllers
             await _context.SaveChangesAsync();
 
             return Ok($"Se agrego la categoria {dtoCategory.catName} con ID {dtoCategory.catId} correctamente ");
+        }
+
+        [HttpDelete("deleteCategory/{catId}")]
+        public async Task<IActionResult> DeleteCategory(int catId)
+        {
+            var category = await _context.Categories.FindAsync(catId);
+
+            if(category == null) { return BadRequest("No se encontro una categoria con ese ID"); }
+
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+
+            return Ok($"Se elimino correctamente la categoria con el ID {catId}");
         }
 
         public class DtoCategory 

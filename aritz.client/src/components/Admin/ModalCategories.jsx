@@ -4,6 +4,7 @@ import axiosInstance from "../../api/axiosConfig";
 import Swal from 'sweetalert2'; // Importar SweetAlert2
 import { FaEdit, FaTimes, FaCheck } from "react-icons/fa";
 import { IoMdAddCircle } from "react-icons/io";
+import { MdDeleteForever } from "react-icons/md";
 
 function ModalProducts() {
 
@@ -107,10 +108,35 @@ function ModalProducts() {
         }
     }
 
+    const handleDelCategory = async (catId) => {
+        try {
+            const result = await Swal.fire({
+                                     title: "Deseas borrar la categoria?",
+                                     text: "Esta accion no puede deshacerse",
+                                     icon: "warning",
+                                     confirmButtonText: "Si, eliminar",
+                                     cancelButtonText: "Cancelar",
+                                     showCancelButton: true
+                                 })
+            if (result.isConfirmed) {
+
+                await axiosInstance.delete(`Categories/deleteCategory/${catId}`);
+
+                await Swal.fire("¡Eliminado!", "La categoría ha sido eliminada.", "success");
+
+                fetchCategories();
+            }
+
+        } catch (e) {
+            console.log("No se pudo borrar la categoria", e);
+            Swal.fire("Error", "Ocurrió un error al intentar eliminar.", "error");
+        }
+    }
+
     return (
 
         <div
-            className="modal fade"
+            className={`modal fade ${styles.containerModalCats}`}
             id="staticBackdropCategories"
             data-bs-backdrop="static"
             data-bs-keyboard="false"
@@ -182,11 +208,19 @@ function ModalProducts() {
                                         <p>{cat.CAT_ID}</p>
                                         <p>{cat.CAT_NAME}</p>
                                     </div>
-                                    <FaEdit
-                                        size={20}
-                                        style={{ cursor: "pointer" }}
-                                        onClick={(event) => handleEditClick(event, cat)}
-                                    />
+                                    <div>
+                                        <FaEdit
+                                            size={20}
+                                            style={{ cursor: "pointer" }}
+                                            onClick={(event) => handleEditClick(event, cat)}
+                                        />
+                                        <MdDeleteForever
+                                            className={styles.delIcon}
+                                            size={25}
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => handleDelCategory(cat.CAT_ID)}
+                                        />
+                                    </div>
                                 </div>
                                 )
                             
