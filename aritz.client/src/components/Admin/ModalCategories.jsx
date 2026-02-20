@@ -13,7 +13,10 @@ function ModalProducts() {
     const [error, setError] = useState('');
 
     const [editCatId, setEditCatId] = useState(null);
-    const [editCatName, setEditCatName] = useState('');
+    const [editCat, setEditCat] = useState({
+        catName: "",
+        catDescription: ""
+    });
 
     const [activeAddCat, setActiveAddCat] = useState(false);
     const [lastCatId, setLastCatId] = useState(0);
@@ -27,16 +30,22 @@ function ModalProducts() {
     const handleEditClick = (event, cat) => {
         event.preventDefault();
         setEditCatId(cat.CAT_ID);
-        setEditCatName(cat.CAT_NAME);
+        const formValues = {
+            catName: cat.CAT_NAME,
+            catDescription: cat.CAT_DESCRIPTION
+        }
+        setEditCat(formValues);
     };
 
     const handleEditFormChange = (event) => {
         event.preventDefault();
+        const fieldName = event.target.getAttribute("name");
         const fieldValue = event.target.value; // Obtego el valor del atributo
 
-        var newCatName = fieldValue;
+        const newFormData = { ...editCat };
+        newFormData[fieldName] = fieldValue;
 
-        setEditCatName(newCatName);
+        setEditCat(newFormData);
     };
 
     const handleCancelClick = () => {
@@ -45,10 +54,12 @@ function ModalProducts() {
 
     const handleSaveClick = async () => {
         try {
-            await axiosInstance.post('Categories/updCategory', {
+            const dataToSend = {
                 catId: editCatId,
-                catName: editCatName
-            });
+                catName: editCat.catName,
+                catDescription: editCat.catDescription 
+            }
+            await axiosInstance.post('Categories/updCategory', dataToSend);
 
             fetchCategories();
             setEditCatId(null);
@@ -66,7 +77,7 @@ function ModalProducts() {
    
     const fetchCategories = async () => {
         try {
-            const response = await axiosInstance.get('Products/by-category'); // Realiza una solicitud GET a /api/products
+            const response = await axiosInstance.get('Categories/getCategories'); // Realiza una solicitud GET a /api/products
             setCategories(response.data); // Actualiza el estado con los datos obtenidos
             const cantCats = response.data.length
             console.log("Cant Categorias: ", cantCats);
@@ -174,10 +185,19 @@ function ModalProducts() {
                                             />
                                             <input
                                                 type="text"
-                                                value={editCatName}
+                                                value={editCat.catName}
                                                 onChange={handleEditFormChange}
                                                 className="form-control"
                                                 name="catName"
+                                                placeholder="Nombre"
+                                            />
+                                            <input
+                                                type="text"
+                                                value={editCat.catDescription}
+                                                onChange={handleEditFormChange}
+                                                className="form-control"
+                                                name="catDescription"
+                                                placeholder="Descripcion"
                                             />
                                         </div>
                                         <div className="d-flex flex-column">

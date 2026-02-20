@@ -17,6 +17,16 @@ namespace Aritz.Server.Controllers
             _context = context;
         }
 
+        [HttpGet("getCategories")]
+        public async Task<IActionResult> GetCategories()
+        {
+            var categories = await _context.Categories
+                                           .ToListAsync();
+            if (categories == null) return NotFound("No se pudo traer las categorias");
+
+            return Ok(categories);
+        }
+
         [HttpPost("updCategory")]
         public async Task<IActionResult> UpdateCategory([FromBody] DtoCategory categoryDto)
         {
@@ -25,6 +35,7 @@ namespace Aritz.Server.Controllers
             if (category == null) return NotFound("Categoría no encontrada");
 
             category.CAT_NAME = categoryDto.catName;
+            category.CAT_DESCRIPTION = categoryDto.catDescription;
 
             await _context.SaveChangesAsync();
             return Ok(new { Message = "Categoría actualizada correctamente" });
@@ -59,6 +70,7 @@ namespace Aritz.Server.Controllers
         {             
             public int catId { get; set; }
             public string catName { get; set; }
+            public string catDescription { get; set; }
         }
     }
 }

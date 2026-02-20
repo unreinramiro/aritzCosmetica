@@ -17,7 +17,6 @@
     <Folder Include="src\components\CenteredContainer\" />
     <Folder Include="src\components\Cart\" />
     <Folder Include="src\components\BreadCrum\" />
-    <Folder Include="src\components\Admin\" />
     <Folder Include="src\components\CardHome\" />
     <Folder Include="src\components\LocationMap\" />
     <Folder Include="src\pages\Products\Filters\" />

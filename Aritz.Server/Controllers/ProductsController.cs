@@ -37,7 +37,8 @@ namespace Aritz.Server.Controllers
                                     Category = new CategoryDto
                                     {
                                         CAT_ID = p.Category.CAT_ID,
-                                        CAT_NAME = p.Category.CAT_NAME
+                                        CAT_NAME = p.Category.CAT_NAME,
+                                        CAT_DESCRIPTION = p.Category.CAT_DESCRIPTION
                                     },
                                     Gallery = p.ProductImages.Select(img => new ProductImgDto
                                     {
@@ -394,6 +395,7 @@ namespace Aritz.Server.Controllers
         {
             public int CAT_ID { get; set; }
             public string CAT_NAME { get; set; }
+            public string CAT_DESCRIPTION { get; set; }
             // No incluimos la lista de Products
         }
 
