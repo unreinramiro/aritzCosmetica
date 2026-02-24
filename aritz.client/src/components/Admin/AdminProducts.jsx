@@ -107,7 +107,7 @@ function AdminProducts() {
     return (
         <>
 
-            <div className={styles.containerAllFilters}>
+         <div className={styles.containerAllFilters}>
             <div className={styles.filtrosContainer}>
                 <div className="input-group flex-nowrap">
                     <span className="input-group-text" id="addon-wrapping"><CiSearch /></span>

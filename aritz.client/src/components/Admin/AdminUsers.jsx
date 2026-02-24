@@ -8,6 +8,7 @@ import { IoMdAdd } from "react-icons/io";
 import { LuRefreshCw } from "react-icons/lu";
 import Provinces from "../../data/Provinces.json";
 import { MdDeleteForever } from "react-icons/md";
+import Swal from 'sweetalert2'; // Importar SweetAlert2
 function AdminUsers() {
 
     const [users, setUsers] = useState([]);
@@ -47,6 +48,29 @@ function AdminUsers() {
                 : [...prev, provId]
         );
     };
+
+    const handleDelUser = async (userId) => {
+        try {
+            const result = await Swal.fire({
+                title: "Deseas borrar al usuario?",
+                text: "Esta accion no puede deshacerse",
+                icon: "warning",
+                confirmButtonText: "Si, eliminar",
+                cancelButtonText: "Cancelar",
+                showCancelButton: true
+            })
+            if (result.isConfirmed) {
+
+                const response = await axiosInstance.delete(`Users/deleteUser/${userId}`);
+
+                Swal.fire('Exito', `Se elimino correctamente el usuario`, 'success');
+
+                fetchUsers();
+            }
+        } catch (e) {
+            console.log("No se pudo borrar el usuario ", e)
+        }
+    }
 
     return (
         <>
@@ -233,8 +257,7 @@ function AdminUsers() {
                                         className={styles.delIcon}
                                         size={25}
                                         style={{ cursor: "pointer" }}
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#staticBackdropUsr"
+                                        onClick={() => handleDelUser(usr.USR_ID)}
                                     />
                                 </td>
                             </tr>
