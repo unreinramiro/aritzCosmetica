@@ -4,6 +4,7 @@ import axiosInstance from "../../api/axiosConfig";
 import { NavLink } from "react-router-dom";
 import { FaRegSadTear } from "react-icons/fa";
 import Swal from 'sweetalert2'; // Importar SweetAlert2
+import { formatDate } from "../../utils/utils"
 
 function ModalUsr({ user }) {
 
@@ -66,7 +67,7 @@ function ModalUsr({ user }) {
                         <h1 className="modal-title fs-5" id="staticBackdropLabel">{user.USR_NAME} {user.USR_SURNAME}</h1>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div className="modal-body d-flex flex-column gap-3">
+                    <div className="modal-body d-flex flex-column gap-3" style={{ maxHeight: "70vh", overflowY: "scroll" }}>
 
                         <ul className="nav nav-tabs">
                             <li className={`nav-item ${styles.pedidos}`}>
@@ -93,46 +94,90 @@ function ModalUsr({ user }) {
                         {dataShow == 'Info'
                             ?
                             <>
-                                <div className="input-group">
-                                    <span className="input-group-text">Nombre</span>
-                                    <input type="text" aria-label="First name" className="form-control" value={user.USR_NAME} readOnly />
+                                <div className="d-flex flex-column gap-1">
+                                    <h6>Contacto</h6>
+                                    <div className="input-group flex-nowrap">
+                                        <span className={`input-group-text ${styles.spanIcon}`} id="addon-wrapping">@</span>
+                                        <input type="text" className="form-control" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" value={user.USR_EMAIL} readOnly />
+                                    </div>
+                                    <div className="input-group">
+                                        <span className={`input-group-text ${styles.spanIcon}`}>+54</span>
+                                        <input type="text" aria-label="Celular" className="form-control" value={user.USR_PHONE_NUMBER} readOnly />
+                                    </div>
                                 </div>
-                                <div className="input-group">
-                                    <span className="input-group-text">Apellido</span>
-                                    <input type="text" aria-label="First name" className="form-control" value={user.USR_SURNAME} readOnly />
+
+                                <hr></hr>
+
+                                <div className="d-flex flex-column gap-1">
+                                    <h6>Info Personal</h6>
+                                    <div className="input-group">
+                                        <span className={`input-group-text ${styles.spanIcon}`}>Nombre</span>
+                                        <input type="text" aria-label="First name" className="form-control" value={user.USR_NAME} readOnly />
+                                    </div>
+                                    <div className="input-group">
+                                        <span className={`input-group-text ${styles.spanIcon}`}>Apellido</span>
+                                        <input type="text" aria-label="First name" className="form-control" value={user.USR_SURNAME} readOnly />
+                                    </div>
+                                    <div className="input-group">
+                                        <span className={`input-group-text ${styles.spanIcon}`}>DNI</span>
+                                        <input type="text" aria-label="Documento" className="form-control" value={user.USR_DOCUMENT_NUMBER} readOnly />
+                                    </div>
                                 </div>
-                                <div className="input-group flex-nowrap">
-                                    <span className="input-group-text" id="addon-wrapping">@</span>
-                                    <input type="text" className="form-control" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" value={user.USR_EMAIL} readOnly />
+
+                                <hr></hr>
+
+                                <div className="d-flex flex-column gap-1">
+                                    <h6>Domicilio</h6>
+                                    <div className="input-group">
+                                        <span className={`input-group-text ${styles.spanIcon}`}>Provincia</span>
+                                        <input type="text" aria-label="Provincia" className="form-control" value={user.USR_PROVINCE} readOnly />
+                                    </div>
+                                    <div className="input-group">
+                                        <span className={`input-group-text ${styles.spanIcon}`}>Ciudad</span>
+                                        <input type="text" aria-label="Ciudad" className="form-control" value={user.USR_CITY} readOnly />
+                                    </div>
+                                    <div className="input-group">
+                                        <span className={`input-group-text ${styles.spanIcon}`}>Calle</span>
+                                        <input type="text" aria-label="Ciudad" className="form-control" value={user.USR_STREET} readOnly />
+                                    </div>
+                                    <div className="input-group">
+                                        <span className={`input-group-text ${styles.spanIcon}`}>Nro de calle</span>
+                                        <input type="text" aria-label="Ciudad" className="form-control" value={user.USR_STREET_NUMBER} readOnly />
+                                    </div>
+                                    <div className="input-group">
+                                        <span className={`input-group-text ${styles.spanIcon}`}>Piso</span>
+                                        <input type="text" aria-label="Ciudad" className="form-control" value={user.USR_FLOOR} readOnly />
+                                    </div>
+                                    <div className="input-group">
+                                        <span className={`input-group-text ${styles.spanIcon}`}>Cod Postal</span>
+                                        <input type="text" aria-label="Ciudad" className="form-control" value={user.USR_POSTAL_CODE} readOnly />
+                                    </div>
                                 </div>
-                                <div className="input-group">
-                                    <span className="input-group-text">+54</span>
-                                    <input type="text" aria-label="Celular" className="form-control" value={user.USR_PHONE_NUMBER} readOnly />
+
+                                <hr></hr>
+
+                                <div className="d-flex flex-column gap-1">
+                                    <h6>Otros</h6>
+                                    <div className="input-group mb-3">
+                                        <label className="input-group-text" htmlFor="inputGroupSelect01">Admin</label>
+                                        <select
+                                            className="form-select"
+                                            id="inputGroupSelect01"
+                                            value={user.USR_IS_ADMIN}
+                                        >
+                                            <option value="1">Si</option>
+                                            <option value="2">No</option>
+                                        </select>
+                                    </div>
+                                    <div className="input-group">
+                                        <span className="input-group-text">Creacion de cuenta</span>
+                                        <input type="text" aria-label="Ciudad" className="form-control" value={formatDate(user.USR_CREATED_DATE)} readOnly />
+                                    </div>
                                 </div>
-                                <div className="input-group mb-3">
-                                    <label className="input-group-text" htmlFor="inputGroupSelect01">Admin</label>
-                                    <select
-                                        className="form-select"
-                                        id="inputGroupSelect01"
-                                        value={user.USR_IS_ADMIN}
-                                    >
-                                        <option value="1">Si</option>
-                                        <option value="2">No</option>
-                                    </select>
-                                </div>
-                                <div className="input-group">
-                                    <span className="input-group-text">DNI</span>
-                                    <input type="text" aria-label="Documento" className="form-control" value={user.USR_DOCUMENT_NUMBER} readOnly />
-                                </div>
-                                <div className="input-group">
-                                    <span className="input-group-text">Provincia</span>
-                                    <input type="text" aria-label="Provincia" className="form-control" value={user.USR_PROVINCE} readOnly />
-                                </div>
-                                <div className="input-group">
-                                    <span className="input-group-text">Ciudad</span>
-                                    <input type="text" aria-label="Ciudad" className="form-control" value={user.USR_CITY} readOnly />
-                                </div>
+
+                                
                             </>
+
                             :
 
                             orderUser.length <= 0
@@ -143,7 +188,7 @@ function ModalUsr({ user }) {
                                 </div>
                                 :
                             orderUser.map((ord) => (
-                                <div className="d-flex flex-column gap-2" key={ord.ORD_ID}>
+                                <div className="d-flex flex-column gap-2 p-2" key={ord.ORD_ID}>
                                     <p className="text-start d-flex justify-content-between">Nro Orden: <b>#{ord.ORD_ID}</b></p>
                                     <div className="d-flex flex-column">
                                         <p className="text-start">Estado del pedido:</p>
@@ -157,7 +202,9 @@ function ModalUsr({ user }) {
                                             >
                                                 <option value="Pendiente">Pendiente</option>
                                                 <option value="En curso">En curso</option>
+                                                <option value="Eviado">Enviado</option>
                                                 <option value="Finalizado">Finalizado</option>
+                                                <option value="Cancelado">Cancelado</option>
                                             </select>
                                         </div>
                                     </div>

@@ -113,12 +113,14 @@
 .negrita {
     font-weight: bold;
     color: #000; /* Opcional: cambiar color */
-    text-decoration: underline; /* Opcional */
+}
+
+.spanIcon{
+    flex-basis: 30% !important;
 }
 
 /* Modal Orders */
-
-.containerGeneralOrder{
+.containerGeneralOrder {
     overflow-y: scroll;
     max-height: 80vh;
 }
