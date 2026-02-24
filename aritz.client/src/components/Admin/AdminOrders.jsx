@@ -105,7 +105,8 @@ function AdminOrders() {
 
     return (
         <>
-        <div className={styles.filtrosContainer}>
+        <div className={styles.containerAllFilters}>
+            <div className={styles.filtrosContainer}>
                 <div className="input-group flex-nowrap">
                     <span className="input-group-text" id="addon-wrapping"><CiSearch /></span>
                     <input
@@ -132,10 +133,9 @@ function AdminOrders() {
                 </div>
 
             </div>
-
+        
 
             <div className={`collapse ${styles.filterGroup}`} id="collapseExample">
-                <hr></hr>
                 <ul>
                     <li className={styles.filterItem}>
                         <label>
@@ -282,7 +282,7 @@ function AdminOrders() {
 
                 </ul>
             </div>
-        
+        </div>
             <div className={styles.containerTableOrders}>
                 {filteredOrders.length <= 0
                     ?

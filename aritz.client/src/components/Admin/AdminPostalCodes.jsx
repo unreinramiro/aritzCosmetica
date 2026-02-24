@@ -101,6 +101,7 @@ function AdminPostalCodes() {
                                                 <input
                                                     type="Text"
                                                     name="Name"
+                                                    className="form-control"
                                                     value={editFormData.Name}
                                                     onChange={handleEditFormChange}
                                                 />
@@ -111,6 +112,7 @@ function AdminPostalCodes() {
                                                     name="MinZipCode" 
                                                     value={editFormData.MinZipCode}
                                                     onChange={handleEditFormChange}
+                                                    className="form-control"
                                                 />
                                             </td>   
                                             <td data-label="MaxZipCode">
@@ -119,6 +121,7 @@ function AdminPostalCodes() {
                                                     name="MaxZipCode" 
                                                     value={editFormData.MaxZipCode}
                                                     onChange={handleEditFormChange}
+                                                    className="form-control"
                                                 />
                                             </td>
                                             <td data-label="Precio">
@@ -127,6 +130,7 @@ function AdminPostalCodes() {
                                                     name="Price" 
                                                     value={editFormData.Price}
                                                     onChange={handleEditFormChange}
+                                                    className="form-control"
                                                 />
                                             </td>
                                             <td

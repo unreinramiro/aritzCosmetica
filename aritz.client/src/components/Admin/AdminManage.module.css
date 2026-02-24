@@ -59,15 +59,23 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 10px;
+    padding: 40px;
     gap: 10px;
 }
 
 /* Parte Productos */
 
-.filtrosContainer{
+.containerAllFilters{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.filtrosContainer {
     display: flex;
     gap: 10px;
+    width: 50vw;
 }
 
 .filter{
@@ -82,15 +90,43 @@
         color: rgb(208, 208, 208);
     }
 
-.filterGroup{
+.filterGroup {
     display: flex;
-    justify-content: space-around;
+    justify-content: start;
+    gap: 30px;
+    width: 50vw;
+    flex-flow: wrap;
 }
 
 .filterGroup2 {
     display: flex;
     justify-content: start;
-    margin-left: 70px;
+}
+
+.filterGroup3 {
+    display: flex;
+    justify-content: space-around;
+    flex-flow: wrap;
+    width: 50vw;
+}
+
+    .filterGroup3 ul {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+    }
+
+        .filterGroup3 ul li label{
+            display: flex;
+        }
+
+            .filterGroup3 ul li label p{
+                flex-basis: 90%;
+                text-align: start;
+            }
+
+.containerFilterItem{
+    width: 50%;
 }
 
 .filterItem {
@@ -188,6 +224,7 @@
         margin-top: 20px;
         flex-direction: column;
         gap: 20px;
+        width: 100%;
     }
 
     .filter {
@@ -208,10 +245,14 @@
 
     .filterGroup {
         flex-direction: column;
+        gap: 10px;
+    }
+
+    .containerAllFilters{
+        align-items: start;
     }
 
     /* Parte de la tabla */
-
     .containerTableOrders {
         min-height: 65vh;
         max-height: auto;
@@ -244,6 +285,10 @@
         margin-bottom: 20px;
         padding: 15px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .productsUsersAdminContainer{
+        padding: 10px;
     }
 
     .productsUserTable td {
@@ -293,5 +338,26 @@
         width: 100%;
         height: 50px;
     }
+
+    .filterGroup3{
+        display: flex;
+        flex-direction: column;
+    }
+
+        .filterGroup3 ul{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+            .filterGroup3 ul li label{
+                display: flex;
+                justify-content: center;
+            }
+
+                .filterGroup3 ul li label p{
+                    flex-basis: 100%;
+                    text-align: start;
+                }
 
 }

@@ -103,12 +103,11 @@ function AdminProducts() {
         );
     };
 
-    const handleRefreshPrd = async () => {
-        setRefreshPrd(prev => !prev);
-    }
 
     return (
         <>
+
+            <div className={styles.containerAllFilters}>
             <div className={styles.filtrosContainer}>
                 <div className="input-group flex-nowrap">
                     <span className="input-group-text" id="addon-wrapping"><CiSearch /></span>
@@ -139,13 +138,7 @@ function AdminProducts() {
                 >
                     Categorias
                 </button>
-                <button
-                    className={styles.refreshBtn}
-                    style={{ width: "50px" }}
-                    onClick={handleRefreshPrd}
-                >
-                    <LuRefreshCw/> 
-                </button>
+
                 <div
                     className={styles.filter}
                     data-bs-toggle="collapse"
@@ -159,67 +152,73 @@ function AdminProducts() {
                     <h5>Filtros:</h5>
                 </div>
 
-            </div>
-            <div>
-                <div className={`collapse ${styles.filterGroup}`} id="collapseExample">
-                    {categoryGroups.map((group, groupIndex) => (
-                        <ul key={`group-${groupIndex}`}>
-                            {group.map((category) => (
-                                <li
-                                    className={styles.filterItem}
-                                    key={category.CAT_ID}
-                                >
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedCategories.includes(category.CAT_ID)}
-                                            onChange={() => handleCategoryChange(category.CAT_ID)}
-                                        />
-                                        {category.CAT_NAME}
-                                    </label>
-                                </li>
-                            ))}
-                        </ul>
-                    ))}
                 </div>
-                
-                <div className={`collapse ${styles.filterGroup2}`} id="collapseExample">
-                    <hr></hr>
-                    <ul>
-                        <li className={styles.filterItem}>
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="filteredActive"
-                                    checked={filteredActive === 'all'}
-                                    onChange={() => setFilteredActive('all')}
-                                />
-                                Todos
-                            </label>
-                        </li>
-                        <li className={styles.filterItem}>
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="filteredActive"
-                                    checked={filteredActive === 'active'}
-                                    onChange={() => setFilteredActive('active')}
-                                />
-                                Activo
-                            </label>
-                        </li>
-                        <li className={styles.filterItem}>
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="filteredActive"
-                                    checked={filteredActive === 'inactive'}
-                                    onChange={() => setFilteredActive('inactive')}
-                                />
-                                Inactivo
-                            </label>
-                        </li>
-                    </ul>
+            <div>
+                <div className="collapse" id="collapseExample">
+                    <h6 style={{ textAlign: "start" }}>Otros</h6>
+                    <div className={styles.filterGroup2} id="collapseExample">
+                        <ul className={styles.containerFilterItem}>
+                            <li className={styles.filterItem}>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="filteredActive"
+                                        checked={filteredActive === 'all'}
+                                        onChange={() => setFilteredActive('all')}
+                                    />
+                                    Todos
+                                </label>
+                            </li>
+                            <li className={styles.filterItem}>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="filteredActive"
+                                        checked={filteredActive === 'active'}
+                                        onChange={() => setFilteredActive('active')}
+                                    />
+                                    Activo
+                                </label>
+                            </li>
+                            <li className={styles.filterItem}>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="filteredActive"
+                                        checked={filteredActive === 'inactive'}
+                                        onChange={() => setFilteredActive('inactive')}
+                                    />
+                                    Inactivo
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div className="collapse" id="collapseExample">
+                    <h6 style={{ textAlign: "start" }}>Categorias</h6>
+                    <div className={styles.filterGroup}>
+                        {categoryGroups.map((group, groupIndex) => (
+                            <ul key={`group-${groupIndex}`}>
+                                {group.map((category) => (
+                                    <li
+                                        className={styles.filterItem}
+                                        key={category.CAT_ID}
+                                    >
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedCategories.includes(category.CAT_ID)}
+                                                onChange={() => handleCategoryChange(category.CAT_ID)}
+                                            />
+                                            {category.CAT_NAME}
+                                        </label>
+                                    </li>
+                                ))}
+                            </ul>
+                        ))}
+                         </div>
+                    </div>
                 </div>
             </div>
             <div className={styles.containerTableOrders}>
