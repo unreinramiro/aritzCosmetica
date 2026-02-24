@@ -11,10 +11,19 @@ import { MdDeleteForever } from "react-icons/md";
 import Swal from 'sweetalert2'; // Importar SweetAlert2
 function AdminUsers() {
 
+    // Usuarios
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState([]);
 
+    // Provincias
     const [provinces, setProvince] = useState([])
+
+    // Filtros
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredActive, setFilteredActive] = useState('all');
+    const [filteredAdmin, setFilteredAdmin] = useState('all');
+    const [filteredRecent, setFilteredRecent] = useState('recents');
+    const [filteredUsers, setFilteredUsers] = useState([]);
 
     const fetchUsers = async () => {
         try {
@@ -30,6 +39,50 @@ function AdminUsers() {
         fetchUsers();
     }, []);
 
+    useEffect(() => {
+        let result = [...users];
+
+        // 1. Filtro por texto
+        if (searchTerm.trim()) {
+            const term = searchTerm.toLowerCase();
+            result = result.filter(u =>
+                u.USR_NAME.toLowerCase().includes(term) ||
+                u.USR_SURNAME.toLowerCase().includes(term)
+            );
+        }
+
+        // 2. Filtro por activo o no
+        if (filteredActive === 'active') {
+            result = result.filter(u => u.USR_IS_VERIFIED === true);
+        } else if (filteredActive === 'inactive') {
+            result = result.filter(u => u.USR_IS_VERIFIED === false);
+        }
+
+        // 3. Filtro por admin o no
+        if (filteredAdmin === 'admin') {
+            result = result.filter(u => u.USR_IS_ADMIN === true);
+        } else if (filteredAdmin === 'noAdmin') {
+            result = result.filter(u => u.USR_IS_ADMIN === false);
+        }
+
+        // 4. Filtro por mas reciente o antiguo
+        if (filteredRecent === 'recents') {
+            result.sort((a, b) => new Date(b.USR_CREATED_DATE) - new Date(a.USR_CREATED_DATE));
+        } else if (filteredRecent === 'olders') {
+            result.sort((a, b) => new Date(a.USR_CREATED_DATE) - new Date(b.USR_CREATED_DATE));
+        }
+
+        // 5. Filtro por provincia
+        if (provinces.length > 0) {
+            result = result.filter(u =>
+                provinces.includes(u.USR_PROVINCE)
+            );
+        }
+
+        setFilteredUsers(result);
+
+    }, [searchTerm, users, filteredActive, filteredAdmin, filteredRecent, provinces]);
+
     const groupProvinces = (items, size = 3) => {
         const groups = [];
         for (let i = 0; i < items.length; i += size) {
@@ -41,11 +94,11 @@ function AdminUsers() {
     const categoryGroups = groupProvinces(Provinces);
 
     // Funcion para filtros en los checkboxes
-    const handleProvinceChange = (provId) => {
+    const handleProvinceChange = (province) => {
         setProvince(prev =>
-            prev.includes(provId)
-                ? prev.filter(id => id !== provId)
-                : [...prev, provId]
+            prev.includes(province)
+                ? prev.filter(prov => prov !== province)
+                : [...prev, province]
         );
     };
 
@@ -92,6 +145,8 @@ function AdminUsers() {
                             placeholder="Buscar..."
                             aria-label="Username"
                             aria-describedby="addon-wrapping"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
 
@@ -119,6 +174,8 @@ function AdminUsers() {
                                     <input
                                         type="radio"
                                         name="filteredActive"
+                                        checked={filteredActive === 'all'}
+                                        onChange={() => setFilteredActive('all')}
                                     />
                                     Todos
                                 </label>
@@ -128,6 +185,8 @@ function AdminUsers() {
                                     <input
                                         type="radio"
                                         name="filteredActive"
+                                        checked={filteredActive === 'active'}
+                                        onChange={() => setFilteredActive('active')}
                                     />
                                     Activo
                                 </label>
@@ -137,6 +196,8 @@ function AdminUsers() {
                                     <input
                                         type="radio"
                                         name="filteredActive"
+                                        checked={filteredActive === 'inactive'}
+                                        onChange={() => setFilteredActive('inactive')}
                                     />
                                     Inactivo
                                 </label>
@@ -148,7 +209,9 @@ function AdminUsers() {
                                 <label>
                                     <input
                                         type="radio"
-                                        name="filteredActive"
+                                        name="filteredAdmin"
+                                        checked={filteredAdmin === 'all'}
+                                        onChange={() => setFilteredAdmin('all')}
                                     />
                                     Todos
                                 </label>
@@ -157,18 +220,22 @@ function AdminUsers() {
                                 <label>
                                     <input
                                         type="radio"
-                                        name="filteredActive"
+                                        name="filteredAdmin"
+                                        checked={filteredAdmin === 'admin'}
+                                        onChange={() => setFilteredAdmin('admin')}
                                     />
-                                    Es Admin
+                                    Admin
                                 </label>
                             </li>
                             <li className={styles.filterItem}>
                                 <label>
                                     <input
                                         type="radio"
-                                        name="filteredActive"
+                                        name="filteredAdmin"
+                                        checked={filteredAdmin === 'noAdmin'}
+                                        onChange={() => setFilteredAdmin('noAdmin')}
                                     />
-                                    No es Admin
+                                    No Admin
                                 </label>
                             </li>
                         </ul>
@@ -178,7 +245,9 @@ function AdminUsers() {
                                 <label>
                                     <input
                                         type="radio"
-                                        name="filteredActive"
+                                        name="filteredRecents"
+                                        checked={filteredRecent === 'recents'}
+                                        onChange={() => setFilteredRecent('recents')}
                                     />
                                     Mas recientes
                                 </label>
@@ -187,7 +256,9 @@ function AdminUsers() {
                                 <label>
                                     <input
                                         type="radio"
-                                        name="filteredActive"
+                                        name="filteredRecents"
+                                        checked={filteredRecent === 'olders'}
+                                        onChange={() => setFilteredRecent('olders')}
                                     />
                                     Mas antiguos
                                 </label>
@@ -204,11 +275,13 @@ function AdminUsers() {
                                 {group.map((province, index) => (
                                     <li
                                         className={styles.filterItem}
-                                        key={index++}
+                                        key={index}
                                     >
                                         <label>
                                             <input
                                                 type="checkbox"
+                                                checked={provinces.includes(province)}
+                                                onChange={() => handleProvinceChange(province)}
                                             />
                                             <p>{province}</p>
                                         </label>
@@ -235,7 +308,7 @@ function AdminUsers() {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map((usr) => (
+                        {filteredUsers.map((usr) => (
                             <tr
                                 key={usr.USR_ID}
                                 className={styles.filaOrdenDetail}
