@@ -23,6 +23,8 @@ namespace Aritz.Server.Controllers
 
             if (user == null) { return NotFound("No se encontro el usuario"); }
 
+            if ( user.USR_IS_ADMIN == true) { return Conflict("No se puede eliminar un usuario administrador"); }
+
             _context.Remove(user);
             await _context.SaveChangesAsync();
 

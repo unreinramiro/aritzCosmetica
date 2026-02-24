@@ -67,8 +67,15 @@ function AdminUsers() {
 
                 fetchUsers();
             }
-        } catch (e) {
-            console.log("No se pudo borrar el usuario ", e)
+        } catch (error) {
+            console.log("No se pudo borrar el usuario ", error);
+            if (error.response.status === 409) {
+                Swal.fire({
+                    title: 'No se pudo eliminar',
+                    text: error.response.data,
+                    icon: 'error'
+                });
+            } 
         }
     }
 
