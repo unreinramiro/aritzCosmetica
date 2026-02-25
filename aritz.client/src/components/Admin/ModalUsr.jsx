@@ -6,11 +6,13 @@ import { FaRegSadTear } from "react-icons/fa";
 import Swal from 'sweetalert2'; // Importar SweetAlert2
 import { formatDate } from "../../utils/utils"
 
-function ModalUsr({ user }) {
+function ModalUsr({ user, fetchUsers }) {
 
     const [dataShow, setDataShow] = useState('Info');
     const [orderUser, setOrderUser] = useState([]);
     const [status, setStatus] = useState('Pendiente');
+
+    const [adminUser, setAdminUser] = useState('');
 
     const getOrderUser = async () => {
         try {
@@ -46,6 +48,21 @@ function ModalUsr({ user }) {
 
             const response = await axiosInstance.put(`Order/${orderId}/updOrdStatus`, bodyData);
             Swal.fire('Exito', `Se actualizo correctamente el estado a ${bodyData.OrderStatus}`, 'success');
+        } catch (e) {
+            console.log("Error al querer actualizar el estado: ", e);
+        }
+    }
+
+    const handleAdminChange = async (userId, newStatus) => {
+        setAdminUser(newStatus);
+        const dataToSend = {
+            userId: userId,
+            newStatus: newStatus
+        }
+        try {
+            const response = await axiosInstance.put('Users/updUserAdmin', dataToSend);
+            Swal.fire('Exito', `Se actualizo correctamente el estado de administraror`, 'success');
+            fetchUsers();
         } catch (e) {
             console.log("Error al querer actualizar el estado: ", e);
         }
@@ -163,10 +180,12 @@ function ModalUsr({ user }) {
                                         <select
                                             className="form-select"
                                             id="inputGroupSelect01"
-                                            value={user.USR_IS_ADMIN}
+                                            defaultValue={user.USR_IS_ADMIN ? "Si" : "No"} 
+                                            name="userAdmin"
+                                            onChange={(e) => handleAdminChange(user.USR_ID, e.target.value)}
                                         >
-                                            <option value="1">Si</option>
-                                            <option value="2">No</option>
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
                                         </select>
                                     </div>
                                     <div className="input-group">

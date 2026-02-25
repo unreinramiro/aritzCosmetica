@@ -348,6 +348,7 @@ function AdminUsers() {
 
                 <ModalUsr
                     user={selectedUser}
+                    fetchUs={fetchUsers}
                 />
             </div>
         </>
