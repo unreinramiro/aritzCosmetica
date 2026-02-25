@@ -63,8 +63,15 @@ function ModalUsr({ user, fetchUsers }) {
             const response = await axiosInstance.put('Users/updUserAdmin', dataToSend);
             Swal.fire('Exito', `Se actualizo correctamente el estado de administraror`, 'success');
             fetchUsers();
-        } catch (e) {
-            console.log("Error al querer actualizar el estado: ", e);
+        } catch (error) {
+            console.log("Error al querer actualizar el estado: ", error);
+            if (error.response.status === 409) {
+                Swal.fire({
+                    title: 'No se pudo eliminar',
+                    text: error.response.data,
+                    icon: 'error'
+                });
+            } 
         }
     }
 
@@ -180,7 +187,7 @@ function ModalUsr({ user, fetchUsers }) {
                                         <select
                                             className="form-select"
                                             id="inputGroupSelect01"
-                                            defaultValue={user.USR_IS_ADMIN ? "Si" : "No"} 
+                                            value={user.USR_IS_ADMIN ? "Si" : "No"} 
                                             name="userAdmin"
                                             onChange={(e) => handleAdminChange(user.USR_ID, e.target.value)}
                                         >
