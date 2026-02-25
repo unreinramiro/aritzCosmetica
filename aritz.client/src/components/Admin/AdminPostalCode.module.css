@@ -41,6 +41,10 @@
     cursor: pointer;
 }
 
+.delIcon:hover {
+    color: rgb(255, 0, 0);
+}
+
 @media (max-width: 992px) {
     /* Parte de la tabla */
 
@@ -103,9 +107,13 @@
             flex-basis: 40%; /* Ocupa el 40% del ancho */
         }
 
-    .postalCodeTable thead {
-        border-bottom: none;
-    }
+        .postalCodeTable td input{
+            width: 60%;
+        }
+
+        .postalCodeTable thead {
+            border-bottom: none;
+        }
 
     .postalCodeTable td.addPostalCode {
         justify-content: center !important;

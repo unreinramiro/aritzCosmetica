@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import axiosInstance from "../../api/axiosConfig";
 import styles from "./AdminPostalCode.module.css";
 import { FaEdit, FaTimes, FaCheck } from "react-icons/fa";
 import { MdSystemUpdateAlt } from "react-icons/md";
 import { IoMdAddCircle } from "react-icons/io";
+import { MdDeleteForever } from "react-icons/md";
+import Swal from 'sweetalert2'; // Importar SweetAlert2
 
 function AdminPostalCodes() {
 
@@ -79,6 +81,31 @@ function AdminPostalCodes() {
         }
     };
 
+    const handleDelPostalCode = async (postId) => {
+        try {
+            const result = await Swal.fire({
+                title: "Deseas borrar la zona?",
+                text: "Esta accion no puede deshacerse",
+                icon: "warning",
+                confirmButtonText: "Si, eliminar",
+                cancelButtonText: "Cancelar",
+                showCancelButton: true
+            })
+            if (result.isConfirmed) {
+
+                await axiosInstance.delete(`Shipping/deletePostalCode/${postId}`);
+
+                await Swal.fire("¡Eliminado!", "La zona ha sido eliminada.", "success");
+
+                fetchPostalCodes();
+            }
+
+        } catch (e) {
+            console.log("No se pudo borrar la categoria", e);
+            Swal.fire("Error", "Ocurrió un error al intentar eliminar.", "error");
+        }
+    }
+
     return (
         <div className={styles.containerPostalCode} >
             <h1>Codigo Postal</h1>
@@ -141,12 +168,12 @@ function AdminPostalCodes() {
                                             </td>
                                             <td
                                                 data-label="Guardar/Cancelar"
-                                                className="d-flex justify-content-center align-center"
+                                                className="d-flex justify-content-center align-center gap-1"
                                             >
                                                 <FaCheck
                                                     size={20}
                                                     color="green"
-                                                    style={{ cursor: "pointer", marginRight: "10px" }}
+                                                    style={{ cursor: "pointer" }}
                                                     title="Guardar"
                                                     onClick={() => handleSaveClick('update')}
                                                 />
@@ -170,7 +197,7 @@ function AdminPostalCodes() {
                                         <td data-label="MinZipCode">{postalCode.MinZipCode}</td>
                                         <td data-label="MaxZipCode">{postalCode.MaxZipCode}</td>
                                         <td data-label="Precio">${postalCode.Price}</td>
-                                        <td data-label="Editar">
+                                        <td data-label="Editar/Borrar">
                                             <FaEdit
                                                 size={20}
                                                 style={{ cursor: "pointer" }}
@@ -178,6 +205,12 @@ function AdminPostalCodes() {
                                                         handleEditClick(event, postalCode);
                                                         setActiveAddPostal(false);
                                                     }}
+                                                />
+                                            <MdDeleteForever
+                                                    className={styles.delIcon}
+                                                    size={25}
+                                                    style={{ cursor: "pointer" }}
+                                                    onClick={() => handleDelPostalCode(postalCode.Id)}
                                             />
                                         </td>
                                     </tr>

@@ -83,6 +83,18 @@ namespace Aritz.Server.Controllers
             return Ok("Codigo postal agregado correctamente");
         }
 
+        [HttpDelete("deletePostalCode/{postId}")]
+        public async Task<IActionResult> DeletePostalCode(int postId)
+        {
+            var zone = await _context.ShippingZones.FindAsync(postId);
+            if (zone == null) return NotFound("No se encontro la zona");
+
+            _context.ShippingZones.Remove(zone);
+            await _context.SaveChangesAsync();
+
+            return Ok("Codigo postal borrado correctamente");
+        }
+
         [HttpGet("getPostalCodes")]
         public async Task<IActionResult> GetPostalCodes()
         {
