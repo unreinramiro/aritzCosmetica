@@ -82,7 +82,7 @@ function AdminPostalCodes() {
     return (
         <div className={styles.containerPostalCode} >
             <h1>Codigo Postal</h1>
-            <div className={styles.subContaienrPostalCode}>
+            <div className={styles.subContainerPostalCode}>
                 <div>
                     <table className={styles.postalCodeTable}>
                         <thead>
@@ -91,6 +91,7 @@ function AdminPostalCodes() {
                                 <th>Min ZIP Code</th>
                                 <th>Max ZIP Code</th>
                                 <th>Precio</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -250,7 +251,6 @@ function AdminPostalCodes() {
                                 :
                                 (
                                     <tr
-                                        className={`d-flex align-items-center justify-content-center ${styles.addPostalCode}`}
                                         onClick={() => {
                                             setActiveAddPostal(true);
 
@@ -264,11 +264,14 @@ function AdminPostalCodes() {
                                             setEditContactId(0);
                                         }}
                                     >
-                                        <td className="d-flex align-items-center justify-content-center gap-2">
+                                        <td
+                                            className={styles.addPostalCode}
+                                            colSpan={5}
+                                        >
                                             <IoMdAddCircle
                                                 size={30}
                                             />
-                                            Agregar una categoria
+                                            Agregar un codigo postal
                                         </td>
                                     </tr>
                                 )

@@ -7,14 +7,19 @@
     text-align: center;
 }
 
+.subContainerPostalCode {
+    padding: 30px;
+}
+
 .postalCodeTable {
     max-height: 50vh;
     width: 80vw;
     overflow-y: scroll;
+
 }
 
     .postalCodeTable thead {
-        border-bottom: 2px solid #000;
+        border-bottom: 1px solid #eee;
     }
 
         .postalCodeTable thead tr th {
@@ -27,6 +32,7 @@
         font-size: .9rem;
         padding: 20px;
     }
+
 
 .addPostalCode:hover {
     background-color: #e9ecef; /* Efecto hover */
@@ -100,5 +106,17 @@
     .postalCodeTable thead {
         border-bottom: none;
     }
+
+    .postalCodeTable td.addPostalCode {
+        justify-content: center !important;
+        padding-left: 0 !important;
+        width: 100%;
+    }
+
+
+        .postalCodeTable td.addPostalCode::before {
+            content: none !important;
+            flex-basis: 0;
+        }
 
 }
