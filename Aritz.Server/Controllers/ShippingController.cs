@@ -54,8 +54,10 @@ namespace Aritz.Server.Controllers
             var zone = await _context.ShippingZones.FindAsync(zoneDto.Id);
             if (zone == null) return NotFound("Zona no encontrada");
 
+            zone.Name = zoneDto.Name;
             zone.Price = zoneDto.Price;
             zone.MinZipCode = zoneDto.MinZipCode;
+            zone.MaxZipCode = zoneDto.MaxZipCode;
 
             await _context.SaveChangesAsync();
             return Ok("Precio actualizado correctamente");

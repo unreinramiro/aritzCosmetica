@@ -70,7 +70,9 @@ function AdminPostalCodes() {
             });
 
             fetchPostalCodes();
+
             setEditContactId(null);
+            setActiveAddPostal(false);
 
         } catch (error) {
             console.error("Error al guardar", error);
@@ -171,7 +173,10 @@ function AdminPostalCodes() {
                                             <FaEdit
                                                 size={20}
                                                 style={{ cursor: "pointer" }}
-                                                onClick={(event) => handleEditClick(event, postalCode)}
+                                                    onClick={(event) => {
+                                                        handleEditClick(event, postalCode);
+                                                        setActiveAddPostal(false);
+                                                    }}
                                             />
                                         </td>
                                     </tr>
