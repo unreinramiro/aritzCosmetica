@@ -47,9 +47,7 @@ namespace Aritz.Server.Controllers
             });
         }
 
-        // --- EXTRA PARA EL ADMINISTRADOR ---
-
-        // POST: api/Shipping/update (Para que puedas editar precios desde Postman o tu Panel Admin)
+        
         [HttpPost("update")]
         public async Task<IActionResult> UpdatePostalCode([FromBody] ShippingZone zoneDto)
         {
@@ -57,12 +55,31 @@ namespace Aritz.Server.Controllers
             if (zone == null) return NotFound("Zona no encontrada");
 
             zone.Price = zoneDto.Price;
-            // zone.MinZipCode = zoneDto.MinZipCode; // Si quieres editar rangos también
+            zone.MinZipCode = zoneDto.MinZipCode;
 
             await _context.SaveChangesAsync();
             return Ok("Precio actualizado correctamente");
         }
 
+        [HttpPost("addPostalCode")]
+        public async Task<IActionResult> InsertPostalCode([FromBody] ShippingZone zoneDto)
+        {
+            var zone = await _context.ShippingZones.FindAsync(zoneDto.Id);
+            if (zone != null) return NotFound("Ya existe una zona igual");
+
+            var newZone = new ShippingZone
+            {
+                Name = zoneDto.Name,
+                MinZipCode = zoneDto.MinZipCode,
+                MaxZipCode = zoneDto.MaxZipCode,
+                Price = zoneDto.Price
+            };
+
+            _context.ShippingZones.Add(newZone);
+            await _context.SaveChangesAsync();
+
+            return Ok("Codigo postal agregado correctamente");
+        }
 
         [HttpGet("getPostalCodes")]
         public async Task<IActionResult> GetPostalCodes()

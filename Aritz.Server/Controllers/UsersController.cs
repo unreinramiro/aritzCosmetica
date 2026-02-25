@@ -38,17 +38,17 @@ namespace Aritz.Server.Controllers
 
             if (user == null) { return NotFound("No se encontro el usuario"); }
 
-            // Hago validacion para que al menos quede un usuario como administrador
-            var almostOneUserAdmin = await _context.Users
-                                                   .CountAsync(u => u.USR_IS_ADMIN == true);
-
-            if(almostOneUserAdmin <= 1 && user.USR_IS_ADMIN == true)
-            {
-                return Conflict("Debe quedar al menos un administrador.");
-            }
-
             if (userAdminDto.newStatus == "No")
             {
+                // Hago validacion para que al menos quede un usuario como administrador
+                var almostOneUserAdmin = await _context.Users
+                                                       .CountAsync(u => u.USR_IS_ADMIN == true);
+
+                if (almostOneUserAdmin <= 1 && user.USR_IS_ADMIN == true)
+                {
+                    return Conflict("Debe quedar al menos un administrador.");
+                }
+
                 user.USR_IS_ADMIN = false;
                 await _context.SaveChangesAsync();
 

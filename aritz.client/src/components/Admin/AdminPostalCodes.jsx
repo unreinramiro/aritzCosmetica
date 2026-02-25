@@ -3,18 +3,20 @@ import axiosInstance from "../../api/axiosConfig";
 import styles from "./AdminPostalCode.module.css";
 import { FaEdit, FaTimes, FaCheck } from "react-icons/fa";
 import { MdSystemUpdateAlt } from "react-icons/md";
+import { IoMdAddCircle } from "react-icons/io";
 
 function AdminPostalCodes() {
 
     const [postalCodes, setPostalCodes] = useState([]);
     const [editContactId, setEditContactId] = useState(null);
-    const [editMode, setToggleEditMode] = useState(0);
     const [editFormData, setEditFormData] = useState({
         Name: "",
         MinZipCode: "",
         MaxZipCode: "",
         Price: ""
     });
+
+    const [activeAddPostal, setActiveAddPostal] = useState(false);
 
     useEffect(() => {
         fetchPostalCodes();
@@ -59,9 +61,10 @@ function AdminPostalCodes() {
         setEditContactId(null);
     };
 
-    const handleSaveClick = async () => {
+    const handleSaveClick = async (insertUpdate) => {
+        console.log(insertUpdate);
         try {
-            await axiosInstance.post('Shipping/update', {
+            await axiosInstance.post(`Shipping/${insertUpdate}`, {
                 Id: editContactId,
                 ...editFormData
             });
@@ -142,7 +145,7 @@ function AdminPostalCodes() {
                                                     color="green"
                                                     style={{ cursor: "pointer", marginRight: "10px" }}
                                                     title="Guardar"
-                                                    onClick={handleSaveClick}
+                                                    onClick={() => handleSaveClick('update')}
                                                 />
                                                 <FaTimes
                                                     size={20}
@@ -151,7 +154,7 @@ function AdminPostalCodes() {
                                                     onClick={handleCancelClick}
                                                     title="Cancelar"
                                                 />
-                                        </td>
+                                            </td>
                                     </tr>
                                 )
                                     :
@@ -168,14 +171,106 @@ function AdminPostalCodes() {
                                             <FaEdit
                                                 size={20}
                                                 style={{ cursor: "pointer" }}
-                                                    onClick={(event) => handleEditClick(event, postalCode)}
+                                                onClick={(event) => handleEditClick(event, postalCode)}
                                             />
                                         </td>
                                     </tr>
                                 )
                             ))}
+                            {activeAddPostal
+                                ?
+                                (
+                                    <tr>
+                                        <td data-label="Provincia">
+                                            <input
+                                                type="Text"
+                                                name="Name"
+                                                className="form-control"
+                                                placeholder="Provincia"
+                                                value={editFormData.Name}
+                                                onChange={handleEditFormChange}
+                                            />
+                                        </td>
+                                        <td data-label="MinZipCode">
+                                            <input
+                                                type="Number"
+                                                name="MinZipCode"
+                                                className="form-control"
+                                                placeholder="MinZipCode"
+                                                value={editFormData.MinZipCode}
+                                                onChange={handleEditFormChange}
+                                            />
+                                        </td>
+                                        <td data-label="MaxZipCode">
+                                            <input
+                                                type="Number"
+                                                name="MaxZipCode"
+                                                className="form-control"
+                                                placeholder="MaxZipCode"
+                                                value={editFormData.MaxZipCode}
+                                                onChange={handleEditFormChange}
+                                            />
+                                        </td>
+                                        <td data-label="Precio">
+                                            <input
+                                                type="Number"
+                                                name="Price"
+                                                className="form-control"
+                                                placeholder="Precio"
+                                                value={editFormData.Price}
+                                                onChange={handleEditFormChange}
+                                            />
+                                        </td>
+                                        <td
+                                            data-label="Guardar/Cancelar"
+                                            className="d-flex justify-content-center align-center"
+                                        >
+                                            <FaCheck
+                                                size={20}
+                                                color="green"
+                                                style={{ cursor: "pointer", marginRight: "10px" }}
+                                                title="Guardar"
+                                                onClick={() => handleSaveClick('addPostalCode')}
+                                            />
+                                            <FaTimes
+                                                size={20}
+                                                color="red"
+                                                style={{ cursor: "pointer" }}
+                                                onClick={() => setActiveAddPostal(false)}
+                                                title="Cancelar"
+                                            />
+                                        </td>
+                                    </tr>
+                                )
+                                :
+                                (
+                                    <tr
+                                        className={`d-flex align-items-center justify-content-center ${styles.addPostalCode}`}
+                                        onClick={() => {
+                                            setActiveAddPostal(true);
+
+                                            setEditFormData({
+                                                Name: "",
+                                                MinZipCode: "",
+                                                MaxZipCode: "",
+                                                Price: ""
+                                            });
+
+                                            setEditContactId(0);
+                                        }}
+                                    >
+                                        <td className="d-flex align-items-center justify-content-center gap-2">
+                                            <IoMdAddCircle
+                                                size={30}
+                                            />
+                                            Agregar una categoria
+                                        </td>
+                                    </tr>
+                                )
+                            }
                         </tbody>
                     </table>
+
                 </div>
             </div>
         </div>

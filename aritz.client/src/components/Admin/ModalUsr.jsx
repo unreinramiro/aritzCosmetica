@@ -6,7 +6,7 @@ import { FaRegSadTear } from "react-icons/fa";
 import Swal from 'sweetalert2'; // Importar SweetAlert2
 import { formatDate } from "../../utils/utils"
 
-function ModalUsr({ user, fetchUsers }) {
+function ModalUsr({ user }) {
 
     const [dataShow, setDataShow] = useState('Info');
     const [orderUser, setOrderUser] = useState([]);
@@ -62,7 +62,6 @@ function ModalUsr({ user, fetchUsers }) {
         try {
             const response = await axiosInstance.put('Users/updUserAdmin', dataToSend);
             Swal.fire('Exito', `Se actualizo correctamente el estado de administraror`, 'success');
-            fetchUsers();
         } catch (error) {
             console.log("Error al querer actualizar el estado: ", error);
             if (error.response.status === 409) {
@@ -71,7 +70,9 @@ function ModalUsr({ user, fetchUsers }) {
                     text: error.response.data,
                     icon: 'error'
                 });
-            } 
+            } else {
+                console.error("Ocurrió un error inesperado");
+            }
         }
     }
 
