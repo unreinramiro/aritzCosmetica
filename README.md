@@ -49,11 +49,11 @@
 <!-- Usa una tabla para organizar las imágenes y que no queden gigantes -->
 | Home Page | Carrito de Compras |
 |:---------:|:------------------:|
-| <img src="./home.png" width="400"> | <img src="./cart.png" width="400"> |
+| <img src="./assets/home.png" width="400"> | <img src="./assets/cart.png" width="400"> |
 
 | Panel Admin | Detalle Producto |
 |:-----------:|:----------------:|
-| <img src="URL_IMAGEN_3.png" width="400"> | <img src="URL_IMAGEN_4.png" width="400"> |
+| <img src="/assets/adminProducts.png" width="400"> | <img src="/assets/products.png" width="400"> |
 
 ## 🛠 Tecnologías
 
