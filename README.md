@@ -49,7 +49,7 @@
 <!-- Usa una tabla para organizar las imágenes y que no queden gigantes -->
 | Home Page | Carrito de Compras |
 |:---------:|:------------------:|
-| <img src="URL_IMAGEN_1.png" width="400"> | <img src="URL_IMAGEN_2.png" width="400"> |
+| <img src="./home.png" width="400"> | <img src="./cart.png" width="400"> |
 
 | Panel Admin | Detalle Producto |
 |:-----------:|:----------------:|
