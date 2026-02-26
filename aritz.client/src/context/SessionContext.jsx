@@ -9,6 +9,7 @@ const SessionContext = createContext();
 
 // Este será tu componente proveedor para envolver toda la app
 export const SessionProvider = ({ children }) => {
+    const [isLoading, setIsLoading] = useState(true); 
     const [isLoggedIn, setIsLoggedIn] = useState(false); // Estado de autenticación
     const [screenLogIn, setScreenLogIn] = useState(true);
     const [isRegister, setIsRegister] = useState(false);
@@ -36,14 +37,25 @@ export const SessionProvider = ({ children }) => {
     const [AdmUsrPrd, setAdmUsrPrd] = useState('Productos');
 
     useEffect(() => {
+
         const token = localStorage.getItem('authToken');
         const storedUserName = localStorage.getItem('userName');
         const storedUserId = localStorage.getItem('userId');
+        const storedIsAdmin = localStorage.getItem('isAdmin');
+
         if (token && storedUserName) {
             setIsLoggedIn(true);
             setUserName(storedUserName);
             setUserId(parseInt(storedUserId));
+
+            if (storedIsAdmin === 'true') setIsAdmin(true);
+        } else {
+            setIsLoggedIn(false);
+            setIsAdmin(false);
         }
+
+        setIsLoading(false);
+
     }, []);
 
     useEffect(() => {
@@ -239,6 +251,7 @@ export const SessionProvider = ({ children }) => {
 
     // Valor que proporciona el contexto
     const value = {
+        isLoading,
         isLoggedIn,
         setIsLoggedIn,
         screenLogIn,
