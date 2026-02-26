@@ -42,7 +42,7 @@
 
 ## 🚀 Sobre el Proyecto
 
-(Aquí describe brevemente qué hace tu app. Ej: "Aritz es un e-commerce diseñado para la venta de cosmética natural, permitiendo gestión de usuarios, carrito de compras, panel de administración y pasarela de pagos con MercadoPago...")
+Aritz es un e-commerce diseñado para la venta de cosmética natural, permitiendo gestión de usuarios, carrito de compras, panel de administración y pasarela de pagos con MercadoPago.
 
 ## 📸 Capturas de Pantalla
 
