@@ -46,7 +46,6 @@ const Header = () => {
             console.log('Categorias obtenidas:', response.data);
         } catch (err) {
             console.error("Error al obtener los productos", err); // Muestra el error en consola
-            setError(err.message); // Guarda el mensaje de error en el estado
         }
     }
 

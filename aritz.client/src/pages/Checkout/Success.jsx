@@ -37,7 +37,7 @@ function Success() {
 
     useEffect(() => {
         console.log("PaymentStatus:", paymentStatus, "Flag: ", isProcessing, "TotalSumCart: ", totalSumCart);
-        if (paymentStatus === 'approved' && userId && !isProcessing && !processedRef.curren) {
+        if (paymentStatus === 'approved' && userId && !isProcessing && !processedRef.current) {
             processedRef.current = true; // Marcamos como procesado
             handleOrderConfirm();
         }
@@ -64,10 +64,15 @@ function Success() {
 
             const totalFinal = subTotalCarrito + costoEnvioReal;
 
+            console.log("Datos a enviar al BACKEND: ");
+            console.log("User ID: ", userId);
+            console.log("Monto total: ", totalFinal);
+
             const orderResponse = await axiosInstance.post("Order/confirmOrder", {
                 userId,
                 paymentMethod: 1,
-                totalSumCart: totalFinal
+                totalSumCart: totalFinal,
+                CartItems: cartItems
             });
 
             const newOrderId = orderResponse.data.OrderId;

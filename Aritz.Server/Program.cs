@@ -9,6 +9,10 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// --- CÓDIGO TEMPORAL DE DEBUG (BORRAR DESPUÉS) ---
+var connString = builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine($"Cadena leída: '{connString}'");
+
 // Configura CORS
 builder.Services.AddCors(options =>
 {

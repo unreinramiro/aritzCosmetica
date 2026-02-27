@@ -123,19 +123,27 @@ namespace Aritz.Server.Controllers
                 return NotFound(new { Message = "El carrito está vacío." });
             }
 
-            var orderDetails = cart.Items.Select(i => new OrderDetails
+            try
             {
-                ODD_ORD_ID = dto.OrderId,
-                ODD_PRD_ID = i.CAI_PRD_ID,
-                ODD_QUANTITY = i.CAI_QUANTITY,
-                ODD_TOTAL_PRICE = i.CAI_TOTAL_PRICE
-            }).ToList();
+                var orderDetails = cart.Items.Select(i => new OrderDetails
+                {
+                    ODD_ORD_ID = dto.OrderId,
+                    ODD_PRD_ID = i.CAI_PRD_ID,
+                    ODD_QUANTITY = i.CAI_QUANTITY,
+                    ODD_TOTAL_PRICE = i.CAI_TOTAL_PRICE
+                }).ToList();
 
-            _context.OrderDetails.AddRange(orderDetails);
-            _context.CartItems.RemoveRange(cart.Items); // Limpiar el carrito
-            await _context.SaveChangesAsync();
+                _context.OrderDetails.AddRange(orderDetails);
+                _context.CartItems.RemoveRange(cart.Items); // Limpiar el carrito
+                await _context.SaveChangesAsync();
 
-            return Ok("Se inserto en la Order Details correctamente");
+                return Ok("Se inserto en la Order Details correctamente");
+            }
+            catch (Exception)
+            {
+                return NotFound(new { Message = "No se pudo insertar la orden." });
+            }
+
         }
 
         [HttpGet("{userId}")]

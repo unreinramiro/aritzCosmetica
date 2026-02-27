@@ -122,3 +122,4 @@ wwwroot\images\prod_b08d2be8-2fa3-46a1-ad33-b7b46cc96a0c.jpeg
 wwwroot\uploads\receipts\receipt_49_eda6f650-e32f-4b0d-b4d3-6c965cc402db.pdf
 wwwroot\uploads\receipts\receipt_49_560d8d7e-cfc9-415a-bad5-1cf3a7c75c94.jpeg
 wwwroot\uploads\receipts\receipt_49_4adc40ab-2812-4e9f-941e-5a505eb16b35.jpg
+wwwroot\uploads\receipts\receipt_50_0500b7fc-b260-409c-b8e5-3d134f47856d.png
