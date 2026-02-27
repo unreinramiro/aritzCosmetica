@@ -67,7 +67,7 @@ function Home() {
                 viewport={{ once: true, amount: 0.3 }} // once: true (solo se anima 1 vez), amount: 0.3 (espera a ver el 30% del componente)
                 transition={{ duration: 0.8, ease: "easeOut" }} // Dura 0.8 segundos
             >
-                <h1>¿Por que la gente nos elige?</h1>
+                <h1>Calidad en lo nuestro</h1>
                 <div className={`d-flex gap-3 text-start ${styles.cardsContainer}`}>
                     <CardHome
                         key={1}

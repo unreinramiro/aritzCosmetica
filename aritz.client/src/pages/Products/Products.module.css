@@ -50,6 +50,7 @@
 
 .cartaImgContainer {
     justify-content: center;
+    overflow: hidden;
 }
 
     .cartaImgContainer img {
@@ -57,13 +58,18 @@
         aspect-ratio: 2/3; /* Mantiene proporción rectangular (o usa 1/1 para cuadrado) */
         object-fit: cover;
         object-position: top;
+        transition: transform 0.3s ease;
     }
 
-    .cuerpoCarta {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
+        .cartaImgContainer img:hover {
+            transform: scale(1.1);
+        }
+
+.cuerpoCarta {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 
 .productTitle {
     cursor: pointer;

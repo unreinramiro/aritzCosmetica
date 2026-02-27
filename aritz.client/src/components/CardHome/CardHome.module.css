@@ -1,16 +1,41 @@
 .cardBig{
     width: 100%;
+    height: 100%;
     border: none !important;
+    position: relative;
+    overflow: hidden;
 }
 
-.cardBig img{
-    object-fit: cover;
-    width: 100%;
+    .cardBig img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.3s ease;
+    }
+
+        .cardBig img:hover {
+            transform: scale(1.1);
+        }
+
+.cardBigSubContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    background-color: antiquewhite;
+    opacity: 70%;
     height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 70%;
+    padding: 10px;
 }
+
 
 @media (max-width: 992px) {
-
-
-
+    .cardBig {
+        width: 100%;
+        border: none !important;
+        position: relative;
+        overflow: hidden;
+    }
 }
