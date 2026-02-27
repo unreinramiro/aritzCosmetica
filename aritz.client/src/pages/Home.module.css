@@ -3,6 +3,7 @@
     flex-direction: column;
     justify-content: center;
     width: 100vw;
+    height: 90vh;
     padding: 70px;
     text-align: center;
     gap: 10px;
@@ -11,23 +12,24 @@
     .cardBigContainer h1 {
         font-family: "Montserrat", sans-serif;
         font-size: 2rem;
-        color: rgb(128, 98, 51); /* Tu color de marca */
+        color: rgb(128, 98, 51);
     }
 
 .cardsContainer {
-    height: 70vh;
+    height: 100%;
 }
 
 @media (max-width: 992px) {
     .cardBigContainer {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 100vw;
+        min-height: auto;
+        height: auto;
         padding: 30px;
-        text-align: center;
-        gap: 10px;
     }
+
+    .cardBigContainer h1{
+        font-size: 1.5rem;
+    }
+
 
     .cardsContainer {
         height: auto;
