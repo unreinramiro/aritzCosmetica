@@ -67,3 +67,11 @@ Aritz es un e-commerce diseñado para la venta de cosmética natural, permitiend
 1. Clonar el repositorio
    ```sh
    git clone https://github.com/TU_USUARIO/TU_REPO.git
+
+## 🗄️ Base de Datos
+
+El proyecto utiliza Entity Framework Core Code First.
+1.  Configura tu cadena de conexión en `appsettings.json`.
+2.  Abre la consola en la carpeta del proyecto backend.
+3.  Ejecuta: `dotnet ef database update`.
+    *   Esto creará automáticamente la base de datos y todas las tablas.
