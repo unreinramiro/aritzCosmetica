@@ -66,7 +66,7 @@ Aritz es un e-commerce diseñado para la venta de cosmética natural, permitiend
 
 1. Clonar el repositorio
    ```sh
-   git clone https://github.com/TU_USUARIO/TU_REPO.git
+   git clone https://github.com/unreinramiro/aritzCosmetica.git
 
 ## 🗄️ Base de Datos
 
