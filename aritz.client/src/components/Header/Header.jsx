@@ -42,6 +42,7 @@ const Header = () => {
     const fetchCategories = async () => {
         try {
             const response = await axiosInstance.get('Products/by-category'); // Realiza una solicitud GET a /api/products
+
             setCategories(response.data); // Actualiza el estado con los datos obtenidos
             console.log('Categorias obtenidas:', response.data);
         } catch (err) {
@@ -50,9 +51,9 @@ const Header = () => {
     }
 
     const processedCategories = categories.map(cat => {
-
+        // CORRECCIÓN AQUÍ:
         const validProducts = cat.Products.filter(prod =>
-            prod.PRD_QUANTITY > 0 && prod.PRD_IS_ACTIVE !== 0
+            prod.PRD_QUANTITY > 0 && prod.PRD_IS_ACTIVE === true
         );
 
         return { ...cat, Products: validProducts };

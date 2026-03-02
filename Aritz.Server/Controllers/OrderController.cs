@@ -67,6 +67,11 @@ namespace Aritz.Server.Controllers
                             return BadRequest($"Stock insuficiente para el producto: {product.PRD_NAME}. Stock actual: {product.PRD_QUANTITY}");
                         }
 
+                        if (product.PRD_QUANTITY <= 0)
+                        {
+                            product.PRD_IS_ACTIVE = false;
+                        }
+
                         // Restamos
                         product.PRD_QUANTITY -= carItem.CAI_QUANTITY;
                         _context.Products.Update(product);

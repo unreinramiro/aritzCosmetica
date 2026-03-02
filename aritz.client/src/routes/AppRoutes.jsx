@@ -28,6 +28,7 @@ const AppRoutes = () => {
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/product" element={<Product />} />
+            <Route path="/product/product-detail/:id" element={<ProductDetail />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Auth />} />
 
@@ -39,7 +40,6 @@ const AppRoutes = () => {
                 <Route path="/checkout/pay-success" element={<Success />} />
                 <Route path="/checkout/pay-failure" element={<Failure />} />
                 <Route path="/checkout/pay-pending" element={<Pending />} />
-                <Route path="/product/product-detail/:id" element={<ProductDetail />} />
                 <Route path="/user/my-requests" element={<MyRequests />} />
                 <Route path="/user/my-requests/my-order/:id" element={<MyRequestDetail />} />
                 <Route path="/user/my-account" element={<MyAccount />} />

@@ -103,7 +103,8 @@ namespace Aritz.Server.Controllers
                             PRD_DESCRIPTION = p.PRD_DESCRIPTION,
                             PRD_IMAGE = p.PRD_IMAGE,
                             PRD_PRICE = p.PRD_PRICE,
-                            PRD_QUANTITY = p.PRD_QUANTITY
+                            PRD_QUANTITY = p.PRD_QUANTITY,
+                            PRD_IS_ACTIVE = p.PRD_IS_ACTIVE
                         }).ToList()
                     })
                     .ToListAsync();
@@ -210,6 +211,11 @@ namespace Aritz.Server.Controllers
             if (products.PRD_IS_ACTIVE != prdDto.PRD_IS_ACTIVE)
             {
                 products.PRD_IS_ACTIVE = prdDto.PRD_IS_ACTIVE;
+                updated = true;
+            }
+            if (products.PRD_QUANTITY <= 0)
+            {
+                products.PRD_IS_ACTIVE = false;
                 updated = true;
             }
 
