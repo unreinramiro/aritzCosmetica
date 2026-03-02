@@ -6,14 +6,11 @@ import path from 'path';
 import child_process from 'child_process';
 import { env } from 'process';
 
-// Detectamos si estamos en producción (Vercel sets NODE_ENV=production)
-const isDevelopment = env.NODE_ENV === 'development';
-
-// Variables para guardar la configuración de HTTPS
+// Configuración por defecto (vacía para producción)
 let httpsConfig = undefined;
 
-// SOLO EJECUTAR LA LÓGICA DE CERTIFICADOS SI ESTAMOS EN DESARROLLO (TU PC)
-if (isDevelopment) {
+// INTENTAMOS CARGAR CERTIFICADOS SOLO SI ESTAMOS EN LOCAL (DONDE EXISTE DOTNET)
+try {
     const baseFolder =
         env.APPDATA !== undefined && env.APPDATA !== ''
             ? `${env.APPDATA}/ASP.NET/https`
@@ -28,29 +25,28 @@ if (isDevelopment) {
     }
 
     if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
-        // Usamos try-catch para evitar que explote si no tienes dotnet instalado (por seguridad)
-        try {
-            child_process.spawnSync('dotnet', [
-                'dev-certs',
-                'https',
-                '--export-path',
-                certFilePath,
-                '--format',
-                'Pem',
-                '--no-password',
-            ], { stdio: 'inherit', });
-        } catch (e) {
-            console.warn("No se pudo generar el certificado dotnet, continuando sin HTTPS local...");
-        }
+        // En Vercel esto fallará porque no hay 'dotnet', así que lo atrapamos
+        child_process.spawnSync('dotnet', [
+            'dev-certs',
+            'https',
+            '--export-path',
+            certFilePath,
+            '--format',
+            'Pem',
+            '--no-password',
+        ], { stdio: 'inherit', });
     }
 
-    // Si los archivos existen, configuramos HTTPS
+    // Si llegamos aquí y existen los archivos, cargamos la config
     if (fs.existsSync(certFilePath) && fs.existsSync(keyFilePath)) {
         httpsConfig = {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),
         };
     }
+} catch (e) {
+    // Si falla algo (ej: no hay dotnet en Vercel), ignoramos el error y seguimos sin HTTPS local
+    console.warn("Advertencia: No se pudieron cargar certificados SSL locales. (Esto es normal en Vercel/Netlify)");
 }
 
 const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
@@ -69,17 +65,9 @@ export default defineConfig({
             '^/weatherforecast': {
                 target,
                 secure: false
-            },
-            // AGREGADO: Probablemente necesites esto para tus llamadas a la API local
-            '^/api': {
-                target,
-                secure: false
             }
         },
-        port: parseInt(env.DEV_SERVER_PORT || '50833'),
-        // Aquí pasamos la configuración condicional:
-        // Si es Vercel, httpsConfig será undefined (HTTP normal, Vercel pone el HTTPS encima)
-        // Si es tu PC, usará los certificados de .NET
-        https: httpsConfig
+        port: 5173,
+        https: httpsConfig // Aquí pasamos la config (undefined en Vercel, real en Local)
     }
 })
