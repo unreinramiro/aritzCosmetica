@@ -9,6 +9,21 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// 1. LEER EL TOKEN (Busca en appsettings y en user-secrets automáticamente)
+var mpAccessToken = builder.Configuration["MercadoPago:AccessToken"];
+
+if (string.IsNullOrEmpty(mpAccessToken))
+{
+    // Esto te avisará apenas inicies la app si falta la clave, en lugar de fallar cuando alguien paga.
+    throw new Exception("¡Falta el AccessToken de MercadoPago! Revisa tus User Secrets.");
+}
+
+Console.WriteLine($"Access Toekn: '{mpAccessToken}'");
+
+// 2. CONFIGURAR MERCADOPAGO GLOBALMENTE
+MercadoPago.Config.MercadoPagoConfig.AccessToken = mpAccessToken;
+
+
 // --- CÓDIGO TEMPORAL DE DEBUG (BORRAR DESPUÉS) ---
 var connString = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine($"Cadena leída: '{connString}'");

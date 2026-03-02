@@ -1,8 +1,10 @@
 ﻿using Aritz.Server.Data;
 using MercadoPago.Client.Preference;
 using MercadoPago.Config;
+using MercadoPago.Error;
 using MercadoPago.Resource.Preference;
 using Microsoft.AspNetCore.Mvc;
+using MercadoPago.Client.Payment;
 
 namespace Aritz.Server.Controllers
 {
@@ -10,15 +12,11 @@ namespace Aritz.Server.Controllers
     [ApiController]
     public class MercadoPagoController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
         private readonly AritzDbContext _context;
 
-        public MercadoPagoController(IConfiguration configuration, AritzDbContext context)
+        public MercadoPagoController(AritzDbContext context)
         {
-            _configuration = configuration;
             _context = context;
-            // Inicializar MercadoPago con tu Access Token
-            MercadoPagoConfig.AccessToken = _configuration["MercadoPago:AccessToken"];
         }
 
         [HttpPost("create_preference")]
@@ -73,6 +71,19 @@ namespace Aritz.Server.Controllers
 
                 // 4. Devolver el ID al frontend
                 return Ok(new { preferenceId = preference.Id });
+            }
+            catch (MercadoPagoApiException mpEx)
+            {
+                // Aquí está la verdad de la milanesa
+                Console.WriteLine($"Error de MercadoPago: {mpEx.Message}");
+                Console.WriteLine($"Status Code: {mpEx.StatusCode}");
+
+                if (mpEx.ApiError != null)
+                {
+                    Console.WriteLine($"Error Detallado: {mpEx.ApiError.Message}");
+                }
+
+                return BadRequest(new { Error = mpEx.ApiError?.Message ?? "Error desconocido de MP" });
             }
             catch (Exception ex)
             {

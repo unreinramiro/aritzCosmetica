@@ -13,8 +13,8 @@ import Swal from 'sweetalert2';
 import { useLocation } from 'react-router'
 import { formatPrice } from '../../utils/utils';
 
-initMercadoPago('TEST-aa2427a9-e156-4f55-b4c0-d9c5e9b5774c', { locale: 'es-AR' });
-
+const publicKey = import.meta.env.VITE_MP_PUBLIC_KEY;
+initMercadoPago(publicKey, { locale: 'es-AR' });
 function PaymentInfo() {
     const { paymentMethod, setPaymentMethod, zipPrice } = useCheckout();
     const navigate = useNavigate();
