@@ -5,6 +5,7 @@ import imagen2 from '../../assets/images/imagenCarrousel2.jpg';
 import imagen3 from '../../assets/images/imagenCarrousel3.jpg';
 import styles from './Carroussel.module.css'; // Importa el CSS personalizado
 import { NavLink } from "react-router-dom";
+import videoCremas from '../../assets/videos/videoCremas.mp4'; 
 
 function Carroussel() {
 
@@ -46,7 +47,7 @@ function Carroussel() {
                         autoPlay
                         playsInline
                         muted
-                        src="https://localhost:7273/images/videoCremas.mp4"
+                        src={videoCremas}
                     >
                         <source src="https://localhost:7273/images/videoCremas.mp4" type="video/mp4" media="(min-width: 768px)" />
                         <source src="https://localhost:7273/images/videoCremas.mp4" type="video/mp4" media="(min-width: 768px)" />
