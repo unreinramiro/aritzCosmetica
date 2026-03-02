@@ -1,4 +1,4 @@
-import styles from "./CardHome.Module.css";
+import styles from "./CardHome.module.css";
 function CardHome({img, title, description}) {
     return (
         <div className={styles.cardBig}>
