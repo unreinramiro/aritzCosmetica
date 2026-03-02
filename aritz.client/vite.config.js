@@ -6,47 +6,54 @@ import path from 'path';
 import child_process from 'child_process';
 import { env } from 'process';
 
-// Configuración por defecto (vacía para producción)
+// VERIFICACIÓN CLAVE: ¿Estamos en Producción (Vercel)?
+// Si NODE_ENV es production, asumimos que no necesitamos certificados locales.
+const isProduction = env.NODE_ENV === 'production';
+
 let httpsConfig = undefined;
 
-// INTENTAMOS CARGAR CERTIFICADOS SOLO SI ESTAMOS EN LOCAL (DONDE EXISTE DOTNET)
-try {
-    const baseFolder =
-        env.APPDATA !== undefined && env.APPDATA !== ''
-            ? `${env.APPDATA}/ASP.NET/https`
-            : `${env.HOME}/.aspnet/https`;
+// SOLO entramos a esta lógica si NO es producción
+if (!isProduction) {
+    try {
+        const baseFolder =
+            env.APPDATA !== undefined && env.APPDATA !== ''
+                ? `${env.APPDATA}/ASP.NET/https`
+                : `${env.HOME}/.aspnet/https`;
 
-    const certificateName = "aritz.client";
-    const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
-    const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
+        const certificateName = "aritz.client";
+        const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
+        const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
-    if (!fs.existsSync(baseFolder)) {
-        fs.mkdirSync(baseFolder, { recursive: true });
+        if (!fs.existsSync(baseFolder)) {
+            fs.mkdirSync(baseFolder, { recursive: true });
+        }
+
+        if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
+            // Intentamos crear el certificado SOLO si tenemos dotnet (Entorno Local)
+            try {
+                child_process.spawnSync('dotnet', [
+                    'dev-certs',
+                    'https',
+                    '--export-path',
+                    certFilePath,
+                    '--format',
+                    'Pem',
+                    '--no-password',
+                ], { stdio: 'inherit', });
+            } catch (innerError) {
+                // Si falla el spawn (porque no hay dotnet), no hacemos nada.
+            }
+        }
+
+        if (fs.existsSync(certFilePath) && fs.existsSync(keyFilePath)) {
+            httpsConfig = {
+                key: fs.readFileSync(keyFilePath),
+                cert: fs.readFileSync(certFilePath),
+            };
+        }
+    } catch (e) {
+        console.warn("Saltando configuración HTTPS local debido a un error (esperado en producción).");
     }
-
-    if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
-        // En Vercel esto fallará porque no hay 'dotnet', así que lo atrapamos
-        child_process.spawnSync('dotnet', [
-            'dev-certs',
-            'https',
-            '--export-path',
-            certFilePath,
-            '--format',
-            'Pem',
-            '--no-password',
-        ], { stdio: 'inherit', });
-    }
-
-    // Si llegamos aquí y existen los archivos, cargamos la config
-    if (fs.existsSync(certFilePath) && fs.existsSync(keyFilePath)) {
-        httpsConfig = {
-            key: fs.readFileSync(keyFilePath),
-            cert: fs.readFileSync(certFilePath),
-        };
-    }
-} catch (e) {
-    // Si falla algo (ej: no hay dotnet en Vercel), ignoramos el error y seguimos sin HTTPS local
-    console.warn("Advertencia: No se pudieron cargar certificados SSL locales. (Esto es normal en Vercel/Netlify)");
 }
 
 const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
@@ -68,6 +75,7 @@ export default defineConfig({
             }
         },
         port: 5173,
-        https: httpsConfig // Aquí pasamos la config (undefined en Vercel, real en Local)
+        // Si httpsConfig es undefined (en Vercel), Vite usa HTTP normal (correcto para Vercel)
+        https: httpsConfig
     }
 })
