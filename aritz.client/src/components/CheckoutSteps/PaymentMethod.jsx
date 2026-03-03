@@ -18,9 +18,9 @@ function PaymentInfo() {
     const location = useLocation();
     const { totalSumCart } = useCart();
 
-    if (totalSumCart < 20000) {
-        navigate('/cart');
-    }
+    //if (totalSumCart < 20000) {
+    //    navigate('/cart');
+    //}
 
     setPageCheckout(location);
 

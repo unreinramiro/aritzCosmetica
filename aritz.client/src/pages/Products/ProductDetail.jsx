@@ -144,7 +144,7 @@ function ProductDetail() {
                             {displayGallery.map((img, index) => (
 
                                 <img
-                                    src={`https://localhost:7273/images/${img.IMG_URL}`}
+                                    src={`${import.meta.env.VITE_API_URL}/images/${img.IMG_URL}`}
                                     key={index}
                                     onClick={() => handleImageSwap(img.IMG_URL, index)}
                                 />

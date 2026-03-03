@@ -29,9 +29,9 @@ function PaymentInfo() {
 
     setPageCheckout(location);
 
-    if (totalSumCart < 20000 && !loading) {
-        navigate('/cart');
-    }
+    //if (totalSumCart < 20000 && !loading) {
+    //    navigate('/cart');
+    //}
 
     useEffect(() => {
         fetchCart();

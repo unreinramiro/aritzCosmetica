@@ -66,9 +66,9 @@ function ShippingInfo() {
         }
     }
 
-    if (totalSumCart < 20000) {
-        navigate('/cart');
-    }
+    //if (totalSumCart < 20000) {
+    //    navigate('/cart');
+    //}
 
     setPageCheckout(location);
 

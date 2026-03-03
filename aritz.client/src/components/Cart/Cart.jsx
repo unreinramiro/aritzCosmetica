@@ -28,14 +28,14 @@ function Carrito() {
     setPageCheckout(location);
 
     const handleProceedToCheckout = () => {
-        if (totalSumCart < 20000) {
-            Swal.fire({
-                title: 'Debe superar el monto de $20.000 para proceder con la compra',
-                icon: 'error',
-                confirmButtonText: 'Ok'
-            })
-            return;
-        }
+        //if (totalSumCart < 20000) {
+        //    Swal.fire({
+        //        title: 'Debe superar el monto de $20.000 para proceder con la compra',
+        //        icon: 'error',
+        //        confirmButtonText: 'Ok'
+        //    })
+        //    return;
+        //}
         navigate("/checkout/shipping-info"); // Redirige al paso 1 del checkout
     };
 
