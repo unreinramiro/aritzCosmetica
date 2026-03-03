@@ -178,7 +178,7 @@ function Modal({ productName, productCategory, productImg, productPrice, product
                                 <label>
                                     <b>Imagen Principal</b>
 
-                                    <img src={`https://localhost:7273/images/${productImg}`} />
+                                    <img src={`${import.meta.env.VITE_API_URL}/images/${productImg}`} />
                                 </label>
                                 <input
                                     type="file"

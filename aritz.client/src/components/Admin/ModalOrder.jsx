@@ -53,7 +53,7 @@ function ModalOrder({ orderId, orderTotalAmount, orderStatus }) {
                                 key={or.ORD_ID}
                             >
                                 <div className={styles.orderDetailImgContainer}>
-                                    <img src={`https://localhost:7273/images/${or.ProductImage}`} />
+                                    <img src={`${import.meta.env.VITE_API_URL}/images/${or.ProductImage}`} />
                                 </div>
                                 <div className={`d-flex flex-column justify-content-center ${styles.infoOrderContainer}`}>
                                     <div>
