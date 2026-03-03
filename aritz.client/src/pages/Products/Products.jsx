@@ -20,7 +20,7 @@ function Products() {
     const [products, setProducts] = useState([]);
     const { userId } = useSession();
     const [loading, setLoading] = useState(true); // Estado para controlar el spinner o carga
-    const [loadingAddCart, setLoadingAddCart] = useState(false); // Estado para controlar la carga al agregar al carrito]
+    const [loadingProductId, setLoadingProductId] = useState(null); // Estado para controlar la carga al agregar al carrito]
     const [error, setError] = useState(null); // Estado para gestionar errores
     const { fetchCountCart } = useCart();
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -121,7 +121,7 @@ function Products() {
                 return;
             }
 
-            setLoadingAddCart(true); // Inicia la carga al agregar al carrito)
+            setLoadingProductId(productId); // Inicia la carga al agregar al carrito)
 
             const response = await axiosInstance.post("Cart/add-to-cart", {
                 userId,
@@ -148,7 +148,7 @@ function Products() {
                 });
             }
         } finally {
-            setLoadingAddCart(false); // 🔥 SIEMPRE se ejecuta
+            setLoadingProductId(null);
         }
     };
 
@@ -239,8 +239,12 @@ function Products() {
                                                 </h5>
                                                 <p className="card-text">${formatPrice(producto.PRD_PRICE)}</p>
                                         </div>
-                                                <button onClick={() => { handleAddToCart(producto.PRD_ID) }} className={styles.cartaAddCart}>
-                                                    {loadingAddCart ? (
+                                                <button
+                                                    onClick={() => { handleAddToCart(producto.PRD_ID) }}
+                                                    className={styles.cartaAddCart}
+                                                    disabled={loadingProductId === producto.PRD_ID}
+                                                >
+                                                    {loadingProductId === producto.PRD_ID ? (
                                                         <div className="spinner-border" role="status">
                                                             <span className="visually-hidden">Loading...</span>
                                                         </div>
