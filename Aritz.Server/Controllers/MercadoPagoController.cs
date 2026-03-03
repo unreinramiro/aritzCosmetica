@@ -48,9 +48,9 @@ namespace Aritz.Server.Controllers
                     },
                     BackUrls = new PreferenceBackUrlsRequest
                     {
-                        Success = "https://localhost:50833/checkout/pay-success", // Ajusta a tu URL real
-                        Failure = "https://localhost:50833/checkout/pay-failure",
-                        Pending = "https://localhost:50833/checkout/pay-pending"
+                        Success = "https://aritzcosmetica2026.vercel.app/checkout/pay-success", // Ajusta a tu URL real
+                        Failure = "https://aritzcosmetica2026.vercel.app/checkout/pay-failure",
+                        Pending = "https://aritzcosmetica2026.vercel.app/checkout/pay-pending"
                     },
                     AutoReturn = "approved",
                 };

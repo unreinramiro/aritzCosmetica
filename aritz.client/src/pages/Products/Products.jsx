@@ -1,4 +1,4 @@
-import CenteredContainer from "../../components/CenteredContainer/CenteredContainer";
+ï»¿import CenteredContainer from "../../components/CenteredContainer/CenteredContainer";
 import styles from './Products.module.css'
 import { FaFilter } from "react-icons/fa";
 import { useCart } from "../../context/CartContext";
@@ -20,6 +20,7 @@ function Products() {
     const [products, setProducts] = useState([]);
     const { userId } = useSession();
     const [loading, setLoading] = useState(true); // Estado para controlar el spinner o carga
+    const [loadingAddCart, setLoadingAddCart] = useState(false); // Estado para controlar la carga al agregar al carrito]
     const [error, setError] = useState(null); // Estado para gestionar errores
     const { fetchCountCart } = useCart();
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -27,7 +28,7 @@ function Products() {
 
     // ESTADOS PARA LOS FILTROS
     const [searchTerm, setSearchTerm] = useState('');
-    const [filterCats, setFilterCats] = useState([]); // Array de IDs de categorías
+    const [filterCats, setFilterCats] = useState([]); // Array de IDs de categorÃ­as
     const [filterPrice, setFilterPrice] = useState(''); // 'biggest' o 'smallest'
     const [filteredAz, setFilteredAz] = useState('az'); // Arranca de la A a la Z
 
@@ -36,9 +37,9 @@ function Products() {
 
     useEffect(() => {
         const handleScroll = () => {
-            // Verificamos si el usuario llegó al final de la página (con un margen de 100px)
+            // Verificamos si el usuario llegÃ³ al final de la pÃ¡gina (con un margen de 100px)
             if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100) {
-                // Cargamos 8 más solo si hay más productos para mostrar
+                // Cargamos 8 mÃ¡s solo si hay mÃ¡s productos para mostrar
                 setVisibleCount((prevCount) => prevCount + 8);
             }
         };
@@ -65,7 +66,7 @@ function Products() {
 
         if (filterCats.length > 0) {
             result = result.filter(p => filterCats.includes(p.Category.CAT_ID));
-            // Asegúrate que en tu objeto producto la propiedad sea PRD_CAT_ID o p.Category.CAT_ID
+            // AsegÃºrate que en tu objeto producto la propiedad sea PRD_CAT_ID o p.Category.CAT_ID
         }
 
         //3. Filtro alfabeticamente
@@ -75,7 +76,7 @@ function Products() {
             result.sort((a, b) => b.PRD_NAME.localeCompare(a.PRD_NAME));
         }
 
-        // 4. ORDENAMIENTO POR PRECIO (Lógica nueva)
+        // 4. ORDENAMIENTO POR PRECIO (LÃ³gica nueva)
         if (filterPrice === 'biggest') {
             result.sort((a, b) => b.PRD_PRICE - a.PRD_PRICE); // Mayor a menor
         } else if (filterPrice === 'smallest') {
@@ -94,16 +95,16 @@ function Products() {
                 const response = await axiosInstance.get('products'); // Realiza una solicitud GET a /api/products
                 setProducts(response.data); // Actualiza el estado con los datos obtenidos
                 console.log('Productos obtenidos:', response.data);
-                setLoading(false); // Indica que ya terminó la carga
+                setLoading(false); // Indica que ya terminÃ³ la carga
             } catch (err) {
                 console.error("Error al obtener los productos", err); // Muestra el error en consola
                 setError(err.message); // Guarda el mensaje de error en el estado
-                setLoading(false); // Indica que ya terminó la carga, incluso si hubo error
+                setLoading(false); // Indica que ya terminÃ³ la carga, incluso si hubo error
             }
         };
 
         fetchProducts();
-    }, []); // El uso de un array vacío asegura que solo se ejecute al montar el componente
+    }, []); // El uso de un array vacÃ­o asegura que solo se ejecute al montar el componente
 
     if (loading) return <div>Cargando productos...</div>;
     if (error) return <div>Error: {error}</div>;
@@ -120,6 +121,8 @@ function Products() {
                 return;
             }
 
+            setLoadingAddCart(true); // Inicia la carga al agregar al carrito)
+
             const response = await axiosInstance.post("Cart/add-to-cart", {
                 userId,
                 productId,
@@ -135,7 +138,7 @@ function Products() {
             fetchCountCart();
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                // Aquí atrapamos el "Stock insuficiente" que envía tu C#
+                // AquÃ­ atrapamos el "Stock insuficiente" que envÃ­a tu C#
                 Swal.fire({
                     title: 'Sin Stock',
                     // error.response.data suele contener el string "Stock insuficiente..." que mandaste desde C#
@@ -144,6 +147,8 @@ function Products() {
                     confirmButtonText: 'Entendido'
                 });
             }
+        } finally {
+            setLoadingAddCart(false); // ðŸ”¥ SIEMPRE se ejecuta
         }
     };
 
@@ -151,7 +156,7 @@ function Products() {
         navigate(`/product/product-detail/${id}`);
     }
 
-    // 2. Función que recibirá el dato desde Filters.jsx
+    // 2. FunciÃ³n que recibirÃ¡ el dato desde Filters.jsx
     const handleFilterChange = (valorDelHijo) => {
         console.log("Dato recibido del hijo:", valorDelHijo);
         setFiltroSeleccionado(valorDelHijo);
@@ -234,7 +239,16 @@ function Products() {
                                                 </h5>
                                                 <p className="card-text">${formatPrice(producto.PRD_PRICE)}</p>
                                         </div>
-                                            <button onClick={() => { handleAddToCart(producto.PRD_ID) }} className={styles.cartaAddCart}>Agregar al carrito</button>
+                                                <button onClick={() => { handleAddToCart(producto.PRD_ID) }} className={styles.cartaAddCart}>
+                                                    {loadingAddCart ? (
+                                                        <div className="spinner-border" role="status">
+                                                            <span className="visually-hidden">Loading...</span>
+                                                        </div>
+                                                    )
+                                                        :
+                                                        'Agregar al carrito'
+                                                    }
+                                                </button>
                                     </div>
                                 </div>
                                 ))}
