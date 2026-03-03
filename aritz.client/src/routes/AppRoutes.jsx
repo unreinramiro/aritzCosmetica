@@ -32,14 +32,15 @@ const AppRoutes = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Auth />} />
 
+            <Route path="/checkout/pay-success" element={<Success />} />
+            <Route path="/checkout/pay-failure" element={<Failure />} />
+            <Route path="/checkout/pay-pending" element={<Pending />} />
+
             <Route element={<ProtectedRoute />}>
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout/shipping-info" element={<ShippingInfo />} />
                 <Route path="/checkout/payment-method" element={<ShippingMehod />} />
                 <Route path="/checkout/pay" element={<PaymentInfo />} />
-                <Route path="/checkout/pay-success" element={<Success />} />
-                <Route path="/checkout/pay-failure" element={<Failure />} />
-                <Route path="/checkout/pay-pending" element={<Pending />} />
                 <Route path="/user/my-requests" element={<MyRequests />} />
                 <Route path="/user/my-requests/my-order/:id" element={<MyRequestDetail />} />
                 <Route path="/user/my-account" element={<MyAccount />} />
