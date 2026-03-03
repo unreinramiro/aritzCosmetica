@@ -144,7 +144,7 @@ function PaymentInfo() {
                         {cart.map((car) => (
                             <div className={styles.cartItem} key={car.CAI_ID}>
                                 <div className={styles.imgItem}>
-                                    <img src={`https://localhost:7273/images/${car.PRD_IMAGE}`} alt={car.PRD_NAME} />
+                                    <img src={`${import.meta.env.VITE_API_URL}/images/${car.PRD_IMAGE}`} alt={car.PRD_NAME} />
                                 </div>
                                 <div className={styles.detailItem}>
                                     <div className={styles.nameQuantity}>

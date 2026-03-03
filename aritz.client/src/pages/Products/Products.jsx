@@ -220,7 +220,7 @@ function Products() {
                                     <div className={`card h-100 ${styles.carta}`}>
                                         <div className={styles.cartaImgContainer}>
                                             <img 
-                                                src={`https://localhost:7273/images/${producto.PRD_IMAGE}`}
+                                                src={`${import.meta.env.VITE_API_URL}/images/${producto.PRD_IMAGE}`}
                                                 className="card-img-top"
                                                 alt={producto.PRD_NAME}
                                                 loading="lazy"

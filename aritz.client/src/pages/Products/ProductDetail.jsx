@@ -135,7 +135,7 @@ function ProductDetail() {
                 <h3 className={styles.responsiveTitle}>{product.Category.CAT_NAME} {product.PRD_NAME}</h3>
                     <img
                         className={styles.imgMain}
-                        src={`https://localhost:7273/images/${displayImage}`}
+                        src={`${import.meta.env.VITE_API_URL}/images/${displayImage}`}
                         key={displayImage}
                     />
                     {displayGallery.length > 0 

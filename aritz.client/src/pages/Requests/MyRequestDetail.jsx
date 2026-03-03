@@ -161,7 +161,7 @@ function MyRequestDetail() {
                             <hr></hr>
                             <div className={styles.itemsDetail}>
                                 <div className={styles.imageContainer}>
-                                    <img src={`https://localhost:7273/images/${request.ProductImage}`} />
+                                    <img src={`${import.meta.env.VITE_API_URL}/images/${request.ProductImage}`} />
                                 </div>
                                 <div className={styles.itemsDetailSub}>
                                     <h4>{request.ProductName}</h4>

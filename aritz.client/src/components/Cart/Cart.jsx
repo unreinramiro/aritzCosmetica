@@ -113,7 +113,7 @@ function Carrito() {
                             {cart.map((car) => (
                                 <li key={car.CAI_ID} className={styles.cartItem}>
                                     <img
-                                        src={`https://localhost:7273/images/${car.PRD_IMAGE}`}
+                                        src={`${import.meta.env.VITE_API_URL}/images/${car.PRD_IMAGE}`}
                                         className={styles.itemImage}
                                     />
                                     <div className={styles.itemDetails}>
