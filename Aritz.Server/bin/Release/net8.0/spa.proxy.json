@@ -1,0 +1,10 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "https://localhost:50833",
+"RedirectUrl": "",
+"LaunchCommand": "npm run dev",
+"WorkingDirectory": "C:\\Users\\Admin\\source\\repos\\Aritz\\Aritz.Server\\..\\aritz.client",
+"MaxTimeoutInSeconds": "120",
+"KeepRunning": "false"
+}
+}

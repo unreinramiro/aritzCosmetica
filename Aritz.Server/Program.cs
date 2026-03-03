@@ -31,13 +31,11 @@ Console.WriteLine($"Cadena leída: '{connString}'");
 // Configura CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", builder =>
-    {
-        builder.WithOrigins("https://localhost:50833")
-               .AllowAnyMethod()
-               .AllowAnyHeader()
-               .AllowCredentials();
-    });
+    options.AddPolicy("AllowWebapp",
+        builder => builder
+            .AllowAnyOrigin() // Por ahora permitimos todo para evitar errores
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 });
 
 // Configura el DbContext con la cadena de conexión
@@ -75,12 +73,6 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
     });
 
-// Agrega soporte explícito para JSON
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
-});
-
 // Agrega servicios para Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => { c.CustomSchemaIds(type => type.ToString()); });
@@ -99,13 +91,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles();
+
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+
 app.UseRouting();
 
-app.UseCors("AllowReactApp");
+app.UseCors("AllowWebapp");
+
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
-app.MapFallbackToFile("/index.html");
+
 
 app.Run();
