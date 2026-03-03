@@ -153,7 +153,7 @@ function MyRequests() {
                                                 order.ReceiptPath ? (
                                                     <div className={styles.fileRefreshDownload}>
                                                         <a
-                                                            href={`${axiosInstance.defaults.baseURL}Order/${order.ORD_ID}/download-receipt`}
+                                                            href={`${axiosInstance.defaults.baseURL}/Order/${order.ORD_ID}/download-receipt`}
                                                             rel="noopener noreferrer"
                                                             className={styles.downloadLink}
                                                         >

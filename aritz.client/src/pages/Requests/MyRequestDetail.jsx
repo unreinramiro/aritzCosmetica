@@ -195,7 +195,7 @@ function MyRequestDetail() {
                             {path ? (
                                 <div className={styles.fileRefreshDownload}>
                                     <a
-                                        href={`${axiosInstance.defaults.baseURL}Order/${id}/download-receipt`}
+                                        href={`${axiosInstance.defaults.baseURL}/Order/${id}/download-receipt`}
                                         rel="noopener noreferrer"
                                         className={styles.downloadLink}
                                     >
