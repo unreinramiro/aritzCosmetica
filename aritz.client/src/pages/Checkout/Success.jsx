@@ -35,6 +35,8 @@ function Success() {
 
     console.log("Precio del zipPrice antes del llamado a handleOrderConfirm: ", zipPrice);
 
+    const [loadingPay, setLoadingPay] = useState(false);
+
     useEffect(() => {
         console.log("PaymentStatus:", paymentStatus, "Flag: ", isProcessing, "TotalSumCart: ", totalSumCart);
         if (paymentStatus === 'approved' && userId && !isProcessing && !processedRef.current) {
@@ -45,6 +47,7 @@ function Success() {
 
     const handleOrderConfirm = async () => {
         setIsProcessing(true);
+        setLoadingPay(true);
         try {
             const cartResponse = await axiosInstance.get(`Cart/user/${userId}`);
             const cartItems = cartResponse.data;
@@ -100,35 +103,52 @@ function Success() {
         } catch (error) {
             console.error("Error al confirmar el pedido:", error);
             alert("No se pudo confirmar el pedido.");
+        } finally {
+            setLoadingPay(false);
         }
     }
 
     return (
         <div className="d-flex text-center justify-content-center">
             <div className={`d-flex flex-column ${styles.container}`}>
-                <div>
-                    <p className={styles.artizLogoCompra}>Aritz</p>
-                    <h1>¡Muchas gracias por tu compra!</h1>
-                    <FaClipboardCheck
-                        size={100}
-                        style={ {color: "green"} }
-                    />
-                </div>
-                <p>El pedido se encuentra reservado, recorda cargar el comprobante de pago dentro de las proximas 48hs,
-                    sino el mismo se cancelara</p>
+                {loadingPay ? (
+                    <div>
+                        <h3>Aguarde un momento...</h3>
+                        <p>Su pago esta siendo procesado.</p>
+                        <div className="spinner-border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                )
+                    :
+                (
+                <>
+                    <div>
+                        <p className={styles.artizLogoCompra}>Aritz</p>
+                        <h1>¡Muchas gracias por tu compra!</h1>
+                        <FaClipboardCheck
+                            size={100}
+                            style={ {color: "green"} }
+                        />
+                    </div>
+                    <p>El pedido se encuentra reservado, recorda cargar el comprobante de pago dentro de las proximas 48hs,
+                        sino el mismo se cancelara</p>
 
-                <div className={styles.containerComprobante}>
-                    <b>Carga tu comprobante en la sección pedidos en el detalle de tu pedido :D</b>
+                    <div className={styles.containerComprobante}>
+                        <b>Carga tu comprobante en la sección pedidos en el detalle de tu pedido :D</b>
 
-                    <label className={`d-flex gap-3 ${styles.shippingLabels}`}>
-                        <NavLink
-                            to={`/user/my-requests/my-order/${createdOrderId ? createdOrderId : orderId}`}
-                            className={styles.btnShippingNext}
-                        >
-                            Ir a mi pedido
-                        </NavLink>
-                    </label>
-                </div>
+                        <label className={`d-flex gap-3 ${styles.shippingLabels}`}>
+                            <NavLink
+                                to={`/user/my-requests/my-order/${createdOrderId ? createdOrderId : orderId}`}
+                                className={styles.btnShippingNext}
+                            >
+                                Ir a mi pedido
+                            </NavLink>
+                        </label>
+                    </div>
+                </>
+                )}
+                
             </div>
         </div>
     );

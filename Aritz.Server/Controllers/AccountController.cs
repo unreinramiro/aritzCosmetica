@@ -134,30 +134,28 @@ namespace Aritz.Server.Controllers
                 user.USR_POSTAL_CODE = postalcode;
                 updated = true;
             }
+
             if (user.USR_STREET != dtoDom.calle)
             {
                 user.USR_STREET = dtoDom.calle;
                 updated = true;
             }
 
-            string alt = dtoDom.altura.ToString();
-            if (user.USR_STREET_NUMBER != alt)
+            if (user.USR_STREET_NUMBER != dtoDom.altura)
             {
-                user.USR_STREET_NUMBER = alt;
+                user.USR_STREET_NUMBER = dtoDom.altura;
                 updated = true;
             }
 
-            string piso = dtoDom.piso.ToString();
-            if (user.USR_FLOOR != piso)
+            if (user.USR_FLOOR != dtoDom.piso)
             {
-                user.USR_FLOOR = piso;
+                user.USR_FLOOR = dtoDom.piso;
                 updated = true;
             }
 
-            string casa = dtoDom.casadepto.ToString();
-            if (user.USR_APARTMENT != casa)
+            if (user.USR_APARTMENT != dtoDom.casadepto)
             {
-                user.USR_APARTMENT = casa;
+                user.USR_APARTMENT = dtoDom.casadepto;
                 updated = true;
             }
 
@@ -235,9 +233,9 @@ namespace Aritz.Server.Controllers
             public string ciudad { get; set; }
             public int codpostal { get; set; }
             public string calle { get; set; }
-            public int altura { get; set; }
-            public int piso { get; set; }
-            public int casadepto { get; set; }
+            public string altura { get; set; }
+            public string piso { get; set; }
+            public string casadepto { get; set; }
         }
         public class ChangePasswordDto
         {

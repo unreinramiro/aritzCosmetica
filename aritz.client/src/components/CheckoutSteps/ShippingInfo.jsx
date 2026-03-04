@@ -16,6 +16,8 @@ function ShippingInfo() {
 
     const [selectedProvincia, setSelectedProvincia] = useState(""); // Estado para la provincia seleccionada
     const [account, setAccount] = useState([]);
+    const [loadingUpdData, setLoadingUpdData] = useState(false);
+    const [loadingZipCode, setLoadingZipCode] = useState(false);
     const [error, setError] = useState(null);
     const { userId, setPageCheckout } = useSession();
     const [formShipData, setShipData] = useState({
@@ -147,6 +149,20 @@ function ShippingInfo() {
         try {
             console.log("Datos enviados al backend: ", formShipData, userId);
             console.log("Precio cod postal: ", zipPrice);
+
+            const camposOpcionales = ['piso', 'casadepto'];
+
+            const hayErrores = Object.entries(formShipData).some(([key, value]) => {
+                if (camposOpcionales.includes(key)) return false;
+
+                return value === null || value === undefined || value.toString().trim() === '';
+            });
+
+            if (hayErrores) {
+                Swal.fire("Error", "Completa los campos obligatorios", "warning");
+                return;
+            }
+
             //Validacion para el codigo postal
             if (zipPrice == 0) {
 
@@ -155,17 +171,25 @@ function ShippingInfo() {
                     Swal.fire("Error", "Ingresa un Código Postal válido de 4 dígitos", "warning");
                     return;
                 }
+
+                setLoadingZipCode(true);
+
                 const response = await axiosInstance.get(`Shipping/calculate?zipCode=${cp}`);
                 const price = response.data.Price;
                 setZipPrice(price);
             }
 
+            setLoadingUpdData(true);
+
             const response = await axiosInstance.post(`Account/updDom/${userId}`, formShipData);
 
             navigate('/checkout/payment-method');
-        
+
         } catch (e) {
             console.log("Error al actualizar los datos: ", e);
+        } finally {
+            setLoadingZipCode(false);
+            setLoadingUpdData(false);
         }
     }
 
@@ -268,7 +292,14 @@ function ShippingInfo() {
                             onClick={handleCalculateShipping}
                             type="button"
                         >
-                            Calcular Envio
+                            {loadingZipCode ? (
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            )
+                                :
+                                'Calcular Envio'
+                            }
                         </button>
                     </label>
                     <label className={`d-flex gap-3 ${styles.shippingLabels}`}>
@@ -308,7 +339,14 @@ function ShippingInfo() {
                             type="submit"
                             onClick={handleUpdDom}
                         >
-                            Siguiente
+                            {loadingUpdData ? (
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            )
+                                :
+                                'Siguiente'
+                            }
                         </button>
                     </label>
                 </div>

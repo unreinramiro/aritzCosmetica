@@ -187,7 +187,12 @@ function PaymentInfo() {
                                         customization={{ texts: { valueProp: 'smart_option' } }}
                                     />
                                 ) : (
-                                    <p>Cargando botón de pago...</p>
+                                    <div>
+                                        <div className="spinner-border" role="status">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </div>
+                                        <p>Cargando boton de pago...</p>
+                                    </div>
                                 )}
                             </div>
                         }
