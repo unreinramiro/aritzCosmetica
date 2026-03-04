@@ -20,6 +20,7 @@ function PaymentInfo() {
     const navigate = useNavigate();
     const { fetchCountCart, fetchSumTotalCart, totalSumCart } = useCart();
     const [loading, setLoading] = useState(true);
+    const [loadingOrdConf, setLoadingOrdConf] = useState(false);
     const [error, setError] = useState(null);
     const [cart, setCart] = useState([]);
     const [preferenceId, setPreferenceId] = useState(null);
@@ -83,6 +84,7 @@ function PaymentInfo() {
 
     const handleOrderConfirm = async (totalSumCart) => {
         totalSumCart = totalSumCart + zipPrice;
+        setLoadingOrdConf(true);
         try {
             const orderResponse = await axiosInstance.post("Order/confirmOrder", {
                 userId,
@@ -123,6 +125,8 @@ function PaymentInfo() {
                 console.error("Error al confirmar el pedido:", error);
                 alert("No se pudo confirmar el pedido.");
             }
+        } finally {
+            setLoadingOrdConf(false);
         }
     }
 
@@ -212,7 +216,14 @@ function PaymentInfo() {
                                 onClick={() => { handleOrderConfirm(totalSumCart) }}
                                 type="submit"
                             >
-                                Confirmar pedido
+                                {loadingOrdConf ? (
+                                    <div className="spinner-border" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </div>
+                                )
+                                    :
+                                    'Confirmar Orden'
+                                }
                             </button>
                         )}
                     </div>

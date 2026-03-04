@@ -18,6 +18,7 @@ function Carrito() {
     const { userId, setPageCheckout } = useSession();
     const [loading, setLoading] = useState(true);
     const [loadingDelCart, setLoadingDelCart] = useState(false);
+    const [loadingCleanCart, setLoadingCleanCart] = useState(false);
     const [error, setError] = useState(null);
     const [cart, setCart] = useState([]);
     const location = useLocation();
@@ -87,7 +88,7 @@ function Carrito() {
     const handleCleanCart = async (userId) => {
         try {
 
-            setLoadingDelCart(true);
+            setLoadingCleanCart(true);
 
             const response = await axiosInstance.delete(`Cart/user/${userId}`);
 
@@ -103,7 +104,7 @@ function Carrito() {
             console.error("Error al vaciar el carrito:", error);
             alert("No se pudo vaciar el carrito.");
         } finally {
-            setLoadingDelCart(false);
+            setLoadingCleanCart(false);
         }
     }
 
@@ -156,7 +157,7 @@ function Carrito() {
                                     className={styles.clearButton}
                                     onClick={() => { handleCleanCart(userId) }}
                                 >
-                                    {loadingDelCart ? (
+                                    {loadingCleanCart ? (
                                         <div className="spinner-border" role="status">
                                             <span className="visually-hidden">Loading...</span>
                                         </div>

@@ -5,7 +5,7 @@ import CenteredContainer from "../CenteredContainer/CenteredContainer";
 function Auth() {
     const { screenLogIn, screenIn, screenOut, handleChange, handleRegister,
         handleVerify, handleLogin, isRegister, isVerifying, code, setCode, formData,
-        setIsRegister, passwordStrength, strengthColor, strengthMessage } = useSession();
+        setIsRegister, passwordStrength, strengthColor, strengthMessage, isLoadingLogin, isLoadingRegis, isLoadingVerif } = useSession();
 
     return (
         <CenteredContainer>
@@ -24,7 +24,16 @@ function Auth() {
                                 required
                             />
                         </div>
-                        <button type="submit" className={styles.submitButton}>Verificar</button>
+                        <button type="submit" className={styles.submitButton}>
+                            {isLoadingVerif ? (
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            )
+                                :
+                                'Verificar'
+                            }
+                        </button>
                     </form>
                 ) : (
                     <form onSubmit={screenLogIn ? handleLogin : handleRegister} className={styles.form}>
@@ -143,14 +152,28 @@ function Auth() {
                         <>
                             ¿No tienes cuenta?{" "}
                             <button onClick={() => { screenOut(); setIsRegister(true); }} type="button" className={styles.toggleButton}>
-                                Regístrate
+                                {isLoadingRegis ? (
+                                    <div className="spinner-border" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </div>
+                                )
+                                    :
+                                    'Regístrate'
+                                }
                             </button>
                         </>
                     ) : (
                         <>
                             ¿Ya tienes cuenta?{" "}
-                            <button onClick={() => { screenIn(); setIsRegister(false); }} type="button" className={styles.toggleButton}>
-                                Inicia Sesión
+                                <button onClick={() => { screenIn(); setIsRegister(false); }} type="button" className={styles.toggleButton}>
+                                    {isLoadingLogin ? (
+                                        <div className="spinner-border" role="status">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </div>
+                                    )
+                                        :
+                                        'Iniciar Sesion'
+                                    }
                             </button>
                         </>
                     )}

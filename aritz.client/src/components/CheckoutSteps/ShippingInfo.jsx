@@ -48,6 +48,7 @@ function ShippingInfo() {
         }
 
         try {
+            setLoadingZipCode(true);
             // Llamada al endpoint que creamos
             const response = await axiosInstance.get(`Shipping/calculate?zipCode=${cp}`);
             const price = response.data.Price;
@@ -65,6 +66,8 @@ function ShippingInfo() {
         } catch (error) {
             console.error(error);
             Swal.fire("Error", "No pudimos calcular el envío", "error");
+        } finally {
+            setLoadingZipCode(false);
         }
     }
 
@@ -172,8 +175,6 @@ function ShippingInfo() {
                     return;
                 }
 
-                setLoadingZipCode(true);
-
                 const response = await axiosInstance.get(`Shipping/calculate?zipCode=${cp}`);
                 const price = response.data.Price;
                 setZipPrice(price);
@@ -188,7 +189,6 @@ function ShippingInfo() {
         } catch (e) {
             console.log("Error al actualizar los datos: ", e);
         } finally {
-            setLoadingZipCode(false);
             setLoadingUpdData(false);
         }
     }

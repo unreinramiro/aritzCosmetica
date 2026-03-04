@@ -9,7 +9,11 @@ const SessionContext = createContext();
 
 // Este será tu componente proveedor para envolver toda la app
 export const SessionProvider = ({ children }) => {
-    const [isLoading, setIsLoading] = useState(true); 
+    const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingLogin, setIsLoadingLogin] = useState(false);// Loading para el login
+    const [isLoadingRegis, setIsLoadingRegis] = useState(false);// Loading para el registro
+    const [isLoadingVerif, setIsLoadingVerif] = useState(false);// Loading para la verificacion
+
     const [isLoggedIn, setIsLoggedIn] = useState(false); // Estado de autenticación
     const [screenLogIn, setScreenLogIn] = useState(true);
     const [isRegister, setIsRegister] = useState(false);
@@ -145,6 +149,7 @@ export const SessionProvider = ({ children }) => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        setIsLoadingRegis(true);
         if (formData.password !== formData.confirmPassword) {
             Swal.fire({
                 icon: "error",
@@ -173,23 +178,25 @@ export const SessionProvider = ({ children }) => {
             Swal.fire({
                 title: "Se envio el codigo de verificacion, por favor, revisa tu casilla de mail",
                 icon: "info",
-              showClass: {
-                popup: `
+                showClass: {
+                    popup: `
                   animate__animated
                   animate__fadeInUp
                   animate__faster
                 `
-              },
-              hideClass: {
-                popup: `
+                },
+                hideClass: {
+                    popup: `
                   animate__animated
                   animate__fadeOutDown
                   animate__faster
                 `
-              }
+                }
             });
         } catch (error) {
             alert(error.response?.data?.Message || 'Error en registro');
+        } finally {
+            setIsLoadingRegis(false);
         }
     };
 
@@ -197,6 +204,7 @@ export const SessionProvider = ({ children }) => {
 
     const handleVerify = async (e) => {
         e.preventDefault();
+        setIsLoadingVerif(true);
         try {
             await axiosInstance.post('auth/verify', { email, code });
             setIsVerifying(false);
@@ -209,11 +217,14 @@ export const SessionProvider = ({ children }) => {
             });
         } catch (error) {
             alert(error.response?.data?.Message || 'Código inválido');
+        } finally {
+            setIsLoadingVerif(false);
         }
     };
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setIsLoadingLogin(true);
         try {
             const response = await axiosInstance.post('auth/login', {
                 email: formData.email,
@@ -245,6 +256,8 @@ export const SessionProvider = ({ children }) => {
                 title: "Error al iniciar sesion",
                 text: "Credenciales invalidas",
             });
+        } finally {
+            setIsLoadingLogin(false);
         }
     };
 
@@ -252,6 +265,9 @@ export const SessionProvider = ({ children }) => {
     // Valor que proporciona el contexto
     const value = {
         isLoading,
+        isLoadingLogin,
+        isLoadingRegis,
+        isLoadingVerif,
         isLoggedIn,
         setIsLoggedIn,
         screenLogIn,
