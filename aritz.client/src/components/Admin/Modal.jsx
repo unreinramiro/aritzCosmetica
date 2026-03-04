@@ -19,6 +19,7 @@ function Modal({ productName, productCategory, productImg, productPrice, product
     const [imagesToUpdate, setImagesToUpdate] = useState({}); 
     const [addImg, setAddImg] = useState([]);
     const [currentGallery, setCurrentGallery] = useState([]);
+    const [loadingUpdPrd, setLoadingUpdPrd] = useState(false);
 
     // Sincroniza el estado cuando cambien las props
     useEffect(() => {
@@ -84,7 +85,8 @@ function Modal({ productName, productCategory, productImg, productPrice, product
         }
     }
 
-    const handleUpdPrd = async ()  => {
+    const handleUpdPrd = async () => {
+        setLoadingUpdPrd(true);
         try {
             const formData = new FormData();
 
@@ -99,7 +101,7 @@ function Modal({ productName, productCategory, productImg, productPrice, product
             if (prdData.PRD_IMAGE) {
                 formData.append('MainImageFile', prdData.PRD_IMAGE);
             }
-            
+
             // Agrega una Imagen NUEVA
             if (addImg) {
                 addImg.forEach((file) => {
@@ -118,7 +120,7 @@ function Modal({ productName, productCategory, productImg, productPrice, product
             console.log("Datos enviados al backend: ", formData);
             const response = await axiosInstance.post('Products/updPrd', formData);
             refresh(prev => !prev);
-            setAddImg([]); 
+            setAddImg([]);
 
             const closeBtn = document.querySelector('#staticBackdrop .btn-close');
             if (closeBtn) {
@@ -132,6 +134,8 @@ function Modal({ productName, productCategory, productImg, productPrice, product
             })
         } catch (e) {
             console.log("Error al actualizar los datos: ", e);
+        } finally {
+            setLoadingUpdPrd(false);
         }
     }
 
@@ -340,7 +344,14 @@ function Modal({ productName, productCategory, productImg, productPrice, product
                             className="btn btn-primary"
                             onClick={handleUpdPrd}
                         >
-                            Actualizar
+                            {loadingUpdPrd ? (
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            )
+                                :
+                                'Actualizar'
+                            }
                         </button>
                     </div>
                 </div>

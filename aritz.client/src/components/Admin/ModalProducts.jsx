@@ -16,6 +16,7 @@ function ModalProducts({ refresh }) {
     });
     const [categories, setCategories] = useState([]);
     const [galleryFiles, setGalleryFiles] = useState([]);
+    const [loadingAddPrd, setLoadingAddPrd] = useState(false);
 
     useEffect(() => {
         fetchCategories();
@@ -53,6 +54,7 @@ function ModalProducts({ refresh }) {
     }
 
     const handleAddPrd = async () => {
+        setLoadingAddPrd(true);
         try {
             // 2. Crear FormData (Obligatorio para subir archivos)
             const formData = new FormData();
@@ -75,7 +77,7 @@ function ModalProducts({ refresh }) {
             }
 
             // OJO: Si necesitas enviar Categoría, agrégala aquí también
-            formData.append('PRD_CAT_ID', prdData.PRD_CAT_ID); 
+            formData.append('PRD_CAT_ID', prdData.PRD_CAT_ID);
 
             // 3. Enviar con cabecera multipart/form-data
             const response = await axiosInstance.post('Products/addPrd', formData);
@@ -93,6 +95,8 @@ function ModalProducts({ refresh }) {
         } catch (error) {
             console.error(error);
             Swal.fire('Error', 'No se pudo cargar el producto', 'error');
+        } finally {
+            setLoadingAddPrd(false);
         }
     }
 
@@ -265,7 +269,14 @@ function ModalProducts({ refresh }) {
                             className="btn btn-primary"
                             onClick={handleAddPrd}
                         >
-                            Agregar Producto
+                            {loadingAddPrd ? (
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            )
+                                :
+                                'Agregar Producto'
+                            }
                         </button>
                     </div>
                 </div>

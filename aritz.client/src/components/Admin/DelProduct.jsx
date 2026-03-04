@@ -4,7 +4,10 @@ import axiosInstance from "../../api/axiosConfig";
 import Swal from 'sweetalert2'; // Importar SweetAlert2
 function DelProduct({ prdCatName, prdDelName, prdDelId, prdDelImg, refresh }) {
 
+    const [loadingDelPrd, setLoadingDelPrd] = useState(false);
+
     const handleDeletePrd = async (prdDelId) => {
+        setLoadingDelPrd(true);
         try {
             const response = await axiosInstance.delete(`Products/delPrd/${prdDelId}`);
             refresh(prev => !prev);
@@ -23,6 +26,8 @@ function DelProduct({ prdCatName, prdDelName, prdDelId, prdDelImg, refresh }) {
         } catch (error) {
             console.error("Error al eliminar el producto del carrito:", error);
             alert("No se pudo eliminar el producto del carrito.");
+        } finally {
+            setLoadingDelPrd(false);
         }
     }
 
@@ -43,7 +48,7 @@ function DelProduct({ prdCatName, prdDelName, prdDelId, prdDelImg, refresh }) {
                     </div>
                     <div className="modal-body">
                         <div className={styles.imageDeleteContainer}>
-                            <img src={`https://localhost:7273/images/${prdDelImg}`} />
+                            <img src={`${import.meta.env.VITE_API_URL}/images/${prdDelImg}`} />
                         </div>
                     </div>
                     <div className="modal-footer">
@@ -53,7 +58,14 @@ function DelProduct({ prdCatName, prdDelName, prdDelId, prdDelImg, refresh }) {
                             className="btn btn-danger"
                             onClick={() => { handleDeletePrd(prdDelId) }}
                         >
-                            Borrar
+                            {loadingDelPrd ? (
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            )
+                                :
+                                'Borrar'
+                            }
                         </button>
                     </div>
                 </div>

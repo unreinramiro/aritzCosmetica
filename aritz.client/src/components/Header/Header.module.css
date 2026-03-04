@@ -179,6 +179,10 @@ ul{
 
 /* Responsive: Ajusta para pantallas pequeñas */
 @media (max-width: 992px) {
+    .navItem:hover .dropdown {
+        display: none; /* Muestra el dropdown */
+    }
+
     .navbar {
         display: flex;
         flex-direction: column;

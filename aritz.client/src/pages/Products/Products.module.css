@@ -92,9 +92,11 @@
         color: rgb(128, 98, 51);
     }
 
-.containerLupita{
+.containerLupita {
     width: 100vw;
     height: 50vh;
+    opacity: 0;
+    animation: fadeInUp 1.6s ease-out forwards;
 }
 
 .lupita{
