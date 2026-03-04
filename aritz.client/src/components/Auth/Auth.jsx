@@ -143,7 +143,31 @@ function Auth() {
                             </div>
                         )}
                         <button type="submit" className={styles.submitButton}>
-                            {screenLogIn ? "Iniciar Sesión" : "Crear Cuenta"}
+                                {screenLogIn
+                                    ?
+                                    (
+                                        isLoadingLogin
+                                            ?
+                                            (
+                                            <div className = "spinner-border" role = "status" >
+                                                <span className="visually-hidden">Loading...</span>
+                                            </div>
+                                            )
+                                            :
+                                            'Iniciar Sesion'
+                                    )
+                                    :
+                                    (
+                                        isLoadingRegis
+                                            ?
+                                            (
+                                            <div className = "spinner-border" role = "status" >
+                                                <span className="visually-hidden">Loading...</span>
+                                            </div>
+                                            )
+                                            :
+                                            'Regístrate'
+                                    )}
                         </button>
                     </form>
                 )}
@@ -151,30 +175,12 @@ function Auth() {
                     {screenLogIn ? (
                         <>
                             ¿No tienes cuenta?{" "}
-                            <button onClick={() => { screenOut(); setIsRegister(true); }} type="button" className={styles.toggleButton}>
-                                {isLoadingRegis ? (
-                                    <div className="spinner-border" role="status">
-                                        <span className="visually-hidden">Loading...</span>
-                                    </div>
-                                )
-                                    :
-                                    'Regístrate'
-                                }
-                            </button>
+                            <button onClick={() => { screenOut(); setIsRegister(true); }} type="button" className={styles.toggleButton}>Registrate</button>
                         </>
                     ) : (
                         <>
                             ¿Ya tienes cuenta?{" "}
-                                <button onClick={() => { screenIn(); setIsRegister(false); }} type="button" className={styles.toggleButton}>
-                                    {isLoadingLogin ? (
-                                        <div className="spinner-border" role="status">
-                                            <span className="visually-hidden">Loading...</span>
-                                        </div>
-                                    )
-                                        :
-                                        'Iniciar Sesion'
-                                    }
-                            </button>
+                                <button onClick={() => { screenIn(); setIsRegister(false); }} type="button" className={styles.toggleButton}>Iniciar Sesion</button>
                         </>
                     )}
                 </p>
