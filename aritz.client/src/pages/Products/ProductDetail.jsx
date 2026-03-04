@@ -15,6 +15,7 @@ function ProductDetail() {
     const { id } = useParams();
     const [product, setProduct] = useState();
     const [loading, setLoading] = useState(true);
+    const [loadingProductId, setLoadingProductId] = useState(null);
     const [error, setError] = useState(null);
     const { userId } = useSession();
     const { fetchCountCart } = useCart();
@@ -77,6 +78,8 @@ function ProductDetail() {
                 return;
             }
 
+            setLoadingProductId(productId);
+
             const response = await axiosInstance.post("Cart/add-to-cart", {
                 userId,
                 productId,
@@ -101,6 +104,8 @@ function ProductDetail() {
                     confirmButtonText: 'Entendido'
                 });
             }
+        } finally {
+            setLoadingProductId(null);
         }
     };
 
@@ -169,7 +174,14 @@ function ProductDetail() {
                         className={styles.addCartInfo}
                         onClick={() => { handleAddToCart(product.PRD_ID) }}
                     >
-                        Agregar al carrito
+                        {loadingProductId === product.PRD_ID ? (
+                            <div className="spinner-border" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </div>
+                        )
+                            :
+                            'Agregar al carrito'
+                        }
                     </button>
                 </div>
                 

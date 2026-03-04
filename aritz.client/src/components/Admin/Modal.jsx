@@ -207,7 +207,7 @@ function Modal({ productName, productCategory, productImg, productPrice, product
                                                 onClick={() => { handleDelImg(img.IMG_ID) }}
                                             />
                                         </div>
-                                        <img src={`https://localhost:7273/images/${img.IMG_URL}`}    />
+                                        <img src={`${import.meta.env.VITE_API_URL}/images/${img.IMG_URL}`} />
                                     </div>
                                     <div className={styles.imageSecondaryProductDivSub}>
                                         <input
