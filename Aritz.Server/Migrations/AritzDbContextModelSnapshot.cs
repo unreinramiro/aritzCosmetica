@@ -165,6 +165,10 @@ namespace Aritz.Server.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ORD_USR_ID");
 
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ORD_ZIP_CODE");
+
                     b.HasKey("ORD_ID");
 
                     b.HasIndex("ORD_PMT_ID");

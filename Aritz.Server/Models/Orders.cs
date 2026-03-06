@@ -19,5 +19,7 @@ namespace Aritz.Server.Models
         public PaymentMethod? PaymentMethod { get; set; } // Relación con PaymentMethod
         public List<OrderDetails> OrderDetails { get; set; } = new List<OrderDetails>();
         public Receipts Receipt { get; set; }
+        [Column("ORD_ZIP_CODE")] // Para que en la BD se llame exactamente así
+        public string? ORD_ZIP_CODE { get; set; } // El signo ? permite nulos
     }
 }

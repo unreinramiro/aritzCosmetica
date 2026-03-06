@@ -44,7 +44,8 @@ namespace Aritz.Server.Controllers
                         ORD_ORDER_DATE = DateTime.UtcNow,
                         ORD_TOTAL_AMOUNT = dto.totalSumCart,
                         ORD_STATUS = "Pendiente",
-                        ORD_PMT_ID = dto.paymentMethod
+                        ORD_PMT_ID = dto.paymentMethod,
+                        ORD_ZIP_CODE = dto.ZipCode
                     };
 
 
@@ -206,6 +207,7 @@ namespace Aritz.Server.Controllers
                     IdOrderDetail = od.ODD_ID,
                     Quantity = od.ODD_QUANTITY,
                     TotalPrice = od.ODD_TOTAL_PRICE,
+                    ZipCode = od.Orders.ORD_ZIP_CODE,
                     ProductName = od.Products.PRD_NAME,
                     ProductImage = od.Products.PRD_IMAGE,
                     ReceiptPath = od.Orders.Receipt.RCP_PATH,
@@ -437,6 +439,7 @@ namespace Aritz.Server.Controllers
             public string? Status { get; set; }
             public int paymentMethod { get; set; }
             public List<CartItems> CartItems { get;set; }
+            public string ZipCode { get; set; }
         }
 
         public class OrderDetailDto

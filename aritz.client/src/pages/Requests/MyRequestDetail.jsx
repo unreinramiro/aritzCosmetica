@@ -11,6 +11,7 @@ import BreadCrum from "../../components/BreadCrum/BreadCrum";
 import { formatPrice } from '../../utils/utils';
 import { useSearchParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { calculateDeliveryRange, formatDate } from "../../utils/dateUtils";
 
 function MyRequestDetail() {
 
@@ -27,7 +28,7 @@ function MyRequestDetail() {
     const { userId } = useSession();
     const [path, setPath] = useState(false);
     const [shippingCost, setShippingCost] = useState(0);
-    console.log(payMethod);
+ 
 
     useEffect(() => {
         // Obtengo el detalle de la orden
@@ -147,6 +148,12 @@ function MyRequestDetail() {
         }
     }
 
+    const firstItem = requestDet.length > 0 ? requestDet[0] : null;
+    const zipToUse = firstItem ? firstItem.ZipCode : null;
+
+    const deliveryEstimation = calculateDeliveryRange(zipToUse);
+    
+
     return (
         <div>
             <BreadCrum id={id}/>
@@ -155,7 +162,7 @@ function MyRequestDetail() {
 
                 <div className={styles.items}>
                     <div className={styles.shiippingData}>
-                        Llega entre el * y el *
+                        Llega entre el {deliveryEstimation ? deliveryEstimation.start : '*'} y el {deliveryEstimation ? deliveryEstimation.end : '*'}
                     </div>
                     {requestDet.map((request) => (
                         <div

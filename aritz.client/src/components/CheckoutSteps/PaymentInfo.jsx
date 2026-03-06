@@ -86,11 +86,14 @@ function PaymentInfo() {
         totalSumCart = totalSumCart + zipPrice;
         setLoadingOrdConf(true);
         try {
+            const userResponse = await axiosInstance.get(`Account/${userId}`);
+
             const orderResponse = await axiosInstance.post("Order/confirmOrder", {
                 userId,
                 paymentMethod,
                 totalSumCart,
-                CartItems: cart
+                CartItems: cart,
+                zipCode: userResponse.data.USR_POSTAL_CODE
             });
 
             const orderId = orderResponse.data.OrderId;
