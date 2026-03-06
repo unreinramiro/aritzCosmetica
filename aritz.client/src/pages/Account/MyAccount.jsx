@@ -36,6 +36,9 @@ function MyAccount() {
         newPassword: '',
         confirmNewPassword: ''
     });
+    const [loadingPassChange, setLoadingPassChange] = useState(false);
+    const [loadingPersonalChange, setLoadingPersonalChange] = useState(false);
+    const [loadingDomChange, setLoadingDomChange] = useState(false);
 
     const handlePasswordChange = (e) => {
         const { name, value } = e.target;
@@ -69,6 +72,7 @@ function MyAccount() {
 
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
+        setLoadingPassChange(true);
         if (passwordData.newPassword !== passwordData.confirmNewPassword) {
             Swal.fire({ icon: 'error', title: 'Las contraseñas no coinciden' });
             return;
@@ -120,12 +124,29 @@ function MyAccount() {
             // Aquí podrías mostrar un input para ingresar el código de verificación
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Error', text: err.response?.data?.Message || 'Error al cambiar la clave' });
+        } finally {
+            setLoadingPassChange(false);
         }
     };
 
     const handleUpdPersonalData = async () => {
+        setLoadingPersonalChange(true);
         try {
             console.log("Datos enviados al backend: ", formPersonalData, userId);
+
+            const camposOpcionales = ['documento', 'telefono'];
+
+            const hayErrores = Object.entries(formPersonalData).some(([key, value]) => {
+                if (camposOpcionales.includes(key)) return false;
+
+                return value === null || value === undefined || value.toString().trim() === '';
+            });
+
+            if (hayErrores) {
+                Swal.fire("Error", "Completa los campos obligatorios", "warning");
+                return;
+            }
+
             const response = await axiosInstance.post(`Account/updPersonalData/${userId}`, formPersonalData);
             Swal.fire({
                 title: 'Informacion actualizada correctamente!',
@@ -138,12 +159,29 @@ function MyAccount() {
             fetchAccount();
         } catch (e) {
             console.log("Error al actualizar los datos: ", e);
+        } finally {
+            setLoadingPersonalChange(false);
         }
     }
 
     const handleUpdDom = async () => {
+        setLoadingDomChange(true);
         try {
             console.log("Datos enviados al backend: ", formDomData, userId);
+
+            const camposOpcionales = ['piso', 'casadepto'];
+
+            const hayErrores = Object.entries(formDomData).some(([key, value]) => {
+                if (camposOpcionales.includes(key)) return false;
+
+                return value === null || value === undefined || value.toString().trim() === '';
+            });
+
+            if (hayErrores) {
+                Swal.fire("Error", "Completa los campos obligatorios", "warning");
+                return;
+            }
+
             const response = await axiosInstance.post(`Account/updDom/${userId}`, formDomData);
             Swal.fire({
                 title: 'Informacion actualizada correctamente!',
@@ -154,6 +192,8 @@ function MyAccount() {
             fetchAccount();
         } catch (e) {
             console.log("Error al actualizar los datos: ", e);
+        } finally {
+            setLoadingDomChange(false);
         }
     }
 
@@ -266,12 +306,19 @@ function MyAccount() {
                                   className="btn btn-danger"
                                   onClick={() => toggleEditMode('account')}
                               />
-                              <input
-                                  type="submit"
-                                  value="Actualizar"
+                              <button
                                   className="btn btn-primary"
                                   onClick={handlePasswordSubmit}
-                                  />
+                              >
+                                  {loadingPassChange ? (
+                                      <div className="spinner-border" role="status">
+                                          <span className="visually-hidden">Loading...</span>
+                                      </div>
+                                  )
+                                      :
+                                      'Actualizar'
+                                  }
+                              </button>
                           </div>
                           :
                           ''
@@ -342,12 +389,19 @@ function MyAccount() {
                                   className="btn btn-danger"
                                   onClick={() => toggleEditMode('personal')}
                               />
-                              <input
-                                  type="submit"
-                                  value="Actualizar"
+                              <button
                                   className="btn btn-primary"
                                   onClick={handleUpdPersonalData}
-                              />
+                              >
+                                  {loadingPersonalChange ? (
+                                      <div className="spinner-border" role="status">
+                                          <span className="visually-hidden">Loading...</span>
+                                      </div>
+                                  )
+                                      :
+                                      'Actualizar'
+                                  }
+                              </button>
                           </div>
                           :
                           ''
@@ -429,7 +483,7 @@ function MyAccount() {
                                   <input
                                       type="number"
                                       placeholder="Casa/Dpto"
-                                      name="casa"
+                                      name="casadepto"
                                       value={formDomData.casadepto === '' ? '' : formDomData.casadepto}
                                       onChange={handleDomData}
                                   />
@@ -455,12 +509,20 @@ function MyAccount() {
                                   className="btn btn-danger"
                                   onClick={() => toggleEditMode('domicilio')}
                               />
-                              <input
-                                  type="submit"
-                                  value="Actualizar"
+                              <button
                                   className="btn btn-primary"
                                   onClick={handleUpdDom}
-                              />
+                              >
+                                  {loadingDomChange ? (
+                                      <div className="spinner-border" role="status">
+                                          <span className="visually-hidden">Loading...</span>
+                                      </div>
+                                  )
+                                      :
+                                      'Actualizar'
+                                  }
+                              </button>
+
                           </div>
                           :
                           ''

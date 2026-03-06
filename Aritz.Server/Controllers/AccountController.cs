@@ -223,8 +223,8 @@ namespace Aritz.Server.Controllers
         {
             public string nombre { get; set; }
             public string apellido { get; set; }
-            public int documento { get; set; }
-            public int telefono { get; set; }
+            public string? documento { get; set; }
+            public string? telefono { get; set; }
         }
 
         public class DomicilioData
