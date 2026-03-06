@@ -127,3 +127,4 @@ wwwroot\images\NewGalleryImg_155d123a-15ea-44ac-b6fc-646a3f8fd494.jpg
 wwwroot\images\prod_e1e389cc-78ae-4bc3-8f24-a29ee955f07f.jpg
 wwwroot\images\prod_e9d34349-c9b6-4bb7-8cf8-f575243b3fcc.png
 wwwroot\images\updMainImg_18188f3b-9938-4543-92fb-4ee67a65ae05.jpeg
+wwwroot\uploads\receipts\receipt_60_4e408806-affe-4e2b-bee0-e09fc5c26e5e.png

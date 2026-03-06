@@ -136,7 +136,7 @@ function MyRequests() {
                             >
                                 <td data-label="Nro Orden">
                                     <NavLink
-                                        to={`/user/my-requests/my-order/${order.ORD_ID}`}
+                                        to={`/user/my-requests/my-order/${order.ORD_ID}?payMethod=${order.PaymentMethod}`}   
                                         className={styles.orderNavlink}
                                     >
                                         {order.ORD_ID}

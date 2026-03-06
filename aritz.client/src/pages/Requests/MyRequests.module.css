@@ -2,6 +2,10 @@
     font-family: "Montserrat", sans-serif;
 }
 
+.requestsTitle{
+    padding: 30px;
+}
+
 .stickyHeader th {
     position: sticky;
     top: 0;
@@ -14,7 +18,7 @@
     display: flex;
     justify-content: center;
     max-height: 70vh;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .requestsTable thead {

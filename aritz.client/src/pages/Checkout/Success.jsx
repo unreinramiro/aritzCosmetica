@@ -92,7 +92,7 @@ function Success() {
             setCreatedOrderId(newOrderId);
 
             Swal.fire({
-                title: '¡Exito!',
+                title: 'Exito!',
                 text: detailResponse.data.Message || 'Pedido confirmado correctamente.',
                 icon: 'success',
                 confirmButtonText: 'Aceptar',

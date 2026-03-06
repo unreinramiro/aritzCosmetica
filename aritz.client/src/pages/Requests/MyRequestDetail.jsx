@@ -10,10 +10,13 @@ import { AiOutlineUpload } from "react-icons/ai";
 import BreadCrum from "../../components/BreadCrum/BreadCrum";
 import { formatPrice } from '../../utils/utils';
 import { useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 function MyRequestDetail() {
 
     const { id } = useParams();
+    const params = new URLSearchParams(location.search);
+    const payMethod = params.get('payMethod');
     const [status, setStatus] = useState('');
     const [requestDet, setRequestDet] = useState([]);
     const [error, setError] = useState(null);
@@ -24,6 +27,7 @@ function MyRequestDetail() {
     const { userId } = useSession();
     const [path, setPath] = useState(false);
     const [shippingCost, setShippingCost] = useState(0);
+    console.log(payMethod);
 
     useEffect(() => {
         // Obtengo el detalle de la orden
@@ -188,6 +192,16 @@ function MyRequestDetail() {
                         <hr></hr>
                         <p>Total del pedido: ${formatPrice(totalAmount)}</p>
                     </div>
+                    {payMethod == 'Transferencia bancaria' && !path && status != 'Cancelado'
+                        ? 
+                        <div className={styles.Comprobante}>
+                            <b>Datos para su transferencia</b>
+                            <p>CBU:</p>
+                            <p>Alias:</p>
+                        </div>
+                        :
+                        ''
+                    }
                     {status != 'Cancelado'
                         ?
                         <div className={styles.Comprobante}>
