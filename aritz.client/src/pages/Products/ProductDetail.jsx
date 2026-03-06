@@ -32,8 +32,10 @@ function ProductDetail() {
     }, [id]); // El uso de un array vacío asegura que solo se ejecute al montar el componente
 
     useEffect(() => {
-        fetchCart();
-    }, [])
+        if (userId) {
+            fetchCart();
+        }
+    }, [id, userId])
 
     const fetchProduct = async () => {
         try {
