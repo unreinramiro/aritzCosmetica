@@ -87,7 +87,7 @@ namespace Aritz.Server.Controllers
                     var emailBodyBuilder = new System.Text.StringBuilder();
                     emailBodyBuilder.AppendLine($"<h2>Nueva Orden de Compra #{newOrder.ORD_ID}</h2>");
                     emailBodyBuilder.AppendLine($"<p><strong>Cliente:</strong> {client.USR_NAME} {client.USR_SURNAME} ({client.USR_EMAIL})</p>");
-                    emailBodyBuilder.AppendLine($"<p>Clickea <strong><a href='https://localhost:50833/user/my-requests/my-order/{newOrder.ORD_ID}'>acá</a></strong> para ir al pedido</p>");
+                    emailBodyBuilder.AppendLine($"<p>Clickea <strong><a href='https://www.aritz.com.ar/user/my-requests/my-order/{newOrder.ORD_ID}'>acá</a></strong> para ir al pedido</p>");
                     emailBodyBuilder.AppendLine($"<h3>Total: ${dto.totalSumCart}</h3>");
 
                     var adminEmail = _configuration["EmailSettings:SenderEmail"];

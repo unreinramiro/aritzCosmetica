@@ -143,7 +143,7 @@ function PaymentInfo() {
             <div className={`container ${styles.paymentInfoContainer}`}>
                 <div className={`row ${styles.subPaymentInfoContainer}`}>
 
-                    <div className={`col-12 col-lg-7 d-flex flex-column gap-4 ${styles.resumeContainer}`}>
+                    <div className={`col-12 col-lg-5 d-flex flex-column gap-4 ${styles.resumeContainer}`}>
                         <h3>Tu pedido</h3>
                         {cart.map((car) => (
                             <div className={styles.cartItem} key={car.CAI_ID}>

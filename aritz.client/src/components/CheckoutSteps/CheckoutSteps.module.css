@@ -2,6 +2,10 @@
     padding: 10px !important;
 }
 
+.subPaymentInfoContainer {
+    justify-content: center;
+}
+
 .formShippingInfo{
     flex-direction: column;
     gap: 10px;
@@ -18,17 +22,16 @@
 }
 
 .btnShippingNext {
-    width: 100%;
-    background-color: #007bff;
-    color: white;
+    min-height: 40px;
+    background-color: rgb(128, 98, 51);
     border: none;
-    border-radius: 4px;
-    padding: 10px 15px;
-    cursor: pointer;
+    color: #fff;
+    width: 100%;
 }
 
     .btnShippingNext:hover {
-        background-color: #0056b3;
+        background-color: #fff;
+        color: rgb(128, 98, 51);
     }
 
 .btnShippingBack {
@@ -39,10 +42,6 @@
     padding: 1px 10px;
     cursor: pointer;
 }
-
-    .btnShippingBack:hover {
-        text-decoration: underline;
-    }
 
 .shippingSeparate{
     width: 30%;
@@ -125,9 +124,9 @@
     padding: 10px;
 }
 
-.resumeContainer{
+.resumeContainer {
     max-height: 60vh;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 /* Cart Item */
@@ -296,7 +295,7 @@ input[type=number] {
 
     .subPaymentInfoContainer{
         display: flex;
-        flex-direction: column ;
+        flex-direction: column;
     }
 
     .resumeContainer {
@@ -309,4 +308,17 @@ input[type=number] {
         margin: 0;
     }
 
+    .shippingInputs {
+        height: 50px;
+        width: 100%;
+        position: relative;
+    }
+
+    .calcSend {
+        height: 50px;
+    }
+
+    .imgItem {
+        width: 50%;
+    }
 }

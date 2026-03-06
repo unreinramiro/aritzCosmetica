@@ -36,6 +36,7 @@
 .subImgContainer {
     width: 30%;
     overflow-y: auto;
+    overflow-x: auto;
 }
 
     .subImgContainer img {

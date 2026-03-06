@@ -85,6 +85,10 @@
 
 @media (max-width: 992px) {
 
+    .datosCuenta{
+        gap: 20px;
+    }
+
     .datosCuentaContainer {
         width: 100%;
     }
@@ -96,5 +100,11 @@
     .domicilioContainer{
         width: 100%;
     }
+
+    .labelEmailPassword select{
+        width: 100%;
+    }
+
+
 
 }
