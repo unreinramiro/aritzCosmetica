@@ -47,16 +47,23 @@ function PaymentInfo() {
 
     const createMercadoPagoPreference = async () => {
         try {
+            const userResponse = await axiosInstance.get(`Account/${userId}`);
+
             const orderData = {
                 userId: userId,
                 totalSumCart: totalSumCart,
+                paymentMethod: 1,
                 zipPrice: zipPrice,
                 items: cart.map(item => ({
+                    ProductId: item.PRD_ID,
                     ProductName: item.PRD_NAME,
                     Quantity: item.CAI_QUANTITY,
                     UnitPrice: item.PRD_PRICE
-                }))
+                })),
+                ZipCode: userResponse.data.USR_POSTAL_CODE
             };
+
+            console.log('Datos enviados al controllador de MP: ', orderData)
 
             const response = await axiosInstance.post("MercadoPago/create_preference", orderData);
 
@@ -155,7 +162,7 @@ function PaymentInfo() {
                                 </div>
                                 <div className={styles.detailItem}>
                                     <div className={styles.nameQuantity}>
-                                        <b>{car.PRD_NAME}</b>
+                                        <b>{car.CAT_NAME} {car.PRD_NAME}</b>
                                         <p>Cantidad: {car.CAI_QUANTITY}</p>
                                     </div>
                                     <div className={styles.precio}>

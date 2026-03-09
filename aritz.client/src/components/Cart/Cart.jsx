@@ -127,7 +127,7 @@ function Carrito() {
                                         className={styles.itemImage}
                                     />
                                     <div className={styles.itemDetails}>
-                                        <h4>{car.PRD_NAME}</h4>
+                                        <h4>{car.CAT_NAME} {car.PRD_NAME}</h4>
                                         <p>Precio: ${car.CAI_TOTAL_PRICE}</p>
                                         <p>Cantidad: {car.CAI_QUANTITY}</p>
                                         <button

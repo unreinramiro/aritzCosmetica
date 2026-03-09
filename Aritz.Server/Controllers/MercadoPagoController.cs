@@ -1,10 +1,11 @@
 ﻿using Aritz.Server.Data;
+using Aritz.Server.Models;
+using MercadoPago.Client.Payment;
 using MercadoPago.Client.Preference;
 using MercadoPago.Config;
 using MercadoPago.Error;
 using MercadoPago.Resource.Preference;
 using Microsoft.AspNetCore.Mvc;
-using MercadoPago.Client.Payment;
 
 namespace Aritz.Server.Controllers
 {
@@ -22,6 +23,12 @@ namespace Aritz.Server.Controllers
         [HttpPost("create_preference")]
         public async Task<IActionResult> CreatePreference([FromBody] OrderDto orderData)
         {
+            if (orderData.totalSumCart <= 0)
+                return BadRequest("El monto total debe ser mayor a 0.");
+
+            if (orderData.userId <= 0)
+                return BadRequest("Usuario inválido.");
+
             try
             {
                 //// Logica para obtener el mail del usuario con userId
@@ -30,6 +37,33 @@ namespace Aritz.Server.Controllers
                 {
                     return BadRequest("Usuario no encontrado");
                 }
+
+                var newOrder = new Orders
+                {
+                    ORD_USR_ID = orderData.userId,
+                    ORD_ORDER_DATE = DateTime.UtcNow,
+                    ORD_TOTAL_AMOUNT = orderData.totalSumCart + orderData.zipPrice, // Total con envío
+                    ORD_STATUS = "Iniciada",
+                    ORD_PMT_ID = orderData.paymentMethod,
+                    ORD_ZIP_CODE = orderData.ZipCode
+                };
+
+                _context.Orders.Add(newOrder);
+                await _context.SaveChangesAsync();
+
+                foreach (var item in orderData.Items)
+                {
+
+                    var detail = new OrderDetails {
+                        ODD_ORD_ID = newOrder.ORD_ID,
+                        ODD_PRD_ID = item.ProductId, 
+                        ODD_QUANTITY = item.Quantity,
+                        ODD_TOTAL_PRICE = item.UnitPrice * item.Quantity
+                    };
+                    _context.OrderDetails.Add(detail);
+
+                }
+                await _context.SaveChangesAsync();
 
                 var payerEmail = user.USR_EMAIL;
 
@@ -41,6 +75,8 @@ namespace Aritz.Server.Controllers
                 // 1. Crear el cliente de preferencias
                 var request = new PreferenceRequest
                 {
+                    ExternalReference = newOrder.ORD_ID.ToString(),
+
                     Items = new List<PreferenceItemRequest>(),
                     Payer = new PreferencePayerRequest
                     {
@@ -48,20 +84,21 @@ namespace Aritz.Server.Controllers
                     },
                     BackUrls = new PreferenceBackUrlsRequest
                     {
-                        Success = "https://aritzcosmetica2026.vercel.app/checkout/pay-success", // Ajusta a tu URL real
-                        Failure = "https://aritzcosmetica2026.vercel.app/checkout/pay-failure",
-                        Pending = "https://aritzcosmetica2026.vercel.app/checkout/pay-pending"
+                        Success = "https://www.aritz.com.ar/checkout/pay-success", // Ajusta a tu URL real
+                        Failure = "https://www.aritz.com.ar/checkout/pay-failure",
+                        Pending = "https://www.aritz.com.ar/checkout/pay-pending"
                     },
                     AutoReturn = "approved",
                 };
 
+                decimal finalPrice = orderData.totalSumCart + orderData.zipPrice;
 
                 request.Items.Add(new PreferenceItemRequest
                 {
-                    Title = "Compra en Aritz",
+                    Title = "Compra en Aritz - Orden #" + newOrder.ORD_ID,
                     Quantity = 1,
                     CurrencyId = "ARS",
-                    UnitPrice = orderData.totalSumCart + orderData.zipPrice
+                    UnitPrice = finalPrice
                 });
 
 
@@ -100,10 +137,12 @@ namespace Aritz.Server.Controllers
             public int paymentMethod { get; set; }
             public List<OrderItemDto> Items { get; set; } = new();
             public decimal zipPrice { get; set; }
+            public string ZipCode { get; set; }
         }
 
         public class OrderItemDto
         {
+            public int ProductId { get; set; }
             public string ProductName { get; set; } = string.Empty;
             public int Quantity { get; set; }
             public decimal UnitPrice { get; set; }

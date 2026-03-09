@@ -166,6 +166,7 @@ namespace Aritz.Server.Controllers
 
             var orders = await _context.Orders
                     .Where(o => o.ORD_USR_ID == userId)
+                    .Where(o => o.ORD_STATUS != "Iniciada")
                     .Include(o => o.PaymentMethod)
                     .Include(o => o.OrderDetails)
                     .ThenInclude(d => d.Products)
@@ -199,8 +200,9 @@ namespace Aritz.Server.Controllers
             var orderDetail = await _context.OrderDetails
                 .Where(o => o.ODD_ORD_ID == orderId)
                 .Include(o => o.Products)
+                    .ThenInclude(p => p.Category)
                 .Include(o => o.Orders)
-                .ThenInclude(o => o.Receipt)
+                    .ThenInclude(o => o.Receipt)
                 .Select(od => new
                 {
                     IdOrder = od.ODD_ORD_ID,
@@ -212,7 +214,8 @@ namespace Aritz.Server.Controllers
                     ProductImage = od.Products.PRD_IMAGE,
                     ReceiptPath = od.Orders.Receipt.RCP_PATH,
                     OrderTotalAmount = od.Orders.ORD_TOTAL_AMOUNT,
-                    OrderStatus = od.Orders.ORD_STATUS
+                    OrderStatus = od.Orders.ORD_STATUS,
+                    CategoryName = od.Products.Category.CAT_NAME
                 })
                 .ToListAsync();
 

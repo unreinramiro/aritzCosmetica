@@ -102,6 +102,7 @@ namespace Aritz.Server.Controllers
             var cart = await _context.Carts
                 .Include(c => c.Items)
                 .ThenInclude(i => i.Product)
+                .ThenInclude(p => p.Category)
                 .FirstOrDefaultAsync(c => c.CAR_USR_ID == userId);
 
             if (cart == null || cart.Items == null || !cart.Items.Any())
@@ -120,6 +121,7 @@ namespace Aritz.Server.Controllers
                 i.Product.PRD_IMAGE,
                 i.CAI_QUANTITY,
                 i.CAI_TOTAL_PRICE,
+                i.Product.Category.CAT_NAME
             }));
         }
 

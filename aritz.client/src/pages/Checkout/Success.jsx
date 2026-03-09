@@ -37,76 +37,43 @@ function Success() {
 
     const [loadingPay, setLoadingPay] = useState(false);
 
+    const mpExternalRef = searchParams.get('external_reference');
+
+
     useEffect(() => {
         console.log("PaymentStatus:", paymentStatus, "Flag: ", isProcessing, "TotalSumCart: ", totalSumCart);
+        fetchCountCart();
+        fetchSumTotalCart();
         if (paymentStatus === 'approved' && userId && !isProcessing && !processedRef.current) {
             processedRef.current = true; // Marcamos como procesado
-            handleOrderConfirm();
+            handleStatusChange(mpExternalRef, 'Pendiente')
         }
     }, [paymentStatus, userId]);
 
-    const handleOrderConfirm = async () => {
-        setIsProcessing(true);
-        setLoadingPay(true);
+    const handleStatusChange = async (orderId, newStatus) => {
+
+        console.log("El order ID es: ", orderId);
         try {
-            const cartResponse = await axiosInstance.get(`Cart/user/${userId}`);
-            const cartItems = cartResponse.data;
 
-            // Obtengo el cod postal del cliente
-            const userResponse = await axiosInstance.get(`Account/${userId}`);
-            const codigoPostalReal = userResponse.data.USR_POSTAL_CODE;
+            const bodyData = {
+                OrderId: orderId,
+                OrderStatus: newStatus,
+                CancelOrderByUser: false
+            };
 
-            // Calculo nuevamente el precio del envio en base al codigo postal del cliente
-            const responseCodPostal = await axiosInstance.get(`Shipping/calculate?zipCode=${codigoPostalReal}`);
-            const costoEnvioReal = responseCodPostal.data.Price;
-
-            // Calculamos el total manualmente para estar 100% seguros
-            const subTotalCarrito = cartItems.reduce((acc, item) => {
-                return acc + (item.PRD_PRICE * item.CAI_QUANTITY);
-            }, 0);
-
-            const totalFinal = subTotalCarrito + costoEnvioReal;
-
-            console.log("Datos a enviar al BACKEND: ");
-            console.log("User ID: ", userId);
-            console.log("Monto total: ", totalFinal);
-
-            const orderResponse = await axiosInstance.post("Order/confirmOrder", {
-                userId,
-                paymentMethod: 1,
-                totalSumCart: totalFinal,
-                CartItems: cartItems
-            });
-
-            const newOrderId = orderResponse.data.OrderId;
-
-            if (!newOrderId) {
-                throw new Error('No se recibió el OrderId del backend.');
-            }
-
-            const detailResponse = await axiosInstance.post('order/confirmOrderDetail', {
-                userId,
-                orderId: newOrderId,
-            });
-
-            setCreatedOrderId(newOrderId);
-
-            Swal.fire({
-                title: 'Exito!',
-                text: detailResponse.data.Message || 'Pedido confirmado correctamente.',
-                icon: 'success',
-                confirmButtonText: 'Aceptar',
-            });
-
-            fetchCountCart();
-            fetchSumTotalCart();
-        } catch (error) {
-            console.error("Error al confirmar el pedido:", error);
-            alert("No se pudo confirmar el pedido.");
-        } finally {
-            setLoadingPay(false);
+            const response = await axiosInstance.put(`Order/${orderId}/updOrdStatus`, bodyData);
+        } catch (e) {
+            console.log("Error al querer actualizar el estado: ", e);
         }
     }
+
+    Swal.fire({
+        title: 'Exito!',
+        text: 'Pedido confirmado correctamente.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+    });
+
 
     return (
         <div className="d-flex text-center justify-content-center">
@@ -139,7 +106,7 @@ function Success() {
 
                         <label className={`d-flex gap-3 ${styles.shippingLabels}`}>
                             <NavLink
-                                to={`/user/my-requests/my-order/${createdOrderId ? createdOrderId : orderId}`}
+                                        to={`/user/my-requests/my-order/${mpExternalRef ? mpExternalRef : orderId}`}
                                 className={styles.btnShippingNext}
                             >
                                 Ir a mi pedido
