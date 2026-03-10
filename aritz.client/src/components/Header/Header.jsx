@@ -234,7 +234,7 @@ const Header = () => {
                                 }
                             >
                             
-                                        <p>LogIn / Sing In</p>
+                                        <p>LogIn / Sign In</p>
                             </NavLink>  )}
                     </div>
 
