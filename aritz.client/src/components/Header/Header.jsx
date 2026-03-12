@@ -29,7 +29,12 @@ const Header = () => {
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userName');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('isAdmin');
         setIsLoggedIn(false);
+        setUserId(null);     // <--- Â¡CRÃTICO! Esto hace que el if(userId == null) funcione
+        setUserName(null);
+        setIsAdmin(false);
         Swal.fire("Sesion cerrada");
         navigate('/'); // Redirige al inicio
     };
@@ -51,7 +56,7 @@ const Header = () => {
     }
 
     const processedCategories = categories.map(cat => {
-        // CORRECCIÓN AQUÍ:
+        // CORRECCIÃ“N AQUÃ:
         const validProducts = cat.Products.filter(prod =>
             prod.PRD_QUANTITY > 0 && prod.PRD_IS_ACTIVE === true
         );
@@ -63,7 +68,7 @@ const Header = () => {
         cat => cat.Products.length > 0
     );
 
-    // Función auxiliar para dividir el array en grupos de 3
+    // FunciÃ³n auxiliar para dividir el array en grupos de 3
     const chunkArray = (array, size) => {
         const chunks = [];
         for (let i = 0; i < array.length; i += size) {
@@ -85,7 +90,7 @@ const Header = () => {
                     Aritz
                 </NavLink>
 
-                {/* Botón para hamburguesa en dispositivos móviles */}
+                {/* BotÃ³n para hamburguesa en dispositivos mÃ³viles */}
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -95,7 +100,7 @@ const Header = () => {
                     <span className={`navbar-toggler-icon`}></span>
                 </button>
 
-                {/* Enlaces de navegación */}
+                {/* Enlaces de navegaciÃ³n */}
                 <div className={`collapse navbar-collapse d-flex ${styles.containerNavUl}`}>
                     <ul className={`navbar-nav ${styles.navUl} ${clase ? styles.active : ''}`}>
                         <li className={`${styles.navItem} d-flex`}>
