@@ -16,7 +16,7 @@ import { FaSignsPost } from "react-icons/fa6";
 
 const Header = () => {
 
-    const { isLoggedIn, setIsLoggedIn, userName, setUserName, userId, pageCheckout, isAdmin } = useSession();
+    const { isLoggedIn, setIsLoggedIn, userName, setUserName, userId, setUserId, pageCheckout, isAdmin, setIsAdmin } = useSession();
     const { totalQuantity, fetchCountCart } = useCart();
     const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
@@ -32,7 +32,7 @@ const Header = () => {
         localStorage.removeItem('userId');
         localStorage.removeItem('isAdmin');
         setIsLoggedIn(false);
-        setUserId(null);     // <--- ¡CRÍTICO! Esto hace que el if(userId == null) funcione
+        setUserId(null);
         setUserName(null);
         setIsAdmin(false);
         Swal.fire("Sesion cerrada");
