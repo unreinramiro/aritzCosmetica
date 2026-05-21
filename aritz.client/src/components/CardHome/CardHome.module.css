@@ -25,7 +25,7 @@
     text-align: center;
     background-color: antiquewhite;
     opacity: 70%;
-    height: 40%;
+    max-height: 40%;
     width: 100%;
     position: absolute;
     padding: 10px;
@@ -40,6 +40,7 @@
     }
 
     .cardBigSubContainer {
+        height: auto;
         bottom: 0;
         padding: 1rem;
     }

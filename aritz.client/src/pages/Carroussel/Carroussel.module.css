@@ -62,17 +62,28 @@
         display: block;
         /* 
        cover: Rellena todo el cuadro recortando los bordes si hace falta (No deforma).
-       contain: Muestra la foto entera pero deja espacios vacíos a los lados.
+       contain: Muestra la foto entera pero deja espacios vacï¿½os a los lados.
        fill: Estira la foto (La deforma, queda feo).
     */
         object-fit: cover;
-        object-position: center; /* Centra la imagen */
+        object-position: top center; 
+        object-position: center center; /* Centra la imagen */
     }
+
+.productImage {
+    animation: float 5s ease-in-out infinite;
+    width: 100%;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-15px); }
+}
 
 @media (max-width: 992px) {
 
     .carrouselContainer{
-        height: 100vh;
+        height: auto;
     }
 
     .video {
@@ -88,14 +99,7 @@
     }
 
     .titleCarrousel {
-        position: relative;
-        top: 0%;
-        left: 0%; /* Lo mueve al 50% a la derecha */
-        gap: 10px;
-        color: #000;
-        text-align: center;
-        order: 2;
-        padding: 50px;
+        display: none;
     }
 
     .subTitleCarrousel h1{
@@ -112,6 +116,11 @@
 
     .shopBtn {
         display: none;
+    }
+
+    @keyframes float {
+        from { transform: scale(1); }
+        to   { transform: scale(1.1); }
     }
 
 }

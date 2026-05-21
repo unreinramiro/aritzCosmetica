@@ -6,6 +6,7 @@ import imagen3 from '../../assets/images/imagenCarrousel3.jpg';
 import styles from './Carroussel.module.css'; // Importa el CSS personalizado
 import { NavLink } from "react-router-dom";
 import videoCremas from '../../assets/videos/videoCremas.mp4'; 
+import cremaImg from '../../assets/images/fotoPortada.webp';
 
 function Carroussel() {
 
@@ -40,8 +41,9 @@ function Carroussel() {
                         Shop
                     </NavLink>
                 </div>
-                <div className="carousel-inner" style={{ height: "100%" }}>
-                    <video
+                <div className={`carousel-inner ${styles.containerProductImg}`} style={{ height: "100%" }}>
+                    <img src={cremaImg} className={styles.productImage} alt="producto" />
+                    {/* <video
                         className={styles.video}
                         loop preload="auto"
                         autoPlay
@@ -51,7 +53,7 @@ function Carroussel() {
                     >
                         <source src="https://localhost:7273/images/videoCremas.mp4" type="video/mp4" media="(min-width: 768px)" />
                         <source src="https://localhost:7273/images/videoCremas.mp4" type="video/mp4" media="(min-width: 768px)" />
-                    </video>
+                    </video> */}
                 </div>
             </div>
         </div>
