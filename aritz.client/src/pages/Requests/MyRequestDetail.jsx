@@ -203,8 +203,8 @@ function MyRequestDetail() {
                         ? 
                         <div className={styles.Comprobante}>
                             <b>Datos para su transferencia</b>
-                            <p>CBU:</p>
-                            <p>Alias:</p>
+                            <p>CBU: 0000003100006485290527</p>
+                            <p>Alias: fer.luz.rio</p>
                         </div>
                         :
                         ''

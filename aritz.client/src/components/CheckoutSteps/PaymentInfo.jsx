@@ -105,7 +105,7 @@ function PaymentInfo() {
 
             const orderId = orderResponse.data.OrderId;
             if (!orderId) {
-                throw new Error('No se recibió el OrderId del backend.');
+                throw new Error('No se recibiÃ³ el OrderId del backend.');
             }
 
             const detailResponse = await axiosInstance.post('order/confirmOrderDetail', {
@@ -114,7 +114,7 @@ function PaymentInfo() {
             });
 
             Swal.fire({
-                title: '¡Exito!',
+                title: 'Â¡Exito!',
                 text: detailResponse.data.Message || 'Pedido confirmado correctamente.',
                 icon: 'success',
                 confirmButtonText: 'Aceptar',
@@ -188,8 +188,8 @@ function PaymentInfo() {
                                 </div>
                                 <h2>Datos transferencia</h2>
                                 <div className={styles.bankContainerSub}>
-                                    <b>CBU: 0000003100048344628186</b>
-                                    <b>Alias: ramiro.unrein </b>
+                                    <b>CBU: 0000003100006485290527</b>
+                                    <b>Alias: fer.luz.rio </b>
                                 </div>
                             </div> :
                             <div className={styles.mpContainer}>
@@ -213,7 +213,7 @@ function PaymentInfo() {
                     </div>
                 </div>
 
-                {/* Botones de navegación */}
+                {/* Botones de navegaciÃ³n */}
                 <div className="row mt-4 mb-5">
                     <div className="col-12 d-flex justify-content-between gap-3">
                         <button onClick={back} className={styles.btnShippingBack}>
