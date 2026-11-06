@@ -165,7 +165,7 @@ namespace Aritz.Server.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ORD_USR_ID");
 
-                    b.Property<string>("ZipCode")
+                    b.Property<string>("ORD_ZIP_CODE")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ORD_ZIP_CODE");
 

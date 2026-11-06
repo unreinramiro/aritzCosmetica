@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Aritz.Server.Migrations
 {
     [DbContext(typeof(AritzDbContext))]
-    [Migration("20260306193510_AddZipCodeToOrders")]
-    partial class AddZipCodeToOrders
+    [Migration("20261106211908_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -168,7 +168,7 @@ namespace Aritz.Server.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ORD_USR_ID");
 
-                    b.Property<string>("ZipCode")
+                    b.Property<string>("ORD_ZIP_CODE")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ORD_ZIP_CODE");
 

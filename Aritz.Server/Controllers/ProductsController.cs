@@ -316,6 +316,9 @@ namespace Aritz.Server.Controllers
                     return NotFound($"No se encontró el producto con ID {prdDelId}");
                 }
 
+                var cartItems = _context.CartItems.Where(ci => ci.CAI_PRD_ID == prdDelId);
+                _context.CartItems.RemoveRange(cartItems);
+
                 _context.Products.Remove(product);
                 await _context.SaveChangesAsync();
 
