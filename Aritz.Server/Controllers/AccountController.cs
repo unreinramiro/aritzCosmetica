@@ -1,6 +1,8 @@
 ﻿using Aritz.Server.Data;
 using Aritz.Server.Models;
 using Aritz.Server.Services;
+using MercadoPago.Resource.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -25,6 +27,7 @@ namespace Aritz.Server.Controllers
             _configuration = configuration;
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpGet("users")]
         public async Task<IActionResult> GetUsers()
         {
@@ -43,6 +46,7 @@ namespace Aritz.Server.Controllers
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetAccount(int userId)
         {
+            if (!this.IsOwnerOrAdmin(userId)) return Forbid();
             var user = await _context.Users.FindAsync(userId);
             if(user == null)
             {
@@ -57,6 +61,7 @@ namespace Aritz.Server.Controllers
         [HttpPost("updPersonalData/{userId}")]
         public async Task<IActionResult> UpdPersonalData([FromBody] PersonalData dtoPd, int userId)
         {
+            if (!this.IsOwner(userId)) return Forbid();
             var user = await _context.Users
             .FirstOrDefaultAsync(u => u.USR_ID == userId);
             if (user == null)
@@ -107,6 +112,7 @@ namespace Aritz.Server.Controllers
         [HttpPost("updDom/{userId}")]
         public async Task<IActionResult> UpdDomData([FromBody] DomicilioData dtoDom, int userId)
         {
+            if (!this.IsOwner(userId)) return Forbid();
             var user = await _context.Users
             .FirstOrDefaultAsync(u => u.USR_ID == userId);
             if (user == null)
@@ -174,6 +180,7 @@ namespace Aritz.Server.Controllers
         [HttpPost("changePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
         {
+            if (!this.IsOwner(dto.userId)) return Forbid();
             var user = await _context.Users.FirstOrDefaultAsync(u => u.USR_ID == dto.userId);
             if (user == null)
                 return NotFound(new { Message = "Usuario no encontrado." });
@@ -198,6 +205,7 @@ namespace Aritz.Server.Controllers
         [HttpPost("confirmPasswordChange")]
         public async Task<IActionResult> ConfirmPasswordChange([FromBody] ConfirmPasswordChangeDto dto)
         {
+            if (!this.IsOwner(dto.userId)) return Forbid();
             var user = await _context.Users.FirstOrDefaultAsync(u => u.USR_ID == dto.userId);
             if (user == null)
                 return NotFound(new { Message = "Usuario no encontrado." });

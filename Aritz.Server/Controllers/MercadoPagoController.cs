@@ -5,7 +5,10 @@ using MercadoPago.Client.Preference;
 using MercadoPago.Config;
 using MercadoPago.Error;
 using MercadoPago.Resource.Preference;
+using MercadoPago.Resource.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aritz.Server.Controllers
 {
@@ -23,49 +26,82 @@ namespace Aritz.Server.Controllers
         [HttpPost("create_preference")]
         public async Task<IActionResult> CreatePreference([FromBody] OrderDto orderData)
         {
-            if (orderData.totalSumCart <= 0)
-                return BadRequest("El monto total debe ser mayor a 0.");
+            if (!this.IsOwner(orderData.userId)) return Forbid();
 
-            if (orderData.userId <= 0)
-                return BadRequest("Usuario inválido.");
+            var client = await _context.Users.FindAsync(orderData.userId);
+            if (client == null) return BadRequest("Usuario invalido");
+
+            var cart = await _context.Carts
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(c => c.CAR_USR_ID == orderData.userId);
+            if (cart == null) return BadRequest("Carrito vacio");
+
+            if (!int.TryParse(client.USR_POSTAL_CODE, out int postalCode)) return BadRequest("Completá un código postal válido en tu cuenta."); // Primero parseo a entero para poder buscar en la base
+            var zone = await _context.ShippingZones
+                .FirstOrDefaultAsync(z => postalCode >= z.MinZipCode && postalCode <= z.MaxZipCode);
+            decimal shippingPrice = zone?.Price ?? 10000; // Si encuentra zona le asigna el precio establecido, sino le pone el por default (10000) 
 
             try
             {
-                //// Logica para obtener el mail del usuario con userId
-                var user = await _context.Users.FindAsync(orderData.userId);
-                if (user == null)
-                {
-                    return BadRequest("Usuario no encontrado");
-                }
+                decimal subtotal = 0;
 
                 var newOrder = new Orders
                 {
                     ORD_USR_ID = orderData.userId,
                     ORD_ORDER_DATE = DateTime.UtcNow,
-                    ORD_TOTAL_AMOUNT = orderData.totalSumCart + orderData.zipPrice, // Total con envío
                     ORD_STATUS = "Iniciada",
                     ORD_PMT_ID = orderData.paymentMethod,
-                    ORD_ZIP_CODE = orderData.ZipCode
+                    ORD_ZIP_CODE = client.USR_POSTAL_CODE
                 };
+
+                foreach (var carItem in cart.Items)
+                {
+                    if (carItem.CAI_QUANTITY <= 0)
+                        return BadRequest("Cantidad inválida en el carrito.");
+
+                    // Buscamos el producto
+                    var product = await _context.Products.FindAsync(carItem.CAI_PRD_ID);
+
+                    if (product == null)
+                    {
+                        // Rollback manual no es necesario si lanzamos excepción o return, 
+                        return BadRequest($"El producto con ID {carItem.CAI_PRD_ID} no existe.");
+                    }
+
+                    // VALIDAR STOCK DISPONIBLE
+                    if (product.PRD_QUANTITY < carItem.CAI_QUANTITY)
+                    {
+                        return BadRequest($"Stock insuficiente para el producto: {product.PRD_NAME}. Stock actual: {product.PRD_QUANTITY}");
+                    }
+
+                    subtotal += product.PRD_PRICE * carItem.CAI_QUANTITY;
+
+                    var lineTotal = product.PRD_PRICE * carItem.CAI_QUANTITY;
+                    subtotal += lineTotal;
+
+                    newOrder.OrderDetails.Add(new OrderDetails
+                    {
+                        ODD_PRD_ID = product.PRD_ID,
+                        ODD_QUANTITY = carItem.CAI_QUANTITY,
+                        ODD_TOTAL_PRICE = lineTotal
+                    });
+
+                    // Restamos el stock en Products
+                    product.PRD_QUANTITY -= carItem.CAI_QUANTITY;
+                    if (product.PRD_QUANTITY <= 0) product.PRD_IS_ACTIVE = false; //Si no hay del producto que ponga que el mismo no esta disponible en la bd
+
+                    _context.Products.Update(product);
+
+                }
+
+                var total = subtotal + shippingPrice;
+
+                newOrder.ORD_TOTAL_AMOUNT = total;
 
                 _context.Orders.Add(newOrder);
                 await _context.SaveChangesAsync();
 
-                foreach (var item in orderData.Items)
-                {
-
-                    var detail = new OrderDetails {
-                        ODD_ORD_ID = newOrder.ORD_ID,
-                        ODD_PRD_ID = item.ProductId, 
-                        ODD_QUANTITY = item.Quantity,
-                        ODD_TOTAL_PRICE = item.UnitPrice * item.Quantity
-                    };
-                    _context.OrderDetails.Add(detail);
-
-                }
-                await _context.SaveChangesAsync();
-
-                var payerEmail = user.USR_EMAIL;
+                var payerEmail = client.USR_EMAIL;
 
                 if (string.IsNullOrEmpty(payerEmail))
                 {
@@ -89,22 +125,22 @@ namespace Aritz.Server.Controllers
                         Pending = "https://www.aritz.com.ar/checkout/pay-pending"
                     },
                     AutoReturn = "approved",
-                };
 
-                decimal finalPrice = orderData.totalSumCart + orderData.zipPrice;
+                    NotificationUrl = "https://www.aritz.com.ar/api/MercadoPago/webhook"
+                };
 
                 request.Items.Add(new PreferenceItemRequest
                 {
                     Title = "Compra en Aritz - Orden #" + newOrder.ORD_ID,
                     Quantity = 1,
                     CurrencyId = "ARS",
-                    UnitPrice = finalPrice
+                    UnitPrice = total
                 });
 
 
                 // 3. Generar la preferencia
-                var client = new PreferenceClient();
-                Preference preference = await client.CreateAsync(request);
+                var prefClient = new PreferenceClient();
+                Preference preference = await prefClient.CreateAsync(request);
 
                 // 4. Devolver el ID al frontend
                 return Ok(new { preferenceId = preference.Id });
@@ -129,15 +165,49 @@ namespace Aritz.Server.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpPost("webhook")]
+        public async Task<IActionResult> Webhook(
+            [FromQuery(Name = "data.id")] string? dataId,
+            [FromQuery] string? type)
+        {
+            if (type != "payment" || !long.TryParse(dataId, out var paymentId))
+                return Ok();
+
+            try
+            {
+                // Se consulta el pago a MercadoPago con tu Access Token:
+                // lo que mande el request no se usa como dato confiable
+                var payment = await new PaymentClient().GetAsync(paymentId);
+
+                if (payment.Status != "approved" ||
+                    !int.TryParse(payment.ExternalReference, out var orderId))
+                    return Ok();
+
+                var order = await _context.Orders.FindAsync(orderId);
+                if (order == null || order.ORD_STATUS != "Iniciada") return Ok(); // idempotente
+
+                if (payment.TransactionAmount != order.ORD_TOTAL_AMOUNT)
+                {
+                    Console.WriteLine($"Monto no coincide en la orden {orderId}");
+                    return Ok();
+                }
+
+                order.ORD_STATUS = "Pendiente";
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en webhook MP: {ex.Message}");
+                return StatusCode(500); // MercadoPago reintenta
+            }
+        }
+
         public class OrderDto
         {
             public int userId { get; set; }
-            public decimal totalSumCart { get; set; }
-            public string? Status { get; set; }
             public int paymentMethod { get; set; }
-            public List<OrderItemDto> Items { get; set; } = new();
-            public decimal zipPrice { get; set; }
-            public string ZipCode { get; set; }
         }
 
         public class OrderItemDto

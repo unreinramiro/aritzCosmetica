@@ -9,11 +9,14 @@ using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Aritz.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
         private readonly AritzDbContext _context;
@@ -101,11 +104,7 @@ namespace Aritz.Server.Controllers
                     return Unauthorized("Credenciales inválidas.");
                 }
 
-                Console.WriteLine($"Email recibido: {dto.Email}");
-                Console.WriteLine($"Contraseña recibida: {dto.Password}");
-                Console.WriteLine($"Hash almacenado: {user.USR_PASSWORD_HASH}");
                 bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.USR_PASSWORD_HASH);
-                Console.WriteLine($"Verificación de contraseña: {isPasswordValid}");
 
                 if (string.IsNullOrEmpty(user.USR_PASSWORD_HASH) || !isPasswordValid)
                     return Unauthorized("Credenciales inválidas.");
@@ -114,12 +113,14 @@ namespace Aritz.Server.Controllers
                     return Unauthorized("Cuenta no verificada. Revisa tu email.");
 
                 // Generar JWT
-                var claims = new[]
+                var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.USR_ID.ToString()),
                     new Claim(ClaimTypes.Email, user.USR_EMAIL),
                     new Claim(ClaimTypes.Name, user.USR_NAME)
                 };
+                if (user.USR_IS_ADMIN == true)
+                    claims.Add(new Claim(ClaimTypes.Role, "Admin"));
 
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

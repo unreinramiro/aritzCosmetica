@@ -5,12 +5,15 @@ using MercadoPago.Resource.User;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Aritz.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Aritz.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    
+    [AllowAnonymous]
     public class ContactController : ControllerBase
     {
         private readonly AritzDbContext _context;
