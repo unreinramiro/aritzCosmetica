@@ -64,11 +64,13 @@ img {
 }
 
 .titleInfo{
+    text-align: start;
     font-size: 3rem;
 }
 
 .priceInfo{
     font-size: 2rem;
+    text-align: start;
 }
 
 .addCartInfo {

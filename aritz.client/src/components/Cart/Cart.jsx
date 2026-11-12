@@ -59,7 +59,6 @@ function Carrito() {
     fetchCart();
   }, [userId, totalSumCart]);
 
-  setPageCheckout(location);
 
   const handleProceedToCheckout = () => {
     //if (totalSumCart < 20000) {
@@ -191,7 +190,9 @@ function Carrito() {
               </ul>
 
               {couponError && (
-                <small className="text-center" style={{ color: "#ff4d4d" }}>{couponError}</small>
+                <small className="text-center" style={{ color: "#ff4d4d" }}>
+                  {couponError}
+                </small>
               )}
               {couponInfo && (
                 <small className="text-center" style={{ color: "#2e7d32" }}>

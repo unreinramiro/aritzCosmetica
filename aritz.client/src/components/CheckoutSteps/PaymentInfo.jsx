@@ -19,7 +19,7 @@ initMercadoPago(publicKey, { locale: "es-AR" });
 function PaymentInfo() {
   const { paymentMethod, setPaymentMethod, zipPrice } = useCheckout();
   const navigate = useNavigate();
-  const { fetchCountCart, fetchSumTotalCart, totalSumCart, couponInfo } =
+  const { fetchCountCart, fetchSumTotalCart, totalSumCart, couponInfo, couponCode } =
     useCart();
   const [loading, setLoading] = useState(true);
   const [loadingOrdConf, setLoadingOrdConf] = useState(false);
@@ -31,8 +31,6 @@ function PaymentInfo() {
   const { userId, setPageCheckout } = useSession();
 
   const discount = couponInfo?.discount ?? 0;
-
-  setPageCheckout(location);
 
   //if (totalSumCart < 20000 && !loading) {
   //    navigate('/cart');
@@ -61,6 +59,7 @@ function PaymentInfo() {
       const orderData = {
         userId: userId,
         paymentMethod: 1,
+        code: couponCode
       };
 
       console.log("Datos enviados al controllador de MP: ", orderData);
@@ -94,10 +93,12 @@ function PaymentInfo() {
 
   const handleOrderConfirm = async () => {
     setLoadingOrdConf(true);
+    console.log(couponCode);
     try {
       const orderResponse = await axiosInstance.post("Order/confirmOrder", {
         userId,
         paymentMethod,
+        code: couponCode
       });
 
       const orderId = orderResponse.data.OrderId;
@@ -119,7 +120,6 @@ function PaymentInfo() {
         icon: "success",
         confirmButtonText: "Aceptar",
       });
-
       fetchCountCart();
       fetchSumTotalCart();
       navigate(`/checkout/pay-success?orderId=${orderId}`);
@@ -167,14 +167,17 @@ function PaymentInfo() {
                   </div>
                   <div className={styles.detailItem}>
                     <div className={styles.nameQuantity}>
-                      <b>
+                      <b className="text-start">
                         {car.CAT_NAME} {car.PRD_NAME}
                       </b>
-                      <p>Cantidad: {car.CAI_QUANTITY}</p>
+                      <div>
+                        <p>Cantidad: {car.CAI_QUANTITY}</p>
+                        <p>P/U: ${formatPrice(car.PRD_PRICE)}</p>
+                      </div>
                     </div>
                     <div className={styles.precio}>
-                      <b>Subtotal</b>
-                      <p>$ {formatPrice(car.PRD_PRICE * car.CAI_QUANTITY)}</p>
+                      <b className="text-start">Subtotal</b>
+                      <p>${formatPrice(car.PRD_PRICE * car.CAI_QUANTITY)}</p>
                     </div>
                   </div>
                 </div>
@@ -193,7 +196,7 @@ function PaymentInfo() {
               )}
               <div className={styles.total}>
                 <p className="d-flex justify-content-between">
-                  Total: <b>${formatPrice(totalSumCart + zipPrice)}</b>
+                  Total: <b>${formatPrice(totalSumCart - discount + zipPrice)}</b>
                 </p>
               </div>
             </div>

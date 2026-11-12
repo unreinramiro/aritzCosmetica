@@ -177,6 +177,7 @@ function MyRequestDetail() {
       Swal.fire("Exito", `Se cancelo correctamente el pedido`, "success");
     } catch (e) {
       console.log(e);
+      Swal.fire("Error", `No se pudo cancelar el pedido`, "success");
     }
   };
 
@@ -186,7 +187,7 @@ function MyRequestDetail() {
   const deliveryEstimation = calculateDeliveryRange(zipToUse);
 
   return (
-    <div>
+    <div className={styles.principalContainer}>
       <BreadCrum id={id} />
 
       <div className={styles.centeredContainer}>

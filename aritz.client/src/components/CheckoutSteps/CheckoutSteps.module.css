@@ -359,5 +359,17 @@ input[type=number] {
 
     .imgItem {
         width: 50%;
+        object-fit: cover;
+    }
+
+    .cartItem {
+        width: 100%;
+        justify-content: start;
+        gap: 10px;
+        height: auto;
+    }
+
+    .detailItem{
+        flex-direction: column;
     }
 }

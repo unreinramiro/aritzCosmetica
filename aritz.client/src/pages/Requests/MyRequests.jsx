@@ -102,7 +102,7 @@ function MyRequests() {
 
   const handleDownloadReceipt = async (orderId) => {
     try {
-        console.log(orderId);
+      console.log(orderId);
       const res = await axiosInstance.get(`Order/${orderId}/download-receipt`, {
         responseType: "blob",
       });
@@ -135,59 +135,75 @@ function MyRequests() {
   };
 
   return (
-    <CenteredContainer>
+    <>
       <BreadCrum />
-      <h1 className={styles.requestsTitle}>
-        {orders.length === 0 ? "No tiene ningun pedido" : "Mis pedidos"}
-      </h1>
-      <div className={styles.requestsContainer}>
-        {orders.length === 0 ? (
-          <BiConfused size={250} />
-        ) : (
-          <table className={styles.requestsTable}>
-            <thead className={styles.stickyHeader}>
-              <tr>
-                <th>Nro Orden</th>
-                <th>Fecha</th>
-                <th>Monto total</th>
-                <th>Estado</th>
-                <th>Forma de pago</th>
-                <th>Comprobante</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order.ORD_ID} className={styles.filaOrdenDetailUser}>
-                  <td data-label="Nro Orden">
-                    <NavLink
-                      to={`/user/my-requests/my-order/${order.ORD_ID}?payMethod=${order.PaymentMethod}`}
-                      className={styles.orderNavlink}
-                    >
-                      {order.ORD_ID}
-                    </NavLink>
-                  </td>
-                  <td data-label="Fecha">{formatDate(order.ORD_ORDER_DATE)}</td>
-                  <td data-label="Monto total">
-                    ${formatPrice(order.ORD_TOTAL_AMOUNT)}
-                  </td>
-                  <td data-label="Estado">{order.ORD_STATUS}</td>
-                  <td data-label="Forma de pago">{order.PaymentMethod}</td>
-                  <td data-label="Comprobante">
-                    {order.ORD_STATUS != "Cancelado" ? (
-                      order.ReceiptPath ? (
-                        <div className={styles.fileRefreshDownload}>
-                          <button
-                            type="button"
-                            onClick={() => handleDownloadReceipt(order.ORD_ID)}
-                            className={styles.downloadLink}
-                          >
-                            Descargar comprobante
-                          </button>
+      <CenteredContainer>
+        <h1 className={styles.requestsTitle}>
+          {orders.length === 0 ? "No tiene ningun pedido" : "Mis pedidos"}
+        </h1>
+        <div className={styles.requestsContainer}>
+          {orders.length === 0 ? (
+            <BiConfused size={250} />
+          ) : (
+            <table className={styles.requestsTable}>
+              <thead className={styles.stickyHeader}>
+                <tr>
+                  <th>Nro Orden</th>
+                  <th>Fecha</th>
+                  <th>Monto total</th>
+                  <th>Estado</th>
+                  <th>Forma de pago</th>
+                  <th>Comprobante</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order) => (
+                  <tr key={order.ORD_ID} className={styles.filaOrdenDetailUser}>
+                    <td data-label="Nro Orden">
+                      <NavLink
+                        to={`/user/my-requests/my-order/${order.ORD_ID}?payMethod=${order.PaymentMethod}`}
+                        className={styles.orderNavlink}
+                      >
+                        {order.ORD_ID}
+                      </NavLink>
+                    </td>
+                    <td data-label="Fecha">
+                      {formatDate(order.ORD_ORDER_DATE)}
+                    </td>
+                    <td data-label="Monto total">
+                      ${formatPrice(order.ORD_TOTAL_AMOUNT)}
+                    </td>
+                    <td data-label="Estado">{order.ORD_STATUS}</td>
+                    <td data-label="Forma de pago">{order.PaymentMethod}</td>
+                    <td data-label="Comprobante">
+                      {order.ORD_STATUS != "Cancelado" ? (
+                        order.ReceiptPath ? (
+                          <div className={styles.fileRefreshDownload}>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleDownloadReceipt(order.ORD_ID)
+                              }
+                              className={styles.downloadLink}
+                            >
+                              Descargar comprobante
+                            </button>
+                            <label className={styles.fileInput}>
+                              <BiRefresh
+                                className={styles.refreshIcon}
+                                size={30}
+                              />
+                              <input
+                                type="file"
+                                onChange={(e) =>
+                                  handleFileUpload(order.ORD_ID, e)
+                                }
+                                disabled={uploading[order.ORD_ID]}
+                              />
+                            </label>
+                          </div>
+                        ) : (
                           <label className={styles.fileInput}>
-                            <BiRefresh
-                              className={styles.refreshIcon}
-                              size={30}
-                            />
                             <input
                               type="file"
                               onChange={(e) =>
@@ -195,41 +211,33 @@ function MyRequests() {
                               }
                               disabled={uploading[order.ORD_ID]}
                             />
+                            {uploading[order.ORD_ID] ? (
+                              <span className={styles.loading}>
+                                <div className="spinner-border" role="status">
+                                  <span className="visually-hidden">
+                                    Loading...
+                                  </span>
+                                </div>
+                              </span>
+                            ) : (
+                              <span className="d-flex justify-content-center align-items-center gap-2">
+                                <AiOutlineUpload /> Cargar comprobante
+                              </span>
+                            )}
                           </label>
-                        </div>
+                        )
                       ) : (
-                        <label className={styles.fileInput}>
-                          <input
-                            type="file"
-                            onChange={(e) => handleFileUpload(order.ORD_ID, e)}
-                            disabled={uploading[order.ORD_ID]}
-                          />
-                          {uploading[order.ORD_ID] ? (
-                            <span className={styles.loading}>
-                              <div className="spinner-border" role="status">
-                                <span className="visually-hidden">
-                                  Loading...
-                                </span>
-                              </div>
-                            </span>
-                          ) : (
-                            <span className="d-flex justify-content-center align-items-center gap-2">
-                              <AiOutlineUpload /> Cargar comprobante
-                            </span>
-                          )}
-                        </label>
-                      )
-                    ) : (
-                      <p>Sin Comprobante...</p>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-    </CenteredContainer>
+                        <p>Sin Comprobante...</p>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </CenteredContainer>
+    </>
   );
 }
 
