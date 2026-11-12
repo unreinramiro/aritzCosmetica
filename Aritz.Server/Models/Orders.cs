@@ -21,5 +21,9 @@ namespace Aritz.Server.Models
         public Receipts Receipt { get; set; }
         [Column("ORD_ZIP_CODE")] // Para que en la BD se llame exactamente así
         public string? ORD_ZIP_CODE { get; set; } // El signo ? permite nulos
+        public int? ORD_DIS_ID { get; set; }
+        [ForeignKey("ORD_DIS_ID")]
+        public Discount? Discount { get; set; }
+        public decimal ORD_DISCOUNT_AMOUNT { get; set; }
     }
 }

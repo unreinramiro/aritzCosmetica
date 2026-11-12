@@ -43,6 +43,8 @@ builder.Services.AddDbContext<AritzDbContext>(options =>
         sqlOptions => sqlOptions.EnableRetryOnFailure()
     ).LogTo(Console.WriteLine, LogLevel.Information));
 
+builder.Services.AddScoped<ICouponService, CouponService>();
+
 // Configura autenticación con JWT
 builder.Services.AddAuthentication(options =>
 {

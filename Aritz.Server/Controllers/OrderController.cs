@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Org.BouncyCastle.Asn1.X500;
+using Org.BouncyCastle.Ocsp;
 using System.Reflection.Emit;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace Aritz.Server.Controllers
 {
@@ -19,12 +21,14 @@ namespace Aritz.Server.Controllers
         private readonly AritzDbContext _context;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
+        private readonly ICouponService _coupons;
 
-        public OrderController(AritzDbContext context, IEmailService emailService, IConfiguration configuration)
+        public OrderController(AritzDbContext context, IEmailService emailService, IConfiguration configuration, ICouponService coupons)
         {
             _context = context;
             _emailService = emailService;
             _configuration = configuration;
+            _coupons = coupons;
         }
 
         [HttpPost("confirmOrder")]
@@ -54,6 +58,9 @@ namespace Aritz.Server.Controllers
             {
                     decimal subtotal = 0;
 
+
+                    if (cart.Items == null || !cart.Items.Any()) return BadRequest("Carrito vacío");
+
                     foreach (var carItem in cart.Items)
                     {
                         if (carItem.CAI_QUANTITY <= 0)
@@ -82,8 +89,13 @@ namespace Aritz.Server.Controllers
 
                         _context.Products.Update(product);
                     }
+                
+                // Validamos si tiene cupon
+                var res = await _coupons.CheckCouponAsync(dto.code, subtotal);
+                if (!res.Valid) return BadRequest(res.Error); // Si el cupon no es valido devuelve el error
+                if (res.Coupon != null) res.Coupon.DIS_USED_COUNT++; // Si el cupon es valido se suma al uso
 
-                var total = subtotal + shippingPrice;
+                var total = subtotal - res.Discount + shippingPrice;
 
                 var newOrder = new Orders
                 {
@@ -92,7 +104,8 @@ namespace Aritz.Server.Controllers
                     ORD_TOTAL_AMOUNT = total,
                     ORD_STATUS = "Pendiente",
                     ORD_PMT_ID = dto.paymentMethod,
-                    ORD_ZIP_CODE = client.USR_POSTAL_CODE
+                    ORD_ZIP_CODE = client.USR_POSTAL_CODE,
+                    ORD_DISCOUNT_AMOUNT = res.Discount
                 };
 
                 // 5. Guardar Orden y Cambios de Stock
@@ -490,6 +503,7 @@ namespace Aritz.Server.Controllers
         {
             public int userId { get; set; }
             public int paymentMethod { get; set; }
+            public string code { get; set; }
         }
 
         public class OrderDetailDto
