@@ -27,6 +27,8 @@ function MyRequestDetail() {
   const { userId } = useSession();
   const [path, setPath] = useState(false);
   const [shippingCost, setShippingCost] = useState(0);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [subTotal, setSubtotal] = useState(0);
 
   useEffect(() => {
     // Obtengo el detalle de la orden
@@ -56,11 +58,14 @@ function MyRequestDetail() {
           0,
         );
 
-        const calculatedShipping = finalTotalFromDB - subTotalAmount;
+        const calculatedShipping = response.data[0].ShippingPrice;
+        const discount = response.data[0].DiscountAmount;
 
         setQuantity(totalQuantity);
         setAmount(finalTotalFromDB); //Aca iria el ENVIO cuando tenga hecha esa logica
-        setShippingCost(calculatedShipping > 0 ? calculatedShipping : 0);
+        setShippingCost(calculatedShipping);
+        setDiscountAmount(discount);
+        setSubtotal(subTotalAmount);
 
         console.log(response.data[0]);
         setStatus(response.data[0].OrderStatus);
@@ -231,7 +236,9 @@ function MyRequestDetail() {
               Nro orden: <b>#{id}</b>
             </p>
             <p>Cantidad de items: {totalQuantity}</p>
+            <p>Subtotal: ${formatPrice(subTotal)}</p>
             <p>Costo de envio: ${formatPrice(shippingCost)}</p>
+            <p>Descuento: -${formatPrice(discountAmount)}</p>
             <hr></hr>
             <p>Total del pedido: ${formatPrice(totalAmount)}</p>
           </div>
