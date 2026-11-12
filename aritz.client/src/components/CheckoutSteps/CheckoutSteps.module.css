@@ -2,6 +2,15 @@
     padding: 10px !important;
 }
 
+.containerShipping{
+    display: flex;
+    flex-direction: column;
+}
+
+.contactContainer label{
+    padding: 0;
+}
+
 .subPaymentInfoContainer {
     justify-content: center;
 }
@@ -12,7 +21,7 @@
 }
 
 .shippingLabels {
-    padding: 0 30%;
+    padding: 0;
 }
 
 .shippingInputs{
@@ -23,15 +32,14 @@
 
 .btnShippingNext {
     min-height: 40px;
-    background-color: rgb(128, 98, 51);
+    background-color: #F7F3EC;
     border: none;
-    color: #fff;
+    color: #000;
     width: 100%;
 }
 
     .btnShippingNext:hover {
-        background-color: #fff;
-        color: rgb(128, 98, 51);
+        color: #3f3e3e;
     }
 
 .btnShippingBack {
@@ -50,6 +58,11 @@
 }
 
 /* METODOS DE PAGO */
+
+.payMethodContainer{
+    display: flex;
+    flex-direction: column;
+}
 
 .containerPayments {
     display: flex;
@@ -87,10 +100,10 @@
 .selected {
     border: 2px solid #000; /* Borde negro bien visible */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra para destacarlo */
-    transform: scale(1.03); /* Un poco más grande para que resalte */
+    transform: scale(1.03); /* Un poco mï¿½s grande para que resalte */
 }
 
-/* Opcional: Hacer que el botón no seleccionado se vea un poco opaco */
+/* Opcional: Hacer que el botï¿½n no seleccionado se vea un poco opaco */
 .buttonsPayments:not(.selected) {
     opacity: 0.7;
 }
@@ -100,7 +113,7 @@
     }
 
 .paymentInfoContainer{
-    padding: 50px;
+    height: 100%;
 }
 
 /* Transferencia bancaria */
@@ -157,10 +170,27 @@
     text-align: start;
 }
 
+.nameQuantity{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.precio{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 
 .envio {
     border-bottom: 2px solid #808080;
     border-top: 2px solid #808080;
+    padding: 20px;
+}
+
+.discountContainer{
+    display: flex;
+    justify-content: space-between;
     padding: 20px;
 }
 
@@ -271,11 +301,20 @@ input[type=number] {
         padding: 0;
     }
 
+    .containerShipping{
+        padding: 10px;
+    }
+
     .container{
         display: flex;
         flex-direction: column;
         gap: 20px;
         padding: 50px;
+    }
+
+    .payMethodContainer{
+        gap: 30px;
+        width: 90%;
     }
 
     .containerPayments {

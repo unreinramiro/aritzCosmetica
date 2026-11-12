@@ -52,8 +52,7 @@
     }
 
     .shopBtn:hover {
-        color: #fff;
-        background-color: rgb(128, 98, 51);
+        background-color: #F7F3EC;
     }
     /* --- ESTILO DE LA IMAGEN --- */
     .carrouselImage {

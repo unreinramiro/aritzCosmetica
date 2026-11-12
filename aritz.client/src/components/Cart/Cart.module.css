@@ -1,6 +1,6 @@
-.container {
-    max-width: 800px;
-    margin: 0 auto;
+.container{
+    max-width: 60%;
+    width: 100%;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -96,18 +96,82 @@
 
 .checkoutButton {
     min-height: 40px;
-    background-color: rgb(128, 98, 51);
+    background-color: #F7F3EC;
     border: none;
-    color: #fff;
+    color: #000;
     width: 30%;
 }
 
     .checkoutButton:hover {
-        background-color: #fff;
-        color: rgb(128, 98, 51);
+        color: #3f3e3e;
     }
 
+.cuponContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 320px;
+}
+
+.cuponLabel {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.cuponRow {
+    display: flex;
+    gap: 8px;
+}
+
+.cuponInput {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+    .cuponInput::placeholder {
+        color: #999;
+        text-transform: none;
+    }
+
+    .cuponInput:focus {
+        outline: none;
+        border-color: #bbb;
+    }
+
+.cuponButton {
+    background-color: #F7F3EC;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px 15px;
+    color: #000;
+    cursor: pointer;
+}
+
+    .cuponButton:hover {
+        color: #3f3e3e;
+        border-color: #bbb;
+    }
+
+.oldPrice {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: normal;
+    color: #999;
+    text-decoration: line-through;
+}
+
 @media (max-width: 992px) {
+
+    .container{
+            max-width: 95%;
+    }
 
     .BreadCrumCart {
         display: none !important;
@@ -119,5 +183,9 @@
 
     .checkoutButton {
         width: 50%;
+    }
+
+    .cuponContainer {
+        max-width: 100%;
     }
 }

@@ -5,7 +5,7 @@
 .centeredContainer {
     display: flex;
     justify-content: space-between;
-    max-width: 1200px; /* Ancho máximo */
+    max-width: 1200px; /* Ancho mï¿½ximo */
     margin: 0 auto; /* Centra el contenedor horizontalmente */
     padding: 20px; /* Espaciado interno */
     text-align: left; /* Centra el contenido si es texto */
@@ -136,6 +136,18 @@
     aspect-ratio: 1/1;
     object-fit: cover;
     object-position: top;
+}
+
+.downloadLink{
+    background-color: white;
+    border: none;
+    font-size: 0.9rem;
+    border-radius: 5px;
+}
+
+.downloadLink:hover{
+    background-color: rgb(128, 98, 51);
+    color: black;
 }
 
 @media (max-width: 992px) {

@@ -171,7 +171,7 @@ const Header = () => {
                             isLoggedIn ? (
                                 <div className={styles.userLogin}>
                                     <div className={styles.user}>
-                                        <b className={`d-flex align-items-center gap-1 ${styles.userIcon}`}><FaUser />{userName}</b>
+                                        <b className={`d-flex align-items-center gap-1 ${styles.userIcon}`}>{userName}</b>
                                         <ul className={styles.userDropdown}>
                                             {
                                                 isAdmin

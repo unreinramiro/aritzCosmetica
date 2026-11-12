@@ -78,7 +78,7 @@ ul{
         color: #333;
         text-decoration: none;
         padding: 10px 10px;
-        display: block; /* Cada item ocupa una línea */
+        display: block; /* Cada item ocupa una lï¿½nea */
         transition: background-color 0.3s ease, color 0.3s ease;
         font-size: .8rem;
     }
@@ -110,6 +110,7 @@ ul{
 
 .userDropdown {
     display: none;
+    flex-direction: column;
     position: absolute;
     background-color: white;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
@@ -117,6 +118,7 @@ ul{
     padding: 10px; /* Espaciado interno */
     z-index: 10;
     box-shadow: 10px 10px 20px 5px rgba(0, 0, 0, 0.2);
+    gap: 10px;
 }
 
 .userLogin {
@@ -126,13 +128,9 @@ ul{
 
 .user:hover .userDropdown{
     display: flex;
-    flex-direction: column;
-    gap: 10px;
 }
 
-.userIcon:hover {
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-}
+
 
 .userNavlink {
     display: flex;
@@ -176,7 +174,7 @@ ul{
     display: flex; /* Muestra el dropdown */
 }
 
-/* Responsive: Ajusta para pantallas pequeñas */
+/* Responsive: Ajusta para pantallas pequeï¿½as */
 @media (max-width: 992px) {
     .navItem:hover .dropdown {
         display: none; /* Muestra el dropdown */

@@ -1,7 +1,11 @@
 /* Contenedor principal */
 .container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     max-width: 400px;
     margin: 0 auto; /* Centra el contenedor */
+    margin-top: 70px;
     padding: 20px;
     border: 1px solid #ddd; /* Borde ligero */
     border-radius: 8px; /* Bordes redondeados */
@@ -10,7 +14,7 @@
     text-align: center;
 }
 
-/* Título */
+/* Tï¿½tulo */
 .title {
     font-size: 1.5rem;
     font-weight: bold;
@@ -45,9 +49,9 @@
         font-size: 1rem;
     }
 
-/* Botón enviar */
+/* Botï¿½n enviar */
 .submitButton {
-    background-color: #007bff;
+    background-color: #000;
     color: white;
     padding: 10px 15px;
     border: none;

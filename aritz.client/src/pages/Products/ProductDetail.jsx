@@ -23,13 +23,13 @@ function ProductDetail() {
 
     //Estados para el intercambio de imagenes
     const [displayImage, setDisplayImage] = useState(''); // La imagen grande actual
-    const [displayGallery, setDisplayGallery] = useState([]); // El array de imagenes pequeñas actual
+    const [displayGallery, setDisplayGallery] = useState([]); // El array de imagenes pequeï¿½as actual
 
     const [cart, setCart] = useState([]);
 
     useEffect(() => {
         fetchProduct();
-    }, [id]); // El uso de un array vacío asegura que solo se ejecute al montar el componente
+    }, [id]); // El uso de un array vacï¿½o asegura que solo se ejecute al montar el componente
 
     useEffect(() => {
         if (userId) {
@@ -97,7 +97,7 @@ function ProductDetail() {
             fetchCountCart();
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                // Aquí atrapamos el "Stock insuficiente" que envía tu C#
+                // Aquï¿½ atrapamos el "Stock insuficiente" que envï¿½a tu C#
                 Swal.fire({
                     title: 'Sin Stock',
                     // error.response.data suele contener el string "Stock insuficiente..." que mandaste desde C#
@@ -119,11 +119,11 @@ function ProductDetail() {
         // 2. Actualizamos la principal con la que clickeamos
         setDisplayImage(clickedImgUrl);
 
-        // 3. Actualizamos la galería:
+        // 3. Actualizamos la galerï¿½a:
         // Creamos una copia del array para no mutar el estado directamente
         const newGallery = [...displayGallery];
 
-        // En la posición donde hicimos click, ponemos la imagen vieja (oldMainImage)
+        // En la posiciï¿½n donde hicimos click, ponemos la imagen vieja (oldMainImage)
         // Mantenemos las otras propiedades del objeto (como IDs) y solo cambiamos la URL
         newGallery[index] = { ...newGallery[index], IMG_URL: oldMainImage };
 
@@ -160,10 +160,7 @@ function ProductDetail() {
                         </div>
                         :
                         <div className={styles.subImgContainer}>
-                            <img src={sinImg} />
-                            <img src={sinImg} />
-                            <img src={sinImg} />
-                            <img src={sinImg} />
+
                         </div>
                     }
                 </div>
