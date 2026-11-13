@@ -105,7 +105,9 @@ namespace Aritz.Server.Controllers
                     ORD_STATUS = "Pendiente",
                     ORD_PMT_ID = dto.paymentMethod,
                     ORD_ZIP_CODE = client.USR_POSTAL_CODE,
-                    ORD_DISCOUNT_AMOUNT = res.Discount
+                    ORD_DISCOUNT_AMOUNT = res.Discount,
+                    ORD_DIS_ID = res.Coupon.DIS_ID,
+                    ORD_SHIPPING_AMOUNT = shippingPrice
                 };
 
                 // 5. Guardar Orden y Cambios de Stock
@@ -246,7 +248,9 @@ namespace Aritz.Server.Controllers
                     ReceiptPath = od.Orders.Receipt.RCP_PATH,
                     OrderTotalAmount = od.Orders.ORD_TOTAL_AMOUNT,
                     OrderStatus = od.Orders.ORD_STATUS,
-                    CategoryName = od.Products.Category.CAT_NAME
+                    CategoryName = od.Products.Category.CAT_NAME,
+                    DiscountAmount = od.Orders.ORD_DISCOUNT_AMOUNT,
+                    ShippingPrice = od.Orders.ORD_SHIPPING_AMOUNT
                 })
                 .ToListAsync();
 

@@ -1,5 +1,6 @@
 ﻿using Aritz.Server.Data;
 using Aritz.Server.Models;
+using Aritz.Server.Services;
 using MercadoPago.Client.Payment;
 using MercadoPago.Client.Preference;
 using MercadoPago.Config;
@@ -18,9 +19,12 @@ namespace Aritz.Server.Controllers
     {
         private readonly AritzDbContext _context;
 
-        public MercadoPagoController(AritzDbContext context)
+        private readonly ICouponService _coupons;
+
+        public MercadoPagoController(AritzDbContext context, ICouponService coupons)
         {
             _context = context;
+            _coupons = coupons;
         }
 
         [HttpPost("create_preference")]
@@ -45,13 +49,16 @@ namespace Aritz.Server.Controllers
             {
                 decimal subtotal = 0;
 
+                if (cart.Items == null || !cart.Items.Any()) return BadRequest("Carrito vacío");
+
                 var newOrder = new Orders
                 {
                     ORD_USR_ID = orderData.userId,
                     ORD_ORDER_DATE = DateTime.UtcNow,
                     ORD_STATUS = "Iniciada",
                     ORD_PMT_ID = orderData.paymentMethod,
-                    ORD_ZIP_CODE = client.USR_POSTAL_CODE
+                    ORD_ZIP_CODE = client.USR_POSTAL_CODE,
+                    ORD_SHIPPING_AMOUNT = shippingPrice
                 };
 
                 foreach (var carItem in cart.Items)
@@ -74,8 +81,6 @@ namespace Aritz.Server.Controllers
                         return BadRequest($"Stock insuficiente para el producto: {product.PRD_NAME}. Stock actual: {product.PRD_QUANTITY}");
                     }
 
-                    subtotal += product.PRD_PRICE * carItem.CAI_QUANTITY;
-
                     var lineTotal = product.PRD_PRICE * carItem.CAI_QUANTITY;
                     subtotal += lineTotal;
 
@@ -94,9 +99,16 @@ namespace Aritz.Server.Controllers
 
                 }
 
-                var total = subtotal + shippingPrice;
+                // Validamos si tiene cupon
+                var res = await _coupons.CheckCouponAsync(orderData.code, subtotal);
+                if (!res.Valid) return BadRequest(res.Error); // Si el cupon no es valido devuelve el error
+                if (res.Coupon != null) res.Coupon.DIS_USED_COUNT++; // Si el cupon es valido se suma al uso
+
+                var total = subtotal - res.Discount + shippingPrice;
 
                 newOrder.ORD_TOTAL_AMOUNT = total;
+                newOrder.ORD_DISCOUNT_AMOUNT = res.Discount;
+                newOrder.ORD_DIS_ID = res.Coupon.DIS_ID;
 
                 _context.Orders.Add(newOrder);
                 await _context.SaveChangesAsync();
@@ -120,7 +132,7 @@ namespace Aritz.Server.Controllers
                     },
                     BackUrls = new PreferenceBackUrlsRequest
                     {
-                        Success = "https://www.aritz.com.ar/checkout/pay-success", // Ajusta a tu URL real
+                        Success = "https://localhost:5173/checkout/pay-success", // Ajusta a tu URL real
                         Failure = "https://www.aritz.com.ar/checkout/pay-failure",
                         Pending = "https://www.aritz.com.ar/checkout/pay-pending"
                     },
@@ -208,6 +220,7 @@ namespace Aritz.Server.Controllers
         {
             public int userId { get; set; }
             public int paymentMethod { get; set; }
+            public string code { get; set; }
         }
 
         public class OrderItemDto

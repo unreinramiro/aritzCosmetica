@@ -129,6 +129,9 @@ namespace Aritz.Server.Data
                       .HasForeignKey(o => o.ORD_DIS_ID)
                       .HasConstraintName("FK_Orders_Discounts_ORD_DIS_ID")
                       .OnDelete(DeleteBehavior.Restrict);
+                entity.Property(o => o.ORD_SHIPPING_AMOUNT)
+                      .HasColumnName("ORD_SHIPPING_AMOUNT")
+                      .HasColumnType("decimal(18,2)");
             });
 
             // Configura la tabla OrderDetails

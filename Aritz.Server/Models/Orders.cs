@@ -25,5 +25,7 @@ namespace Aritz.Server.Models
         [ForeignKey("ORD_DIS_ID")]
         public Discount? Discount { get; set; }
         public decimal ORD_DISCOUNT_AMOUNT { get; set; }
+
+        public decimal? ORD_SHIPPING_AMOUNT { get; set; }
     }
 }

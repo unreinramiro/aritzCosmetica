@@ -221,6 +221,10 @@ namespace Aritz.Server.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ORD_PMT_ID");
 
+                    b.Property<decimal?>("ORD_SHIPPING_AMOUNT")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("ORD_SHIPPING_AMOUNT");
+
                     b.Property<string>("ORD_STATUS")
                         .IsRequired()
                         .HasMaxLength(50)
