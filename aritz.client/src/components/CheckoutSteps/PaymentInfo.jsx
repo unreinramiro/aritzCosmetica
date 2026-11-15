@@ -19,8 +19,13 @@ initMercadoPago(publicKey, { locale: "es-AR" });
 function PaymentInfo() {
   const { paymentMethod, setPaymentMethod, zipPrice } = useCheckout();
   const navigate = useNavigate();
-  const { fetchCountCart, fetchSumTotalCart, totalSumCart, couponInfo, couponCode } =
-    useCart();
+  const {
+    fetchCountCart,
+    fetchSumTotalCart,
+    totalSumCart,
+    couponInfo,
+    couponCode,
+  } = useCart();
   const [loading, setLoading] = useState(true);
   const [loadingOrdConf, setLoadingOrdConf] = useState(false);
   const [error, setError] = useState(null);
@@ -59,7 +64,7 @@ function PaymentInfo() {
       const orderData = {
         userId: userId,
         paymentMethod: 1,
-        code: couponCode
+        code: couponCode,
       };
 
       console.log("Datos enviados al controllador de MP: ", orderData);
@@ -98,7 +103,7 @@ function PaymentInfo() {
       const orderResponse = await axiosInstance.post("Order/confirmOrder", {
         userId,
         paymentMethod,
-        code: couponCode
+        code: couponCode,
       });
 
       const orderId = orderResponse.data.OrderId;
@@ -184,6 +189,12 @@ function PaymentInfo() {
               ))}
               <div className={styles.envio}>
                 <p className="d-flex justify-content-between">
+                  Subtotal: <b>${formatPrice(totalSumCart)}</b>
+                </p>
+              </div>
+
+              <div className={styles.envio}>
+                <p className="d-flex justify-content-between">
                   Envio: <b>${formatPrice(zipPrice)}</b>
                 </p>
               </div>
@@ -196,7 +207,8 @@ function PaymentInfo() {
               )}
               <div className={styles.total}>
                 <p className="d-flex justify-content-between">
-                  Total: <b>${formatPrice(totalSumCart - discount + zipPrice)}</b>
+                  Total:{" "}
+                  <b>${formatPrice(totalSumCart - discount + zipPrice)}</b>
                 </p>
               </div>
             </div>

@@ -8,19 +8,19 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [error, setError] = useState(null); // Para errores
-  const [totalSumCart, setTotalSumCart] = useState(0);
+  const [totalSumCart, setTotalSumCart] = useState(
+    () => Number(sessionStorage.getItem("totalSumCart")) || 0,
+  );
   const { userId } = useSession();
   //Contador del carrito
 
   const fetchCountCart = async () => {
+    if (userId == null) return;
     try {
-      if (userId != null) {
-        const response = await axiosInstance.get(
-          `Cart/user/${userId}/total-quantity`,
-        );
-        setTotalQuantity(response.data); // Actualiza la cantidad total en el estado
-      }
-      return console.log("No se inicio sesion");
+      const response = await axiosInstance.get(
+        `Cart/user/${userId}/total-quantity`,
+      );
+      setTotalQuantity(response.data);
     } catch (err) {
       console.error("Error al obtener la cantidad total:", err);
       setError("No se pudo calcular la cantidad total de productos.");
@@ -34,26 +34,25 @@ export const CartProvider = ({ children }) => {
     }
   }, [userId]);
 
-  // Funci�n para actualizar el contador en el frontend
-  // �til cuando se agrega o elimina un producto localmente
+  // Funcion para actualizar el contador en el frontend
+  // Util cuando se agrega o elimina un producto localmente
   const updateTotalQuantity = (quantity) => {
     setTotalQuantity(quantity); // Actualiza directamente el valor si cambia
   };
 
   const fetchSumTotalCart = async () => {
+    if (userId == null) return;
     try {
-      if (userId != null && totalQuantity != 0) {
-        const response = await axiosInstance.get(
-          `Cart/user/${userId}/total-cart`,
-        );
-        setTotalSumCart(response.data);
-      }
+      const response = await axiosInstance.get(
+        `Cart/user/${userId}/total-cart`,
+      );
+      setTotalSumCart(response.data);
+      sessionStorage.setItem("totalSumCart", String(response.data));
     } catch (err) {
       console.error("Error al obtener la suma total:", err);
       setError("No se pudo calcular la suma total de productos en el carrito.");
     }
   };
-
   // Seccion cupon de descuento
   const [couponCode, setCouponCode] = useState(
     () => sessionStorage.getItem("couponCode") || "",
@@ -96,7 +95,7 @@ export const CartProvider = ({ children }) => {
         couponCode,
         saveCoupon,
         clearCoupon,
-        couponInfo
+        couponInfo,
       }}
     >
       {children}
