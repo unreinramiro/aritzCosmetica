@@ -151,6 +151,7 @@ namespace Aritz.Server.Data
                       .WithMany(o => o.OrderDetails)
                       .HasForeignKey(d => d.ODD_ORD_ID)
                       .OnDelete(DeleteBehavior.Cascade);
+                entity.Property(d => d.ODD_UNIT_PRICE).HasColumnName("ODD_UNIT_PRICE").HasColumnType("decimal(18,2)").IsRequired();
             });
 
             // Configura la tabla Payments

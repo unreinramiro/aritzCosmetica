@@ -161,6 +161,8 @@ namespace Aritz.Server.Controllers
                 return NotFound(new { Message = "El carrito está vacío." });
             }
 
+            if (order == null || order.ORD_USR_ID != dto.userId) return NotFound();
+
             try
             {
                 var orderDetails = cart.Items.Select(i => new OrderDetails
@@ -168,7 +170,8 @@ namespace Aritz.Server.Controllers
                     ODD_ORD_ID = dto.OrderId,
                     ODD_PRD_ID = i.CAI_PRD_ID,
                     ODD_QUANTITY = i.CAI_QUANTITY,
-                    ODD_TOTAL_PRICE = i.CAI_TOTAL_PRICE
+                    ODD_TOTAL_PRICE = i.Product.PRD_PRICE * i.CAI_QUANTITY,
+                    ODD_UNIT_PRICE = i.Product.PRD_PRICE
                 }).ToList();
 
                 _context.OrderDetails.AddRange(orderDetails);
@@ -179,7 +182,7 @@ namespace Aritz.Server.Controllers
             }
             catch (Exception)
             {
-                return NotFound(new { Message = "No se pudo insertar la orden." });
+                return StatusCode(500, "No se pudo insertar la orden.");
             }
 
         }
@@ -242,6 +245,7 @@ namespace Aritz.Server.Controllers
                     IdOrderDetail = od.ODD_ID,
                     Quantity = od.ODD_QUANTITY,
                     TotalPrice = od.ODD_TOTAL_PRICE,
+                    UnitPrice = od.ODD_UNIT_PRICE,
                     ZipCode = od.Orders.ORD_ZIP_CODE,
                     ProductName = od.Products.PRD_NAME,
                     ProductImage = od.Products.PRD_IMAGE,

@@ -188,6 +188,10 @@ namespace Aritz.Server.Migrations
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("ODD_TOTAL_PRICE");
 
+                    b.Property<decimal>("ODD_UNIT_PRICE")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("ODD_UNIT_PRICE");
+
                     b.HasKey("ODD_ID");
 
                     b.HasIndex("ODD_ORD_ID");

@@ -172,7 +172,7 @@ namespace Aritz.Server.Controllers
 
             var totalSum = await _context.CartItems
                 .Where(ci => ci.CAI_CAR_ID == cart.CAR_ID)
-                .SumAsync(ci => ci.CAI_TOTAL_PRICE * ci.CAI_QUANTITY);
+                .SumAsync(ci => ci.CAI_TOTAL_PRICE);
 
             Console.WriteLine($"Cantidad total obtenida: {totalSum}");
             return Ok(totalSum);
