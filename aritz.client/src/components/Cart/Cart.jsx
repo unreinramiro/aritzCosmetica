@@ -168,8 +168,9 @@ function Carrito() {
                       <h4>
                         {car.CAT_NAME} {car.PRD_NAME}
                       </h4>
-                      <p>Precio: ${car.CAI_TOTAL_PRICE}</p>
+                      <p>P/u: ${formatPrice(car.PRD_PRICE)}</p>
                       <p>Cantidad: {car.CAI_QUANTITY}</p>
+                      <p>Subtotal: ${formatPrice(car.CAI_TOTAL_PRICE)}</p>
                       <button
                         onClick={() => {
                           handleRemoveFromCart(car.PRD_ID);
@@ -232,7 +233,7 @@ function Carrito() {
                   </h6>
                 )}
                 <h3>
-                  Total: $
+                  Subtotal (Sin envio): $
                   {formatPrice(totalSumCart - (couponInfo?.discount ?? 0))}
                 </h3>
               </div>

@@ -29,6 +29,7 @@ function MyRequestDetail() {
   const [shippingCost, setShippingCost] = useState(0);
   const [discountAmount, setDiscountAmount] = useState(0);
   const [subTotal, setSubtotal] = useState(0);
+  const [unitPrice, setUnitPrice] = useState(0);
 
   useEffect(() => {
     // Obtengo el detalle de la orden
@@ -52,9 +53,8 @@ function MyRequestDetail() {
           0,
         );
 
-        // Calculo el total a pagar
         const subTotalAmount = response.data.reduce(
-          (acc, item) => acc + item.TotalPrice * item.Quantity,
+          (acc, item) => acc + item.UnitPrice * item.Quantity,
           0,
         );
 
@@ -65,6 +65,7 @@ function MyRequestDetail() {
         setAmount(finalTotalFromDB); //Aca iria el ENVIO cuando tenga hecha esa logica
         setShippingCost(calculatedShipping);
         setDiscountAmount(discount);
+        setUnitPrice(response.data[0].UnitPrice);
         setSubtotal(subTotalAmount);
 
         console.log(response.data[0]);
@@ -216,11 +217,11 @@ function MyRequestDetail() {
                     {request.CategoryName} {request.ProductName}
                   </h4>
                   <p>Cantidad: {request.Quantity}</p>
-                  <p>c/u ${formatPrice(request.TotalPrice)}</p>
+                  <p>c/u ${formatPrice(unitPrice)}</p>
                 </div>
                 <div className={styles.TotalPrice}>
                   <b>Subtotal:</b>
-                  <p>${formatPrice(request.TotalPrice * request.Quantity)}</p>
+                  <p>${formatPrice(request.UnitPrice * request.Quantity)}</p>
                 </div>
               </div>
             </div>
