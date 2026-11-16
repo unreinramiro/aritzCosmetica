@@ -106,7 +106,7 @@ namespace Aritz.Server.Controllers
                     ORD_PMT_ID = dto.paymentMethod,
                     ORD_ZIP_CODE = client.USR_POSTAL_CODE,
                     ORD_DISCOUNT_AMOUNT = res.Discount,
-                    ORD_DIS_ID = res.Coupon.DIS_ID,
+                    ORD_DIS_ID = res.Coupon?.DIS_ID,
                     ORD_SHIPPING_AMOUNT = shippingPrice
                 };
 
@@ -116,11 +116,10 @@ namespace Aritz.Server.Controllers
                 // Guardamos todo junto (Orden + Updates de Productos)
                 await _context.SaveChangesAsync();
 
-                // 6. Enviar Email
+                // 6. Enviar Email al Admin
                 var emailBodyBuilder = new System.Text.StringBuilder();
                 emailBodyBuilder.AppendLine($"<h2>Nueva Orden de Compra #{newOrder.ORD_ID}</h2>");
                 emailBodyBuilder.AppendLine($"<p><strong>Cliente:</strong> {client.USR_NAME} {client.USR_SURNAME} ({client.USR_EMAIL})</p>");
-                emailBodyBuilder.AppendLine($"<p>Clickea <strong><a href='https://www.aritz.com.ar/user/my-requests/my-order/{newOrder.ORD_ID}'>acá</a></strong> para ir al pedido</p>");
                 emailBodyBuilder.AppendLine($"<h3>Total: ${total}</h3>");
 
                 var adminEmail = _configuration["EmailSettings:SenderEmail"];
@@ -129,6 +128,20 @@ namespace Aritz.Server.Controllers
                     adminEmail,
                     $"Te hicieron una Nueva Orden de Compra #{newOrder.ORD_ID}",
                     emailBodyBuilder.ToString()
+                );
+
+                // 7. Enviar Email al comprador
+                var userEmailBodyBuilder = new System.Text.StringBuilder();
+                userEmailBodyBuilder.AppendLine($"<h2>¡Su orden NRO #{newOrder.ORD_ID} se generó correctamente!</h2>");
+                userEmailBodyBuilder.AppendLine($"<h3>IMPORTANTE: Recordá cargar el comprobante de pago dentro de las próximas 48 hs, de lo contrario se cancelará</h3>");
+                userEmailBodyBuilder.AppendLine($"<h3>Clickea <strong><a href='https://www.aritz.com.ar/user/my-requests/my-order/{newOrder.ORD_ID}'>acá</a></strong> para ver el estado del pedido y subir el comprobante</h3>");
+
+                var userEmail = client.USR_EMAIL;
+
+                _ = _emailService.SendEmailAsync(
+                    userEmail,
+                    $"¡Muchas gracias por su Compra!",
+                    userEmailBodyBuilder.ToString()
                 );
 
                 return Ok(new { Message = "Pedido creado correctamente.", OrderId = newOrder.ORD_ID });
