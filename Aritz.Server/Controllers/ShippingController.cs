@@ -1,5 +1,6 @@
 ﻿using Aritz.Server.Data; // Tu namespace del DbContext
 using Aritz.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,7 @@ namespace Aritz.Server.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         [HttpGet("calculate")]
         public async Task<IActionResult> Calculate([FromQuery] string zipCode)
         {
@@ -47,7 +49,7 @@ namespace Aritz.Server.Controllers
             });
         }
 
-        
+        [Authorize(Policy = "Admin")]
         [HttpPost("update")]
         public async Task<IActionResult> UpdatePostalCode([FromBody] ShippingZone zoneDto)
         {
@@ -63,6 +65,7 @@ namespace Aritz.Server.Controllers
             return Ok("Precio actualizado correctamente");
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpPost("addPostalCode")]
         public async Task<IActionResult> InsertPostalCode([FromBody] ShippingZone zoneDto)
         {
@@ -83,6 +86,7 @@ namespace Aritz.Server.Controllers
             return Ok("Codigo postal agregado correctamente");
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpDelete("deletePostalCode/{postId}")]
         public async Task<IActionResult> DeletePostalCode(int postId)
         {
@@ -95,6 +99,7 @@ namespace Aritz.Server.Controllers
             return Ok("Codigo postal borrado correctamente");
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpGet("getPostalCodes")]
         public async Task<IActionResult> GetPostalCodes()
         {

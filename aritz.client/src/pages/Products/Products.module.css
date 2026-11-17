@@ -4,11 +4,11 @@
     font-family: "Montserrat", sans-serif;
 }
 
-/* Contenedor principal de la página */
+/* Contenedor principal de la pï¿½gina */
 .productsPage {
     display: flex; /* Flexbox para organizar el aside y el grid */
     padding: 20px; /* Espaciado interno */
-    width: 90vw; /* Ancho máximo */
+    width: 90vw; /* Ancho mï¿½ximo */
 }
 
 /* Aside (barra lateral para filtros) */
@@ -55,7 +55,7 @@
 
     .cartaImgContainer img {
         width: 100%;
-        aspect-ratio: 2/3; /* Mantiene proporción rectangular (o usa 1/1 para cuadrado) */
+        aspect-ratio: 2/3; /* Mantiene proporciï¿½n rectangular (o usa 1/1 para cuadrado) */
         object-fit: cover;
         object-position: top;
         transition: transform 0.3s ease;
@@ -82,14 +82,13 @@
 
 .cartaAddCart {
     min-height: 40px;
-    background-color: rgb(128, 98, 51);
+    background-color: #F7F3EC;
     border: none;
-    color: #fff;
+    color: #000;
 }
 
     .cartaAddCart:hover {
-        background-color: #fff;
-        color: rgb(128, 98, 51);
+        color: #3f3e3e;
     }
 
 .containerLupita {
@@ -123,7 +122,7 @@
     animation: fadeInUp 1.6s ease-out forwards; 
 }
 
-/* Para pantallas pequeñas */
+/* Para pantallas pequeï¿½as */
 @media (max-width: 992px) {
     .productsPage {
         flex-direction: column; /* El aside y el grid se colocan en una columna */

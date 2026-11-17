@@ -102,6 +102,68 @@ namespace Aritz.Server.Migrations
                     b.ToTable("Categories", (string)null);
                 });
 
+            modelBuilder.Entity("Aritz.Server.Models.Discount", b =>
+                {
+                    b.Property<int>("DIS_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DIS_ID"));
+
+                    b.Property<string>("DIS_CODE")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("DIS_DISCOUNT")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("DIS_END_DATE")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("DIS_IS_ACTIVE")
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<int?>("DIS_MAX_USES")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("DIS_MIN_AMOUNT")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("DIS_NAME")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("DIS_START_DATE")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DIS_TYPE")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("DIS_USED_COUNT")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("DIS_ID")
+                        .HasName("PK_Discounts");
+
+                    b.HasIndex("DIS_CODE")
+                        .IsUnique()
+                        .HasDatabaseName("UQ_Discounts_CODE");
+
+                    b.ToTable("Discounts", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Discounts_TYPE", "[DIS_TYPE] IN ('PERCENTAGE','FIXED')");
+
+                            t.HasCheckConstraint("CK_Discounts_VALUE", "[DIS_DISCOUNT] > 0 AND ([DIS_TYPE] <> 'PERCENTAGE' OR [DIS_DISCOUNT] <= 100)");
+                        });
+                });
+
             modelBuilder.Entity("Aritz.Server.Models.OrderDetails", b =>
                 {
                     b.Property<int>("ODD_ID")
@@ -126,6 +188,10 @@ namespace Aritz.Server.Migrations
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("ODD_TOTAL_PRICE");
 
+                    b.Property<decimal>("ODD_UNIT_PRICE")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("ODD_UNIT_PRICE");
+
                     b.HasKey("ODD_ID");
 
                     b.HasIndex("ODD_ORD_ID");
@@ -143,6 +209,14 @@ namespace Aritz.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ORD_ID"));
 
+                    b.Property<decimal>("ORD_DISCOUNT_AMOUNT")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<int?>("ORD_DIS_ID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ORD_ORDER_DATE")
                         .HasColumnType("datetime2")
                         .HasColumnName("ORD_ORDER_DATE");
@@ -150,6 +224,10 @@ namespace Aritz.Server.Migrations
                     b.Property<int>("ORD_PMT_ID")
                         .HasColumnType("int")
                         .HasColumnName("ORD_PMT_ID");
+
+                    b.Property<decimal?>("ORD_SHIPPING_AMOUNT")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("ORD_SHIPPING_AMOUNT");
 
                     b.Property<string>("ORD_STATUS")
                         .IsRequired()
@@ -165,11 +243,13 @@ namespace Aritz.Server.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ORD_USR_ID");
 
-                    b.Property<string>("ZipCode")
+                    b.Property<string>("ORD_ZIP_CODE")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ORD_ZIP_CODE");
 
                     b.HasKey("ORD_ID");
+
+                    b.HasIndex("ORD_DIS_ID");
 
                     b.HasIndex("ORD_PMT_ID");
 
@@ -508,6 +588,12 @@ namespace Aritz.Server.Migrations
 
             modelBuilder.Entity("Aritz.Server.Models.Orders", b =>
                 {
+                    b.HasOne("Aritz.Server.Models.Discount", "Discount")
+                        .WithMany("Orders")
+                        .HasForeignKey("ORD_DIS_ID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("FK_Orders_Discounts_ORD_DIS_ID");
+
                     b.HasOne("Aritz.Server.Models.PaymentMethod", "PaymentMethod")
                         .WithMany("Orders")
                         .HasForeignKey("ORD_PMT_ID")
@@ -519,6 +605,8 @@ namespace Aritz.Server.Migrations
                         .HasForeignKey("ORD_USR_ID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Discount");
 
                     b.Navigation("PaymentMethod");
 
@@ -577,6 +665,11 @@ namespace Aritz.Server.Migrations
             modelBuilder.Entity("Aritz.Server.Models.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Aritz.Server.Models.Discount", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Aritz.Server.Models.Orders", b =>

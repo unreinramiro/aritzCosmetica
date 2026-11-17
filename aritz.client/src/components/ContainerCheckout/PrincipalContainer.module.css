@@ -1,0 +1,26 @@
+.principalContainer{
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    align-content: center;
+}
+
+h1{
+    text-align: center;
+}
+
+h2{
+    text-align: center;
+}
+
+h3{
+    text-align: center;
+}
+
+h6{
+    text-align: center;
+}
+
+b{
+    text-align: center;
+}

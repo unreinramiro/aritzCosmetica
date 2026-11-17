@@ -1,5 +1,6 @@
 ﻿using Aritz.Server.Data; // Tu namespace del DbContext
 using Aritz.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,8 @@ namespace Aritz.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+    [Authorize(Policy = "Admin")]
     public class UsersController : ControllerBase
     {
         private readonly AritzDbContext _context;

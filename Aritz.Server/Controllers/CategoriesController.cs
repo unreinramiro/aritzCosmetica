@@ -1,5 +1,6 @@
 ﻿using Aritz.Server.Data; // Tu namespace del DbContext
 using Aritz.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static Aritz.Server.Controllers.ProductsController;
@@ -17,6 +18,7 @@ namespace Aritz.Server.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         [HttpGet("getCategories")]
         public async Task<IActionResult> GetCategories()
         {
@@ -27,6 +29,7 @@ namespace Aritz.Server.Controllers
             return Ok(categories);
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpPost("updCategory")]
         public async Task<IActionResult> UpdateCategory([FromBody] DtoCategory categoryDto)
         {
@@ -41,6 +44,7 @@ namespace Aritz.Server.Controllers
             return Ok(new { Message = "Categoría actualizada correctamente" });
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpPost("insertCategory")]
         public async Task<IActionResult> InsertCategory([FromBody] DtoCategory dtoCategory)
         {
@@ -61,6 +65,7 @@ namespace Aritz.Server.Controllers
             }
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpDelete("deleteCategory/{catId}")]
         public async Task<IActionResult> DeleteCategory(int catId)
         {

@@ -1,11 +1,16 @@
 ﻿using Aritz.Server.Data;
 using Aritz.Server.Models;
 using Aritz.Server.Services;
+using MercadoPago.Resource.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Org.BouncyCastle.Asn1.X500;
+using Org.BouncyCastle.Ocsp;
+using System.Reflection.Emit;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace Aritz.Server.Controllers
 {
@@ -16,17 +21,20 @@ namespace Aritz.Server.Controllers
         private readonly AritzDbContext _context;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
+        private readonly ICouponService _coupons;
 
-        public OrderController(AritzDbContext context, IEmailService emailService, IConfiguration configuration)
+        public OrderController(AritzDbContext context, IEmailService emailService, IConfiguration configuration, ICouponService coupons)
         {
             _context = context;
             _emailService = emailService;
             _configuration = configuration;
+            _coupons = coupons;
         }
 
         [HttpPost("confirmOrder")]
         public async Task<IActionResult> Order([FromBody] OrderDto dto)
         {
+            if (!this.IsOwner(dto.userId)) return Forbid();
 
             var paymentMethod = await _context.PaymentMethods.FindAsync(dto.paymentMethod);
             if (paymentMethod == null) return NotFound(new { Message = "El método de pago no existe." });
@@ -34,84 +42,123 @@ namespace Aritz.Server.Controllers
             var client = await _context.Users.FindAsync(dto.userId);
             if (client == null) return BadRequest("Usuario no encontrado");
 
+            var cart = await _context.Carts
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(c => c.CAR_USR_ID == dto.userId);
+            if (cart == null) return BadRequest("Carrito vacio");
 
-                try
-                {
 
-                    var newOrder = new Orders
+            if (!int.TryParse(client.USR_POSTAL_CODE, out int postalCode)) return BadRequest("Completá un código postal válido en tu cuenta."); // Primero parseo a entero para poder buscar en la base
+            var zone = await _context.ShippingZones
+                .FirstOrDefaultAsync(z => postalCode >= z.MinZipCode && postalCode <= z.MaxZipCode);
+            decimal shippingPrice = zone?.Price ?? 10000; // Si encuentra zona le asigna el precio establecido, sino le pone el por default (10000)
+
+
+            try
+            {
+                    decimal subtotal = 0;
+
+
+                    if (cart.Items == null || !cart.Items.Any()) return BadRequest("Carrito vacío");
+
+                    foreach (var carItem in cart.Items)
                     {
-                        ORD_USR_ID = dto.userId,
-                        ORD_ORDER_DATE = DateTime.UtcNow,
-                        ORD_TOTAL_AMOUNT = dto.totalSumCart,
-                        ORD_STATUS = "Pendiente",
-                        ORD_PMT_ID = dto.paymentMethod,
-                        ORD_ZIP_CODE = dto.ZipCode
-                    };
+                        if (carItem.CAI_QUANTITY <= 0)
+                            return BadRequest("Cantidad inválida en el carrito.");
 
-
-                    foreach (var carItem in dto.CartItems)
-                    {
                         // Buscamos el producto
                         var product = await _context.Products.FindAsync(carItem.CAI_PRD_ID);
 
                         if (product == null)
                         {
                             // Rollback manual no es necesario si lanzamos excepción o return, 
-                            // pero por limpieza retornamos error.
                             return BadRequest($"El producto con ID {carItem.CAI_PRD_ID} no existe.");
                         }
 
                         // VALIDAR STOCK DISPONIBLE
                         if (product.PRD_QUANTITY < carItem.CAI_QUANTITY)
                         {
-                            // CORRECCIÓN IMPORTANTE: Agregamos 'return'
                             return BadRequest($"Stock insuficiente para el producto: {product.PRD_NAME}. Stock actual: {product.PRD_QUANTITY}");
                         }
 
-                        if (product.PRD_QUANTITY <= 0)
-                        {
-                            product.PRD_IS_ACTIVE = false;
-                        }
+                        subtotal += product.PRD_PRICE * carItem.CAI_QUANTITY;
 
-                        // Restamos
+                        // Restamos el stock en Products
                         product.PRD_QUANTITY -= carItem.CAI_QUANTITY;
+                        if (product.PRD_QUANTITY <= 0) product.PRD_IS_ACTIVE = false; //Si no hay del producto que ponga que el mismo no esta disponible en la bd
+
                         _context.Products.Update(product);
                     }
+                
+                // Validamos si tiene cupon
+                var res = await _coupons.CheckCouponAsync(dto.code, subtotal);
+                if (!res.Valid) return BadRequest(res.Error); // Si el cupon no es valido devuelve el error
+                if (res.Coupon != null) res.Coupon.DIS_USED_COUNT++; // Si el cupon es valido se suma al uso
 
-                    // 5. Guardar Orden y Cambios de Stock
-                    _context.Add(newOrder);
+                var total = subtotal - res.Discount + shippingPrice;
 
-                    // Guardamos todo junto (Orden + Updates de Productos)
-                    await _context.SaveChangesAsync();
-
-                    // 6. Enviar Email (Fuera de la transacción critica)
-                    var emailBodyBuilder = new System.Text.StringBuilder();
-                    emailBodyBuilder.AppendLine($"<h2>Nueva Orden de Compra #{newOrder.ORD_ID}</h2>");
-                    emailBodyBuilder.AppendLine($"<p><strong>Cliente:</strong> {client.USR_NAME} {client.USR_SURNAME} ({client.USR_EMAIL})</p>");
-                    emailBodyBuilder.AppendLine($"<p>Clickea <strong><a href='https://www.aritz.com.ar/user/my-requests/my-order/{newOrder.ORD_ID}'>acá</a></strong> para ir al pedido</p>");
-                    emailBodyBuilder.AppendLine($"<h3>Total: ${dto.totalSumCart}</h3>");
-
-                    var adminEmail = _configuration["EmailSettings:SenderEmail"];
-
-                    _ = _emailService.SendEmailAsync(
-                        adminEmail,
-                        $"Te hicieron una Nueva Orden de Compra #{newOrder.ORD_ID}",
-                        emailBodyBuilder.ToString()
-                    );
-
-                    return Ok(new { Message = "Pedido creado correctamente.", OrderId = newOrder.ORD_ID });
-                }
-                catch (Exception ex)
+                var newOrder = new Orders
                 {
-                    Console.WriteLine($"Error al crear la orden: {ex.Message}");
-                    return StatusCode(500, new { Message = "Error interno al procesar la orden." });
-                }
-            
+                    ORD_USR_ID = dto.userId,
+                    ORD_ORDER_DATE = DateTime.UtcNow,
+                    ORD_TOTAL_AMOUNT = total,
+                    ORD_STATUS = "Pendiente",
+                    ORD_PMT_ID = dto.paymentMethod,
+                    ORD_ZIP_CODE = client.USR_POSTAL_CODE,
+                    ORD_DISCOUNT_AMOUNT = res.Discount,
+                    ORD_DIS_ID = res.Coupon?.DIS_ID,
+                    ORD_SHIPPING_AMOUNT = shippingPrice
+                };
+
+                // 5. Guardar Orden y Cambios de Stock
+                _context.Add(newOrder);
+
+                // Guardamos todo junto (Orden + Updates de Productos)
+                await _context.SaveChangesAsync();
+
+                // 6. Enviar Email al Admin
+                var emailBodyBuilder = new System.Text.StringBuilder();
+                emailBodyBuilder.AppendLine($"<h2>Nueva Orden de Compra #{newOrder.ORD_ID}</h2>");
+                emailBodyBuilder.AppendLine($"<p><strong>Cliente:</strong> {client.USR_NAME} {client.USR_SURNAME} ({client.USR_EMAIL})</p>");
+                emailBodyBuilder.AppendLine($"<h3>Total: ${total}</h3>");
+                emailBodyBuilder.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
+
+                var adminEmail = _configuration["EmailSettings:SenderEmail"];
+
+                _ = _emailService.SendEmailAsync(
+                    adminEmail,
+                    $"Te hicieron una Nueva Orden de Compra #{newOrder.ORD_ID}",
+                    emailBodyBuilder.ToString()
+                );
+
+                // 7. Enviar Email al comprador
+                var userEmailBodyBuilder = new System.Text.StringBuilder();
+                userEmailBodyBuilder.AppendLine($"<h2>¡Su orden NRO #{newOrder.ORD_ID} se generó correctamente!</h2>");
+                userEmailBodyBuilder.AppendLine($"<h3>IMPORTANTE: Recordá cargar el comprobante de pago dentro de las próximas 48 hs, de lo contrario se cancelará</h3>");
+                userEmailBodyBuilder.AppendLine($"<h3>Clickea <strong><a href='https://www.aritz.com.ar/user/my-requests/my-order/{newOrder.ORD_ID}'>acá</a></strong> para ver el estado del pedido y subir el comprobante</h3>");
+                userEmailBodyBuilder.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
+
+                var userEmail = client.USR_EMAIL;
+
+                _ = _emailService.SendEmailAsync(
+                    userEmail,
+                    $"¡Muchas gracias por su Compra!",
+                    userEmailBodyBuilder.ToString()
+                );
+
+                return Ok(new { Message = "Pedido creado correctamente.", OrderId = newOrder.ORD_ID });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al crear la orden: {ex.Message}");
+                return StatusCode(500, new { Message = "Error interno al procesar la orden." });
+            }
         }
 
         [HttpPost("confirmOrderDetail")]
         public async Task<IActionResult> OrderDetail([FromBody] OrderDetailDto dto)
         {
+            if (!this.IsOwner(dto.userId)) return Forbid();
             var order = await _context.Orders.FindAsync(dto.OrderId);
             if (order == null)
             {
@@ -129,6 +176,8 @@ namespace Aritz.Server.Controllers
                 return NotFound(new { Message = "El carrito está vacío." });
             }
 
+            if (order == null || order.ORD_USR_ID != dto.userId) return NotFound();
+
             try
             {
                 var orderDetails = cart.Items.Select(i => new OrderDetails
@@ -136,7 +185,8 @@ namespace Aritz.Server.Controllers
                     ODD_ORD_ID = dto.OrderId,
                     ODD_PRD_ID = i.CAI_PRD_ID,
                     ODD_QUANTITY = i.CAI_QUANTITY,
-                    ODD_TOTAL_PRICE = i.CAI_TOTAL_PRICE
+                    ODD_TOTAL_PRICE = i.Product.PRD_PRICE * i.CAI_QUANTITY,
+                    ODD_UNIT_PRICE = i.Product.PRD_PRICE
                 }).ToList();
 
                 _context.OrderDetails.AddRange(orderDetails);
@@ -147,7 +197,7 @@ namespace Aritz.Server.Controllers
             }
             catch (Exception)
             {
-                return NotFound(new { Message = "No se pudo insertar la orden." });
+                return StatusCode(500, "No se pudo insertar la orden.");
             }
 
         }
@@ -156,7 +206,7 @@ namespace Aritz.Server.Controllers
         public async Task<IActionResult> GetOrders(int userId)
         {
 
-            // Verificar si el usuario existe
+            if (!this.IsOwnerOrAdmin(userId)) return Forbid();
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
             {
@@ -196,6 +246,7 @@ namespace Aritz.Server.Controllers
                 Console.WriteLine($"No existe la orden nro {orderId}");
                 return NotFound(new { Message = "La orden no existe." });
             }
+            if (!this.IsOwnerOrAdmin(order.ORD_USR_ID)) return Forbid();
 
             var orderDetail = await _context.OrderDetails
                 .Where(o => o.ODD_ORD_ID == orderId)
@@ -209,13 +260,16 @@ namespace Aritz.Server.Controllers
                     IdOrderDetail = od.ODD_ID,
                     Quantity = od.ODD_QUANTITY,
                     TotalPrice = od.ODD_TOTAL_PRICE,
+                    UnitPrice = od.ODD_UNIT_PRICE,
                     ZipCode = od.Orders.ORD_ZIP_CODE,
                     ProductName = od.Products.PRD_NAME,
                     ProductImage = od.Products.PRD_IMAGE,
                     ReceiptPath = od.Orders.Receipt.RCP_PATH,
                     OrderTotalAmount = od.Orders.ORD_TOTAL_AMOUNT,
                     OrderStatus = od.Orders.ORD_STATUS,
-                    CategoryName = od.Products.Category.CAT_NAME
+                    CategoryName = od.Products.Category.CAT_NAME,
+                    DiscountAmount = od.Orders.ORD_DISCOUNT_AMOUNT,
+                    ShippingPrice = od.Orders.ORD_SHIPPING_AMOUNT
                 })
                 .ToListAsync();
 
@@ -223,6 +277,7 @@ namespace Aritz.Server.Controllers
             return Ok(orderDetail);
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpGet("allOrders")]
         public async Task<IActionResult> GetAllOrders()
         {
@@ -261,11 +316,9 @@ namespace Aritz.Server.Controllers
             var order = await _context.Orders.FindAsync(orderId);
             if (order == null)
             {
-                return NotFound(new
-                {
-                    Message = "La orden no existe." });
-                }
-        
+                return NotFound(new {Message = "La orden no existe." });
+            }
+            if (!this.IsOwnerOrAdmin(order.ORD_USR_ID)) return Forbid();
             // Validar tipo de archivo
             var allowedExtensions = new[] { ".pdf", ".jpg", ".jpeg", ".png" };
                 var extension = Path.GetExtension(file.FileName).ToLower();
@@ -377,72 +430,104 @@ namespace Aritz.Server.Controllers
             return File(fileBytes, mimeType, fileName);
         }
 
+        private static readonly string[] ValidStatuses =
+            { "Iniciada", "Pendiente", "En curso", "Finalizado", "Cancelado" };
+
         [HttpPut("{orderId}/updOrdStatus")]
-        public async Task<IActionResult> UpdOrdStatus([FromBody] OrderStatusDto dto)
+        public async Task<IActionResult> UpdOrdStatus(int orderId, [FromBody] OrderStatusDto dto)
         {
-            var order = await _context.Orders.FirstOrDefaultAsync(o => o.ORD_ID == dto.OrderId);
+            var order = await _context.Orders
+                .Include(o => o.OrderDetails)
+                .FirstOrDefaultAsync(o => o.ORD_ID == orderId);
             if (order == null)
+                return NotFound(new { Message = "No se encontró la orden de compra." });
+
+            if (!ValidStatuses.Contains(dto.OrderStatus))
+                return BadRequest(new { Message = "Estado inválido." });
+
+            if (order.ORD_STATUS == "Cancelado")
+                return BadRequest(new { Message = "La orden está cancelada y no puede modificarse." });
+
+            var isAdmin = User.IsInRole("Admin");
+
+            if (!isAdmin)
             {
-                return BadRequest(new { Message = "No se encontro la Orden de compra" });
+                // Un cliente solo puede cancelar su propia orden, y solo si está iniciada o pendiente
+                if (!this.IsOwner(order.ORD_USR_ID)) return Forbid();
+                if (dto.OrderStatus != "Cancelado") return Forbid();
+                if (order.ORD_STATUS != "Iniciada" && order.ORD_STATUS != "Pendiente")
+                    return BadRequest(new { Message = "Solo podés cancelar pedidos iniciados o pendientes." });
             }
 
-            order.ORD_STATUS = dto.OrderStatus; // Aca actualizo el estado de la orden de compra
+            var cancelledByUser = !isAdmin; // en esta rama el cliente solo puede estar cancelando
+
+            // Al cancelar, devolvemos el stock que se descontó al crear la orden
+            if (dto.OrderStatus == "Cancelado")
+            {
+                var ids = order.OrderDetails.Select(d => d.ODD_PRD_ID).ToList();
+                var products = await _context.Products
+                    .Where(p => ids.Contains(p.PRD_ID))
+                    .ToListAsync();
+
+                foreach (var d in order.OrderDetails)
+                {
+                    var p = products.FirstOrDefault(x => x.PRD_ID == d.ODD_PRD_ID);
+                    if (p == null) continue;
+                    if (p.PRD_QUANTITY <= 0) p.PRD_IS_ACTIVE = true; // se había desactivado por falta de stock
+                    p.PRD_QUANTITY += d.ODD_QUANTITY;
+                }
+            }
+
+            order.ORD_STATUS = dto.OrderStatus;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // estado + stock en una transacción
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Error al actualizar", Error = ex.Message });
+                Console.WriteLine($"Error al actualizar la orden {orderId}: {ex.Message}");
+                return StatusCode(500, new { Message = "Error al actualizar el estado." });
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.USR_ID == order.ORD_USR_ID); //Busco el usuario por la orden de compra
-
-            if (dto.CancelOrderByUser)
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.USR_ID == order.ORD_USR_ID);
+            if (user != null)
             {
-                var emailBodyBuilder = new System.Text.StringBuilder();
-                emailBodyBuilder.AppendLine($"<h3>Cancelaron la compra #{order.ORD_ID}</h3>");
-                emailBodyBuilder.AppendLine($"<p>El cliente {user.USR_NAME} {user.USR_SURNAME} cancelo la compra.</p>");
-                emailBodyBuilder.AppendLine($"<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
 
-                var adminEmail = _configuration["EmailSettings:SenderEmail"];
+                if (cancelledByUser)
+                {
+                    var body = new System.Text.StringBuilder();
+                    body.AppendLine($"<h3>Cancelaron la compra #{order.ORD_ID}</h3>");
+                    body.AppendLine($"<p>El cliente {user.USR_NAME} {user.USR_SURNAME} canceló la compra.</p>");
+                    body.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
 
-                _ = _emailService.SendEmailAsync(
-                    adminEmail,
-                    $"Cancelaron la orden #{order.ORD_ID}",
-                    emailBodyBuilder.ToString()
-                );
-            }
-            else
-            {
-                var userMail = user.USR_EMAIL;
+                    _ = _emailService.SendEmailAsync(
+                        _configuration["EmailSettings:SenderEmail"],
+                        $"Cancelaron la orden #{order.ORD_ID}",
+                        body.ToString());
+                }
+                else
+                {
+                    var body = new System.Text.StringBuilder();
+                    body.AppendLine($"<h3>Estado de tu orden #{order.ORD_ID}</h3>");
+                    body.AppendLine($"<p><strong>Estado:</strong> El estado de tu pedido pasó a {dto.OrderStatus}</p>");
+                    body.AppendLine($"<h3>Clickea <strong><a href='https://www.aritz.com.ar/user/my-requests/my-order/{order.ORD_ID}'>acá</a></strong> para ver el estado del pedido</h3>");
+                    body.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
 
-                var emailBodyBuilder = new System.Text.StringBuilder();
-                emailBodyBuilder.AppendLine($"<h3>Estado de tu orden #{order.ORD_ID}</h3>");
-                emailBodyBuilder.AppendLine($"<p><strong>Estado:</strong>El estado de tu pedido paso a {dto.OrderStatus}</p>");
-                emailBodyBuilder.AppendLine($"<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
-
-                var usuarioEmail = userMail;
-
-                _ = _emailService.SendEmailAsync(
-                    usuarioEmail,
-                    $"Avances en tu pedido #{order.ORD_ID}",
-                    emailBodyBuilder.ToString()
-                );
+                    _ = _emailService.SendEmailAsync(
+                        user.USR_EMAIL,
+                        $"Avances en tu pedido #{order.ORD_ID}",
+                        body.ToString());
+                }
             }
 
             return Ok(new { Message = "Estado actualizado correctamente" });
-
         }
         public class OrderDto
         {
             public int userId { get; set; }
-            public decimal totalSumCart { get; set; }
-            public string? Status { get; set; }
             public int paymentMethod { get; set; }
-            public List<CartItems> CartItems { get;set; }
-            public string ZipCode { get; set; }
+            public string code { get; set; }
         }
 
         public class OrderDetailDto

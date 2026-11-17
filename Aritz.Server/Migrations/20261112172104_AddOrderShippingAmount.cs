@@ -5,15 +5,15 @@
 namespace Aritz.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class AddZipCodeToOrders : Migration
+    public partial class AddOrderShippingAmount : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ORD_ZIP_CODE",
+            migrationBuilder.AddColumn<decimal>(
+                name: "ORD_SHIPPING_AMOUNT",
                 table: "Orders",
-                type: "nvarchar(max)",
+                type: "decimal(18,2)",
                 nullable: true);
         }
 
@@ -21,7 +21,7 @@ namespace Aritz.Server.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ORD_ZIP_CODE",
+                name: "ORD_SHIPPING_AMOUNT",
                 table: "Orders");
         }
     }

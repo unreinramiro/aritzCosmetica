@@ -1,6 +1,7 @@
 ﻿using Aritz.Server.Data;
 using Aritz.Server.Models;
 using Azure.Core;
+using MercadoPago.Resource.User;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,10 +22,8 @@ namespace Aritz.Server.Controllers
         [HttpPost("add-to-cart")]
         public async Task<IActionResult> AddToCart([FromBody] AddToCartRequest request)
         {
-            Console.WriteLine($"Verificando si el usuario existe: UserId={request.userId}");
 
-
-            // Alternativa: Buscar el usuario con FirstOrDefaultAsync
+            if (!this.IsOwner(request.userId)) return Forbid();
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.USR_ID == request.userId);
             if (user == null)
@@ -38,6 +37,12 @@ namespace Aritz.Server.Controllers
             {
                 return NotFound("Producto no encontrado.");
             }
+
+            if (product.PRD_IS_ACTIVE == false)
+                return BadRequest("Producto no disponible.");
+
+            if (request.quantity < 1 || request.quantity > product.PRD_QUANTITY)
+                return BadRequest("Cantidad inválida.");
 
             // Verifica si ya existe un carrito para el usuario
             var cart = await _context.Carts
@@ -69,15 +74,10 @@ namespace Aritz.Server.Controllers
             {
                 // Ya existe: actualiza la cantidad
                 cartItem.CAI_QUANTITY += request.quantity;
+                cartItem.CAI_TOTAL_PRICE = product.PRD_PRICE * cartItem.CAI_QUANTITY;
             }
             else
             {
-                // Nuevo producto: agrégalo como un nuevo ítem
-                
-                if (product == null)
-                {
-                    return NotFound("Producto no encontrado.");
-                }
 
                 cartItem = new CartItems
                 {
@@ -98,7 +98,7 @@ namespace Aritz.Server.Controllers
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetCart(int userId)
         {
-            Console.WriteLine(userId);
+            if (!this.IsOwner(userId)) return Forbid();
             var cart = await _context.Carts
                 .Include(c => c.Items)
                 .ThenInclude(i => i.Product)
@@ -130,6 +130,7 @@ namespace Aritz.Server.Controllers
         {
             try
             {
+                if (!this.IsOwner(userId)) return Forbid();
                 Console.WriteLine($"Calculando la cantidad total para el usuario con ID: {userId}");
 
                 // Verifica si el carrito del usuario existe
@@ -160,7 +161,7 @@ namespace Aritz.Server.Controllers
         [HttpGet("user/{userId}/total-cart")]
         public async Task<IActionResult> GetTotalCart(int userId)
         {
-            // Verifica si el carrito del usuario existe
+            if (!this.IsOwner(userId)) return Forbid();
             var cart = await _context.Carts.FirstOrDefaultAsync(c => c.CAR_USR_ID == userId);
 
             if (cart == null)
@@ -171,7 +172,7 @@ namespace Aritz.Server.Controllers
 
             var totalSum = await _context.CartItems
                 .Where(ci => ci.CAI_CAR_ID == cart.CAR_ID)
-                .SumAsync(ci => ci.CAI_TOTAL_PRICE * ci.CAI_QUANTITY);
+                .SumAsync(ci => ci.CAI_TOTAL_PRICE);
 
             Console.WriteLine($"Cantidad total obtenida: {totalSum}");
             return Ok(totalSum);
@@ -183,6 +184,7 @@ namespace Aritz.Server.Controllers
         {
             try
             {
+                if (!this.IsOwner(userId)) return Forbid();
                 Console.WriteLine($"Intentando eliminar producto con ID {productId} para el usuario con ID {userId}");
 
                 // Busca el carrito del usuario
@@ -226,6 +228,7 @@ namespace Aritz.Server.Controllers
         {
             try
             {
+                if (!this.IsOwner(userId)) return Forbid();
                 Console.WriteLine($"Intentando eliminar todos los productos del carrito para el usuario: {userId}");
 
                 // Busca el carrito del usuario

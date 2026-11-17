@@ -14,6 +14,7 @@ namespace Aritz.Server.Models
         [ForeignKey("ODD_PRD_ID")]
         public Product? Products { get; set; }
         public int ODD_QUANTITY { get; set; }
+        public decimal ODD_UNIT_PRICE { get; set; }
         public decimal ODD_TOTAL_PRICE { get; set; }
     }
 }

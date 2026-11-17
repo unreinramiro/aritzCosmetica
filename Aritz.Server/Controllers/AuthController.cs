@@ -1,6 +1,8 @@
 ﻿using Aritz.Server.Data;
 using Aritz.Server.Models;
 using Aritz.Server.Services;
+using MercadoPago.Resource.Order;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +16,8 @@ namespace Aritz.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
         private readonly AritzDbContext _context;
@@ -81,8 +85,25 @@ namespace Aritz.Server.Controllers
             user.USR_VERIFICATION_CODE = null;
             user.USR_VERIFICATION_EXPIRATION = null;
             await _context.SaveChangesAsync();
+            try
+            {
+                var body = new System.Text.StringBuilder();
+                body.AppendLine($"<h3>Te registraste correctamente en Aritz Cosmetica Natural</h3>");
+                body.AppendLine($"<h3>Clickea aca para ver el catalogo de nuestros productos: </h3>");
+                body.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
 
+                await _emailService.SendEmailAsync(
+                    user.USR_EMAIL,
+                    $"Registro Exitoso!",
+                    body.ToString());
+            }
+            catch (Exception ex)
+            {
+                BadRequest("No se pudo enviar el mail: {ex}");
+            }
             return Ok("Cuenta verificada.");
+
+            
         }
 
         // Login: POST /api/auth/login
@@ -101,11 +122,7 @@ namespace Aritz.Server.Controllers
                     return Unauthorized("Credenciales inválidas.");
                 }
 
-                Console.WriteLine($"Email recibido: {dto.Email}");
-                Console.WriteLine($"Contraseña recibida: {dto.Password}");
-                Console.WriteLine($"Hash almacenado: {user.USR_PASSWORD_HASH}");
                 bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.USR_PASSWORD_HASH);
-                Console.WriteLine($"Verificación de contraseña: {isPasswordValid}");
 
                 if (string.IsNullOrEmpty(user.USR_PASSWORD_HASH) || !isPasswordValid)
                     return Unauthorized("Credenciales inválidas.");
@@ -114,12 +131,14 @@ namespace Aritz.Server.Controllers
                     return Unauthorized("Cuenta no verificada. Revisa tu email.");
 
                 // Generar JWT
-                var claims = new[]
+                var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.USR_ID.ToString()),
                     new Claim(ClaimTypes.Email, user.USR_EMAIL),
                     new Claim(ClaimTypes.Name, user.USR_NAME)
                 };
+                if (user.USR_IS_ADMIN == true)
+                    claims.Add(new Claim(ClaimTypes.Role, "Admin"));
 
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

@@ -1,87 +1,62 @@
-.leftContainer {
-    width: 100%;
-    height: 50vh;
-    text-align: center;
+.leftContainer,
+.rightContainer {
     display: flex;
     align-items: center;
-    justify-content: start;
-    gap: 5px;
-    padding: 10px;
-    margin-left: 40px;
-    margin-top: 50px;
-    background-color: #f9f9f9;
+    gap: 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 56px 20px;
+    font-family: "Montserrat", sans-serif;
 }
 
 .rightContainer {
-    width: 100%;
-    height: 50vh;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    gap: 5px;
-    padding: 10px;
-    margin-right: 40px;
-    margin-top: 50px;
-    background-color: #f9f9f9;
+    flex-direction: row-reverse;
 }
 
-.imageContainer {
-    width: 40%;
-    height: 80%;
+.imageContainer,
+.descriptionContainer {
+    flex: 1;
+    min-width: 0;
 }
 
 .image {
+    display: block;
     width: 100%;
-    height: 100%;
+    aspect-ratio: 4 / 3;
     object-fit: cover;
-}
-
-.descriptionContainer {
-    width: 40%;
-    height: 100%;
-    align-content: center;
+    border: 1px solid var(--border);
+    border-radius: 6px;
 }
 
 .text {
-    font-size: 2.2rem;
-    font-family: sans-serif, #000;
-    line-height: 1.5;
-    color: rgb(128, 98, 51);
+    margin: 0 0 16px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text);
+}
+
+.text::after {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 3px;
+    margin-top: 12px;
+    background: var(--brand);
 }
 
 .descriptionContainer p {
-    color: #000;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--muted);
 }
 
 @media (max-width: 992px) {
-    .leftContainer {
-        width: 100%;
-        height: auto;
-        flex-direction: column;
-        margin-left: 0px;
-        margin-top: 0px;
-    }
-
+    .leftContainer,
     .rightContainer {
-        width: 100%;
-        height: auto;
         flex-direction: column;
-        justify-content: end;
-        gap: 5px;
-        margin-right: 0px;
-        margin-top: 100px;
-        background-color: #f9f9f9;
+        gap: 24px;
+        padding: 32px 20px;
     }
-
-    .imageContainer {
-        width: 100%;
-        height: 80%;
-        order: 2;
-    }
-
-    .descriptionContainer {
-        width: 100%;
-    }
-
 }

@@ -1,11 +1,36 @@
 .breadCrumContainer {
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 5px;
-    padding: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 20px 0;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.85rem;
+    color: #222;
 }
 
-.link{
+.breadCrumContainer > span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.separator {
+    color: #b5b5b5;
+}
+
+.link {
+    color: #6b6b6b;
     text-decoration: none;
+    transition: color 0.2s;
+}
+
+.link:hover {
+    color: rgb(128, 98, 51);
+}
+
+.current {
+    font-weight: 500;
 }

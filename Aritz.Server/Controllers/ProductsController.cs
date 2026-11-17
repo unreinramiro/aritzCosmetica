@@ -1,5 +1,6 @@
 ﻿using Aritz.Server.Data;
 using Aritz.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -20,6 +21,7 @@ namespace Aritz.Server.Controllers
         }
 
         // GET: api/products
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<List<Product>>> GetProducts()
         {
@@ -53,6 +55,7 @@ namespace Aritz.Server.Controllers
         }
 
         // GET: api/products/{id}
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
@@ -87,6 +90,7 @@ namespace Aritz.Server.Controllers
             return Ok(product);
         }
 
+        [AllowAnonymous]
         [HttpGet("by-category")]
         public async Task<ActionResult<List<Category>>> GetProductsByCategory()
         {
@@ -112,6 +116,7 @@ namespace Aritz.Server.Controllers
             return Ok(categories);
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpPost("updPrd")]
         public async Task<IActionResult> UpdProduct([FromForm] UpdateProductDto prdDto)
         {
@@ -230,6 +235,7 @@ namespace Aritz.Server.Controllers
             }
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpPost("addPrd")]
         public async Task<IActionResult> AddProduct([FromForm] AddProductDto prdDto)
         {
@@ -303,6 +309,7 @@ namespace Aritz.Server.Controllers
             }
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpDelete("delPrd/{prdDelId}")]
         public async Task<IActionResult> DelPrd(int prdDelId)
         {
@@ -316,6 +323,9 @@ namespace Aritz.Server.Controllers
                     return NotFound($"No se encontró el producto con ID {prdDelId}");
                 }
 
+                var cartItems = _context.CartItems.Where(ci => ci.CAI_PRD_ID == prdDelId);
+                _context.CartItems.RemoveRange(cartItems);
+
                 _context.Products.Remove(product);
                 await _context.SaveChangesAsync();
 
@@ -328,6 +338,7 @@ namespace Aritz.Server.Controllers
             }
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpDelete("delImg/{id}")]
         public async Task<IActionResult> delImg(int id)
         {

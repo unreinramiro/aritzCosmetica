@@ -1,57 +1,100 @@
-* {
+.container,
+.container * {
     font-family: "Montserrat", sans-serif;
 }
 
-.artizLogoCompra {
-    font-weight: bold !important;
-    font-size: 4rem !important;
-    font-family: Dancing Script, cursive;
-    color: aliceblue;
+:root {
+    --brand: rgb(128, 98, 51);
+    --brand-dark: rgb(102, 78, 40);
+    --text: #222;
+    --muted: #6b6b6b;
+    --border: #e5e5e5;
+    --surface: #fff;
 }
 
 .container {
     display: flex;
-    width: 60vw;
-    gap: 20px;
-    padding: 50px;
-    border: 4px solid rgb(128, 98, 51);
-    background-color: rgb(128, 98, 51);
-    border-radius: 5px;
-    margin-top: 5%;
-    margin-bottom: 5%;
-    color: #fff;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 560px;
+    margin: 48px 20px;
+    padding: 40px 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--brand);
+    border-radius: 6px;
+    color: var(--text);
 }
 
-    .container p {
-        color: #fff;
-    }
+.artizLogoCompra {
+    margin: 0;
+    font-family: "Dancing Script", cursive;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--brand);
+}
+
+.container h1 {
+    margin: 0 0 16px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.container p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--muted);
+}
 
 .containerComprobante {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    margin-top: 8px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+}
+
+.containerComprobante b {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.shippingLabels {
+    width: 100%;
+    justify-content: center;
 }
 
 .btnShippingNext {
+    display: inline-block;
     width: 100%;
-    background-color: #007bff;
-    color: white;
-    border: none;
+    padding: 10px 16px;
+    background: var(--brand);
+    border: 1px solid var(--brand);
     border-radius: 4px;
-    padding: 10px 15px;
-    cursor: pointer;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
     text-decoration: none;
+    transition: background 0.2s;
 }
 
-    .btnShippingNext:hover {
-        background-color: #0056b3;
-    }
+.btnShippingNext:hover {
+    background: var(--brand-dark);
+    color: #fff;
+}
 
-@media (max-width: 992px) {
-
+@media (max-width: 576px) {
     .container {
-        width: 100vw;
-        margin: 5px;
+        margin: 20px 12px;
+        padding: 28px 20px;
     }
-
 }

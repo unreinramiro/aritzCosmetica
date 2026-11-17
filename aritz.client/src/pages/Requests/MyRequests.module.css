@@ -48,6 +48,8 @@
 }
 
 .downloadLink {
+    background-color: transparent;
+    border: none;
     color: #007bff;
     text-decoration: none;
 }
@@ -103,7 +105,7 @@
         width: 100%;
     }
 
-        /* 2. Ocultamos el encabezado original (los títulos de columnas) */
+        /* 2. Ocultamos el encabezado original (los tï¿½tulos de columnas) */
         .requestsTable thead tr {
             position: absolute;
             top: -9999px;
@@ -124,7 +126,7 @@
     .requestsTable td {
         border: none;
         position: relative;
-        padding-left: 50%; /* Espacio para el título simulado */
+        padding-left: 50%; /* Espacio para el tï¿½tulo simulado */
         padding-top: 10px;
         padding-bottom: 10px;
         text-align: right; /* Alineamos el contenido a la derecha */
@@ -134,12 +136,12 @@
         align-items: center;
     }
 
-        /* Quitamos el borde del último item para que quede limpio */
+        /* Quitamos el borde del ï¿½ltimo item para que quede limpio */
         .requestsTable td:last-child {
             border-bottom: 0;
         }
 
-        /* 5. Magia: Usamos el atributo data-label como título a la izquierda */
+        /* 5. Magia: Usamos el atributo data-label como tï¿½tulo a la izquierda */
         .requestsTable td::before {
             content: attr(data-label); /* Toma el texto del atributo HTML */
             position: relative; /* O absolute si prefieres fijarlo */
@@ -149,7 +151,7 @@
             flex-basis: 40%; /* Ocupa el 40% del ancho */
         }
 
-    /* Ajustes específicos para inputs y botones en móvil */
+    /* Ajustes especï¿½ficos para inputs y botones en mï¿½vil */
     .fileInput span {
         justify-content: flex-end !important;
     }

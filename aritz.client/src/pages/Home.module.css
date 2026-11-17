@@ -1,38 +1,31 @@
 .cardBigContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100vw;
-    height: 90vh;
-    padding: 70px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 64px 20px;
     text-align: center;
-    gap: 10px;
 }
 
-    .cardBigContainer h1 {
-        font-family: "Montserrat", sans-serif;
-        font-size: 2rem;
-        color: rgb(128, 98, 51);
-    }
+.cardBigContainer h1 {
+    margin: 0 0 40px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text);
+}
 
 .cardsContainer {
-    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    text-align: left;
 }
 
 @media (max-width: 992px) {
     .cardBigContainer {
-        min-height: auto;
-        height: auto;
-        padding: 30px;
+        padding: 40px 20px;
     }
-
-    .cardBigContainer h1{
-        font-size: 1.5rem;
-    }
-
 
     .cardsContainer {
-        height: auto;
-        flex-direction: column;
+        grid-template-columns: 1fr;
     }
 }

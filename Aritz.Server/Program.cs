@@ -1,11 +1,12 @@
 using Aritz.Server.Data;
 using Aritz.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,15 +19,12 @@ if (string.IsNullOrEmpty(mpAccessToken))
     throw new Exception("¡Falta el AccessToken de MercadoPago! Revisa tus User Secrets.");
 }
 
-Console.WriteLine($"Access Toekn: '{mpAccessToken}'");
-
 // 2. CONFIGURAR MERCADOPAGO GLOBALMENTE
 MercadoPago.Config.MercadoPagoConfig.AccessToken = mpAccessToken;
 
 
 // --- CÓDIGO TEMPORAL DE DEBUG (BORRAR DESPUÉS) ---
 var connString = builder.Configuration.GetConnectionString("DefaultConnection");
-Console.WriteLine($"Cadena leída: '{connString}'");
 
 // Configura CORS
 builder.Services.AddCors(options =>
@@ -44,6 +42,8 @@ builder.Services.AddDbContext<AritzDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         sqlOptions => sqlOptions.EnableRetryOnFailure()
     ).LogTo(Console.WriteLine, LogLevel.Information));
+
+builder.Services.AddScoped<ICouponService, CouponService>();
 
 // Configura autenticación con JWT
 builder.Services.AddAuthentication(options =>
@@ -80,6 +80,14 @@ builder.Services.AddSwaggerGen(c => { c.CustomSchemaIds(type => type.ToString())
 builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddHostedService<OrderCleanupService>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+    options.AddPolicy("Admin", p => p.RequireRole("Admin"));
+});
 
 var app = builder.Build();
 

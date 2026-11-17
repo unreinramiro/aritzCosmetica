@@ -1,1 +1,2 @@
 C:\Users\Admin\source\repos\Aritz\aritz.client\obj\Debug\aritz.client.esproj.CoreCompileInputs.cache
+D:\aritzCosmetica\aritz.client\obj\Debug\aritz.client.esproj.CoreCompileInputs.cache

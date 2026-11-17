@@ -23,6 +23,8 @@ namespace Aritz.Server.Data
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ShippingZone> ShippingZones { get; set; }
 
+        public DbSet<Discount> Discounts { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configuración de Users, Products, Categories, Cart, CartItems (mantenidas como en mensajes anteriores)
@@ -121,6 +123,15 @@ namespace Aritz.Server.Data
                       .WithOne(d => d.Orders)
                       .HasForeignKey(d => d.ODD_ORD_ID)
                       .OnDelete(DeleteBehavior.Cascade);
+                entity.Property(o => o.ORD_DISCOUNT_AMOUNT).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+                entity.HasOne(o => o.Discount)
+                      .WithMany(d => d.Orders)
+                      .HasForeignKey(o => o.ORD_DIS_ID)
+                      .HasConstraintName("FK_Orders_Discounts_ORD_DIS_ID")
+                      .OnDelete(DeleteBehavior.Restrict);
+                entity.Property(o => o.ORD_SHIPPING_AMOUNT)
+                      .HasColumnName("ORD_SHIPPING_AMOUNT")
+                      .HasColumnType("decimal(18,2)");
             });
 
             // Configura la tabla OrderDetails
@@ -140,6 +151,7 @@ namespace Aritz.Server.Data
                       .WithMany(o => o.OrderDetails)
                       .HasForeignKey(d => d.ODD_ORD_ID)
                       .OnDelete(DeleteBehavior.Cascade);
+                entity.Property(d => d.ODD_UNIT_PRICE).HasColumnName("ODD_UNIT_PRICE").HasColumnType("decimal(18,2)").IsRequired();
             });
 
             // Configura la tabla Payments
@@ -180,6 +192,24 @@ namespace Aritz.Server.Data
                       .OnDelete(DeleteBehavior.Restrict);
             });
 
+            modelBuilder.Entity<Discount>(entity =>
+            {
+                entity.ToTable("Discounts", t =>
+                {
+                    t.HasCheckConstraint("CK_Discounts_TYPE", "[DIS_TYPE] IN ('PERCENTAGE','FIXED')");
+                    t.HasCheckConstraint("CK_Discounts_VALUE",
+                        "[DIS_DISCOUNT] > 0 AND ([DIS_TYPE] <> 'PERCENTAGE' OR [DIS_DISCOUNT] <= 100)");
+                });
+                entity.HasKey(d => d.DIS_ID).HasName("PK_Discounts");
+                entity.Property(d => d.DIS_CODE).HasMaxLength(50).IsRequired();
+                entity.Property(d => d.DIS_NAME).HasMaxLength(100).IsRequired();
+                entity.Property(d => d.DIS_TYPE).HasMaxLength(20).IsRequired();
+                entity.Property(d => d.DIS_DISCOUNT).HasColumnType("decimal(18,2)");
+                entity.Property(d => d.DIS_MIN_AMOUNT).HasColumnType("decimal(18,2)");
+                entity.Property(d => d.DIS_USED_COUNT).HasDefaultValue(0);
+                entity.Property(d => d.DIS_IS_ACTIVE).HasDefaultValue(true).ValueGeneratedNever();
+                entity.HasIndex(d => d.DIS_CODE).IsUnique().HasDatabaseName("UQ_Discounts_CODE");
+            });
         }
     }
 }

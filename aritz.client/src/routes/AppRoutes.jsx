@@ -22,6 +22,7 @@ import Failure from '../pages/Checkout/Failure';
 import Pending from '../pages/Checkout/Pending';
 import NotFound from '../components/NotFound';
 import ProtectedRoute from './ProtectedRoute';
+import AdminCoupons from '../components/Admin/AdminCoupons';
 
 const AppRoutes = () => {
     return (
@@ -51,6 +52,7 @@ const AppRoutes = () => {
                 <Route path="/admin/management/products" element={<AdminProducts />} />
                 <Route path="/admin/management/users" element={<AdminUsers />} />
                 <Route path="/admin/management/postalCodes" element={<AdminPostalCodes />} />
+                <Route path="/admin/management/coupons" element={<AdminCoupons />} />
             </Route>
 
             <Route path="/notFound" element={<NotFound />} />

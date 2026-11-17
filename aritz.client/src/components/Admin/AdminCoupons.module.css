@@ -1,0 +1,123 @@
+.containerCoupon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    text-align: center;
+}
+
+.subContainerCoupon {
+    padding: 30px;
+}
+
+/* Tabla */
+.CouponTable {
+    width: 80vw;
+}
+
+.CouponTable thead {
+    border-bottom: 1px solid #eee;
+}
+
+.CouponTable thead th {
+    font-weight: 400;
+    padding: 20px;
+}
+
+.CouponTable tbody td {
+    font-weight: 400;
+    font-size: 0.9rem;
+    padding: 20px;
+}
+
+/* Agregar cupón */
+.addCoupon:hover {
+    background-color: #e9ecef;
+    border-color: #0d6efd;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Icono eliminar */
+.delIcon:hover {
+    color: red;
+}
+
+/* Responsive: tabla en formato tarjetas */
+@media (max-width: 992px) {
+    .containerCoupon {
+        padding: 10px;
+    }
+
+    .subContainerCoupon {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .CouponTable,
+    .CouponTable thead,
+    .CouponTable tbody,
+    .CouponTable th,
+    .CouponTable td,
+    .CouponTable tr {
+        display: block;
+        width: 100%;
+    }
+
+    /* Oculta el encabezado sin quitarlo del DOM (accesibilidad) */
+    .CouponTable thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .CouponTable thead {
+        border-bottom: none;
+    }
+
+    .filaCoupon {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        padding: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .CouponTable td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0 10px 50%;
+        text-align: right;
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+    }
+
+    .CouponTable td:last-child {
+        border-bottom: 0;
+    }
+
+    .CouponTable td::before {
+        content: attr(data-label);
+        flex-basis: 40%;
+        font-weight: 700;
+        text-align: left;
+        color: #333;
+    }
+
+    .CouponTable td input {
+        width: 60%;
+    }
+
+    .CouponTable td.addCoupon {
+        justify-content: center;
+        padding-left: 0;
+    }
+
+    .CouponTable td.addCoupon::before {
+        content: none;
+    }
+}
