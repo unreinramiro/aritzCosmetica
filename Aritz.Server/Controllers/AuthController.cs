@@ -1,6 +1,8 @@
 ﻿using Aritz.Server.Data;
 using Aritz.Server.Models;
 using Aritz.Server.Services;
+using MercadoPago.Resource.Order;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +11,6 @@ using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Aritz.Server.Controllers
 {
@@ -84,8 +85,25 @@ namespace Aritz.Server.Controllers
             user.USR_VERIFICATION_CODE = null;
             user.USR_VERIFICATION_EXPIRATION = null;
             await _context.SaveChangesAsync();
+            try
+            {
+                var body = new System.Text.StringBuilder();
+                body.AppendLine($"<h3>Te registraste correctamente en Aritz Cosmetica Natural</h3>");
+                body.AppendLine($"<h3>Clickea aca para ver el catalogo de nuestros productos: </h3>");
+                body.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
 
+                await _emailService.SendEmailAsync(
+                    user.USR_EMAIL,
+                    $"Registro Exitoso!",
+                    body.ToString());
+            }
+            catch (Exception ex)
+            {
+                BadRequest("No se pudo enviar el mail: {ex}");
+            }
             return Ok("Cuenta verificada.");
+
+            
         }
 
         // Login: POST /api/auth/login

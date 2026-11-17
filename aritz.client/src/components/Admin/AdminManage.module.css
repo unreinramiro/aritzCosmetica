@@ -204,6 +204,17 @@
     height: 100%;
 }
 
+.downloadLink {
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    text-decoration: none;
+}
+
+    .downloadLink:hover {
+        text-decoration: underline;
+    }
+
 
 @media (max-width: 992px) {
 
@@ -294,7 +305,7 @@
     .productsUserTable td {
         border: none;
         position: relative;
-        padding-left: 50%; /* Espacio para el título simulado */
+        padding-left: 50%; /* Espacio para el tï¿½tulo simulado */
         padding-top: 10px;
         padding-bottom: 10px;
         text-align: right; /* Alineamos el contenido a la derecha */

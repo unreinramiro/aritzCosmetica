@@ -121,6 +121,7 @@ namespace Aritz.Server.Controllers
                 emailBodyBuilder.AppendLine($"<h2>Nueva Orden de Compra #{newOrder.ORD_ID}</h2>");
                 emailBodyBuilder.AppendLine($"<p><strong>Cliente:</strong> {client.USR_NAME} {client.USR_SURNAME} ({client.USR_EMAIL})</p>");
                 emailBodyBuilder.AppendLine($"<h3>Total: ${total}</h3>");
+                emailBodyBuilder.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
 
                 var adminEmail = _configuration["EmailSettings:SenderEmail"];
 
@@ -135,6 +136,7 @@ namespace Aritz.Server.Controllers
                 userEmailBodyBuilder.AppendLine($"<h2>¡Su orden NRO #{newOrder.ORD_ID} se generó correctamente!</h2>");
                 userEmailBodyBuilder.AppendLine($"<h3>IMPORTANTE: Recordá cargar el comprobante de pago dentro de las próximas 48 hs, de lo contrario se cancelará</h3>");
                 userEmailBodyBuilder.AppendLine($"<h3>Clickea <strong><a href='https://www.aritz.com.ar/user/my-requests/my-order/{newOrder.ORD_ID}'>acá</a></strong> para ver el estado del pedido y subir el comprobante</h3>");
+                userEmailBodyBuilder.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
 
                 var userEmail = client.USR_EMAIL;
 
@@ -509,6 +511,7 @@ namespace Aritz.Server.Controllers
                     var body = new System.Text.StringBuilder();
                     body.AppendLine($"<h3>Estado de tu orden #{order.ORD_ID}</h3>");
                     body.AppendLine($"<p><strong>Estado:</strong> El estado de tu pedido pasó a {dto.OrderStatus}</p>");
+                    body.AppendLine($"<h3>Clickea <strong><a href='https://www.aritz.com.ar/user/my-requests/my-order/{order.ORD_ID}'>acá</a></strong> para ver el estado del pedido</h3>");
                     body.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
 
                     _ = _emailService.SendEmailAsync(

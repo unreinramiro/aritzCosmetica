@@ -1,5 +1,6 @@
 ﻿using Aritz.Server.Data;
 using Aritz.Server.Models;
+using MercadoPago.Resource.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -47,8 +48,18 @@ namespace Aritz.Server.Controllers
         }
 
         [Authorize(Policy = "Admin")]
+        [HttpGet("getAllCoupons")]
+        public async Task<IActionResult> GetAllDiscounts()
+        {
+            var discounts = await _context.Discounts.ToListAsync();
+            if (discounts == null) return NotFound("Error al traer los descuentos");
+
+            return Ok(discounts);
+        }
+
+        [Authorize(Policy = "Admin")]
         [HttpPost("addDiscount")]
-        public async Task<IActionResult> AddDiscount([FromForm] DiscountDto dto)
+        public async Task<IActionResult> AddDiscount([FromBody] DiscountDto dto)
         {
             try
             {
@@ -79,8 +90,8 @@ namespace Aritz.Server.Controllers
         }
 
         [Authorize(Policy = "Admin")]
-        [HttpPut]
-        public async Task<IActionResult> UpdDiscount([FromForm] DiscountDto dto)
+        [HttpPost("updDiscount")]
+        public async Task<IActionResult> UpdDiscount([FromBody] DiscountDto dto)
         {
             var dis = await _context.Discounts.FirstOrDefaultAsync(d => d.DIS_ID == dto.Id);
             if (dis == null) return NotFound("No se encontró el cupón de descuento");
