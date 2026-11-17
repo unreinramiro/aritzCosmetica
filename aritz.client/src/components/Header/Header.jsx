@@ -199,17 +199,16 @@ const Header = () => {
                   >
                     {userName}
                   </b>
-                  <ul className={styles.userDropdown}>
+                  <div className={styles.userDropdown}>
                     {isAdmin ? (
                       <>
                         <NavLink
                           to="/admin/management"
                           className={styles.userNavlink}
                         >
-                          <CiEdit size={20} />
+                          <CiEdit size={18} />
                           Administrar
                         </NavLink>
-
                         <NavLink
                           to="/admin/management/postalCodes"
                           className={styles.userNavlink}
@@ -217,7 +216,6 @@ const Header = () => {
                           <FaSignsPost />
                           Envios
                         </NavLink>
-
                         <NavLink
                           to="/admin/management/coupons"
                           className={styles.userNavlink}
@@ -232,20 +230,26 @@ const Header = () => {
                           to="/user/my-account"
                           className={styles.userNavlink}
                         >
+                          <FaUser />
                           Mi cuenta
                         </NavLink>
                         <NavLink
                           to="/user/my-requests"
                           className={styles.userNavlink}
                         >
+                          <FaBoxOpen />
                           Mis pedidos
                         </NavLink>
                       </>
                     )}
-                    <button className="btn btn-danger" onClick={handleLogout}>
+                    <button
+                      type="button"
+                      className={styles.logoutBtn}
+                      onClick={handleLogout}
+                    >
                       Cerrar Sesion
                     </button>
-                  </ul>
+                  </div>
                 </div>
                 {isAdmin ? (
                   ""

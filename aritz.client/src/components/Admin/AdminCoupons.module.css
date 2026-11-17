@@ -50,6 +50,11 @@
         padding: 10px;
     }
 
+    .subContainerCoupon {
+        width: 100%;
+        padding: 10px;
+    }
+
     .CouponTable,
     .CouponTable thead,
     .CouponTable tbody,

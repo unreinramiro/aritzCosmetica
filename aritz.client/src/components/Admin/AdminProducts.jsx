@@ -129,7 +129,7 @@ function AdminProducts() {
                     <IoMdAdd
                         size={20}
                     />
-                    Agregar Producto
+                    Agregar
                 </button>
                 <button
                     data-bs-toggle="modal"

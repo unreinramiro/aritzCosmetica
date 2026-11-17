@@ -303,11 +303,11 @@ function MyAccount() {
                               <input
                                   type="submit"
                                   value="Cancelar"
-                                  className="btn btn-danger"
+                                  className={styles.cancelBtn}
                                   onClick={() => toggleEditMode('account')}
                               />
                               <button
-                                  className="btn btn-primary"
+                                  className={styles.updatelBtn}
                                   onClick={handlePasswordSubmit}
                               >
                                   {loadingPassChange ? (
@@ -386,11 +386,11 @@ function MyAccount() {
                               <input
                                   type="submit"
                                   value="Cancelar"
-                                  className="btn btn-danger"
+                                  className={styles.cancelBtn}
                                   onClick={() => toggleEditMode('personal')}
                               />
                               <button
-                                  className="btn btn-primary"
+                                  className={styles.updatelBtn}
                                   onClick={handleUpdPersonalData}
                               >
                                   {loadingPersonalChange ? (
@@ -506,11 +506,11 @@ function MyAccount() {
                               <input
                                   type="submit"
                                   value="Cancelar"
-                                  className="btn btn-danger"
+                                  className={styles.cancelBtn}
                                   onClick={() => toggleEditMode('domicilio')}
                               />
                               <button
-                                  className="btn btn-primary"
+                                  className={styles.updatelBtn}
                                   onClick={handleUpdDom}
                               >
                                   {loadingDomChange ? (

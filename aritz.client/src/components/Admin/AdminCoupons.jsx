@@ -239,7 +239,7 @@ const AdminCoupons = () => {
                     <td data-label="Codigo">{cou.DIS_CODE}</td>
                     <td data-label="Nombre">{cou.DIS_NAME}</td>
                     <td data-label="Tipo">{cou.DIS_TYPE}</td>
-                    <td data-label="Descuento">${cou.DIS_DISCOUNT}</td>
+                    <td data-label="Descuento">{cou.DIS_TYPE == "PERCENTAGE" ? '%' : '$'}{cou.DIS_DISCOUNT}</td>
                     <td data-label="Monto minimo">${cou.DIS_MIN_AMOUNT}</td>
                     <td data-label="Inicio">
                       {formatDate(cou.DIS_START_DATE)}

@@ -21,10 +21,13 @@ namespace Aritz.Server.Controllers
 
         private readonly ICouponService _coupons;
 
-        public MercadoPagoController(AritzDbContext context, ICouponService coupons)
+        private readonly IEmailService _emailService;
+
+        public MercadoPagoController(AritzDbContext context, ICouponService coupons, IEmailService emailService)
         {
             _context = context;
             _coupons = coupons;
+            _emailService = emailService;
         }
 
         [HttpPost("create_preference")]
@@ -199,14 +202,32 @@ namespace Aritz.Server.Controllers
                 var order = await _context.Orders.FindAsync(orderId);
                 if (order == null || order.ORD_STATUS != "Iniciada") return Ok(); // idempotente
 
-                if (payment.TransactionAmount != order.ORD_TOTAL_AMOUNT)
+                if (payment.TransactionAmount is null || order.ORD_TOTAL_AMOUNT is null ||
+                    payment.TransactionAmount != order.ORD_TOTAL_AMOUNT)
                 {
                     Console.WriteLine($"Monto no coincide en la orden {orderId}");
                     return Ok();
                 }
 
+                var client = await _context.Users.FindAsync(order.ORD_USR_ID);
+
                 order.ORD_STATUS = "Pendiente";
                 await _context.SaveChangesAsync();
+
+                try
+                {
+                    var body = new System.Text.StringBuilder();
+                    body.AppendLine($"<h2>¡Su orden NRO #{order.ORD_ID} se generó correctamente!</h2>");
+                    body.AppendLine($"<h3>Clickea <strong><a href='https://www.aritz.com.ar/user/my-requests/my-order/{order.ORD_ID}'>acá</a></strong> para ver el estado del pedido</h3>");
+                    body.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
+
+                    await _emailService.SendEmailAsync(client.USR_EMAIL, "¡Muchas gracias por su Compra!", body.ToString());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error enviando mail de la orden {orderId}: {ex.Message}");
+                }
+
                 return Ok();
             }
             catch (Exception ex)

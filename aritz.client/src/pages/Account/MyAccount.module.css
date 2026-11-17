@@ -83,6 +83,40 @@
     padding: 10px;
 }
 
+.updatelBtn{
+    margin-top: 6px;
+    padding: 12px 12px 10px;
+    border: 1px solid #ECE5D8;
+    background: transparent;
+    text-align: left;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.85rem;
+    color: #6F7A5A;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+}
+
+.updatelBtn:hover {
+    background-color: #F7F3EC;
+}
+
+.cancelBtn{
+    margin-top: 6px;
+    padding: 12px 12px 10px;
+    border: 1px solid #ECE5D8;
+    background: transparent;
+    text-align: left;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.85rem;
+    color: #9A4A3F;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+}
+
+.cancelBtn:hover {
+    background-color: #F7F3EC;
+}
+
 @media (max-width: 992px) {
 
     .datosCuenta{

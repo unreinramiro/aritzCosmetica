@@ -1,125 +1,107 @@
-.carrouselContainer {
-    height: 80vh;
+@import url("https://fonts.googleapis.com/css2?family=Story+Script=Hanken+Grotesk:wght@300;400&display=swap");
+
+.hero {
+    --bg: #F7F3EC;
+    --ink: #3B3A33;
+    --muted: #7C7A6E;
+    --accent: rgb(128, 98, 51);
+    --soft: #ECE5D8;
+
+    display: flex;
+    align-items: center;
+    min-height: 80vh;
+    padding: 0 7%;
+    gap: 5rem;
+    background: var(--bg);
+    color: var(--ink);
     overflow: hidden;
-    margin-top: 10px;
-    z-index: 1;
-    object-position: top;
 }
 
-.carrouselContainerSub {
-    width: 100% !important;
-    height: 100%;
-}
-
-.carrouselContainerSub :global(.carousel-inner) {
-    height: 100%;
-    position: relative;
-}
-
-.carrouselContainerSub :global(.carousel-item) {
-    height: 100%;
-}
-
-.titleCarrousel {
-    position: absolute;
-    z-index: 10;
-    color: #fff;
-    top: 20%;
-    left: 50%; /* Lo mueve al 50% a la derecha */
+/* ---------- Texto ---------- */
+.content {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 80px;
+    align-items: flex-start;
+    gap: 1.8rem;
 }
 
-.subTitleCarrousel h2{
-    display: none;
+.title {
+    font-family: "Montserrat", serif;
+    font-weight: 400;
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 1;
+    text-align: start;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin: 0;
 }
 
-.video {
-    width: 100%;
+.subtitle {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 340px;
+    margin: 0;
+    color: var(--muted);
+}
+
+.shopBtn {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--ink);
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.shopBtn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* ---------- Imagen ---------- */
+.visual {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.productImage {
+    width: min(420px, 100%);
+    max-height: 68vh;
     object-fit: cover;
-    object-position: top;
+    border-radius: 4px;
+    background: var(--soft);
+    box-shadow: 14px 14px 0 var(--soft);
 }
 
-    .shopBtn {
-        border: 1px solid #fff;
-        padding: 10px;
-        width: 100px;
-        text-decoration: none;
-        color: #000;
-        background-color: #fff;
+/* ---------- Responsive ---------- */
+@media (max-width: 992px) {
+    .hero {
+        flex-direction: column-reverse;
+        min-height: auto;
+        padding: 2.5rem 8% 4rem;
+        gap: 2.5rem;
         text-align: center;
     }
 
-    .shopBtn:hover {
-        background-color: #F7F3EC;
-    }
-    /* --- ESTILO DE LA IMAGEN --- */
-    .carrouselImage {
-        width: 100%;
-        height: 100%;
-        display: block;
-        /* 
-       cover: Rellena todo el cuadro recortando los bordes si hace falta (No deforma).
-       contain: Muestra la foto entera pero deja espacios vac�os a los lados.
-       fill: Estira la foto (La deforma, queda feo).
-    */
-        object-fit: cover;
-        object-position: top center; 
-        object-position: center center; /* Centra la imagen */
+    .title{
+        text-align: center;
     }
 
-.productImage {
-    animation: float 5s ease-in-out infinite;
-    width: 100%;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50%       { transform: translateY(-15px); }
-}
-
-@media (max-width: 992px) {
-
-    .carrouselContainer{
-        height: auto;
+    .content {
+        align-items: center;
     }
 
-    .video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: top;
+    .productImage {
+        max-height: 50vh;
+        box-shadow: 10px 10px 0 var(--soft);
     }
-
-    .carrouselContainerSub{
-        display: flex;
-        flex-direction: column;
-    }
-
-    .titleCarrousel {
-        display: none;
-    }
-
-    .subTitleCarrousel h1{
-        display: none;
-    }
-
-    .subTitleCarrousel b{
-        display: none;
-    }
-
-    .subTitleCarrousel h2 {
-        display: block;
-    }
-
-    .shopBtn {
-        display: none;
-    }
-
-    @keyframes float {
-        from { transform: scale(1); }
-        to   { transform: scale(1.1); }
-    }
-
 }

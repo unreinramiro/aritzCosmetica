@@ -22,7 +22,7 @@ a.nav-link {
     align-items: center !important;
     gap: 5px !important;
     border-radius: 5%;
-    font-family: Calibri;
+    font-family: "Montserrat", sans-serif;;
     text-shadow: none;
 }
 
@@ -108,44 +108,79 @@ ul{
     width: 150px;
 }
 
+.user {
+    position: relative;
+    padding: 10px 0;
+}
+
+.userIcon {
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #3B3A33;
+}
+
 .userDropdown {
     display: none;
     flex-direction: column;
     position: absolute;
-    background-color: white;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    border-radius: 4px; /* Bordes redondeados */
-    padding: 10px; /* Espaciado interno */
-    z-index: 10;
-    box-shadow: 10px 10px 20px 5px rgba(0, 0, 0, 0.2);
+    top: 100%;
+    right: 0;
+    min-width: 210px;
+    padding: 8px;
+    background-color: #FFFDF9;
+    border: 1px solid #ECE5D8;
+    border-radius: 4px;
+    box-shadow: 0 12px 28px rgba(59, 58, 51, 0.12);
+    z-index: 100;
+}
+
+.user:hover .userDropdown,
+.user:focus-within .userDropdown {
+    display: flex;
+}
+
+.userNavlink {
+    display: flex;
+    align-items: center;
     gap: 10px;
+    padding: 10px 12px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #3B3A33;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.userNavlink:hover {
+    background-color: #F7F3EC;
+    color: #6F7A5A;
+}
+
+.logoutBtn {
+    margin-top: 6px;
+    padding: 12px 12px 10px;
+    border: 0;
+    border-top: 1px solid #ECE5D8;
+    background: transparent;
+    text-align: left;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.85rem;
+    color: #9A4A3F;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+}
+
+.logoutBtn:hover {
+    background-color: #F7F3EC;
 }
 
 .userLogin {
     display: flex;
     gap: 50px;
 }
-
-.user:hover .userDropdown{
-    display: flex;
-}
-
-
-
-.userNavlink {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-family: "Montserrat", sans-serif;
-    text-decoration: none;
-    color: #000;
-    font-weight: 500;
-}
-
-    .userNavlink:hover {
-        background-color: #f8f9fa; /* Fondo al pasar el mouse */
-        color: #007bff; /* Cambia el color del texto */
-    }
 
 .carritoContainer {
     position: relative;
@@ -245,6 +280,8 @@ ul{
     .logCartActive {
         display: flex;
         overflow: inherit;
+        height: auto;
+        max-height: none;
     }
 
     .logueo {
@@ -252,9 +289,24 @@ ul{
         justify-content: space-between;
     }
 
+    .user{
+        flex: 1;
+    }
+
     .userLogin {
         width: 100%;
         justify-content: space-between;
+    }
+
+    .userDropdown {
+        display: flex;
+        position: static;
+        min-width: 0;
+        margin-top: 8px;
+        border: 0;
+        box-shadow: none;
+        background: transparent;
+        padding: 0;
     }
 
     .containerNavUl {
