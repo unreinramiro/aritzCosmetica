@@ -3,7 +3,7 @@ import CenteredContainer from "../../components/CenteredContainer/CenteredContai
 import styles from "./MyRequests.module.css";
 import axiosInstance from "../../api/axiosConfig";
 import { useSession } from "../../context/SessionContext";
-import Swal from "sweetalert2";
+import swal from "../../utils/swal"
 import { AiOutlineUpload } from "react-icons/ai";
 import { BiRefresh } from "react-icons/bi";
 import { format } from "date-fns"; // Importa la función format
@@ -37,7 +37,7 @@ function MyRequests() {
   const handleFileUpload = async (orderId, event) => {
     const file = event.target.files[0];
     if (!file) {
-      Swal.fire({
+      swal.fire({
         title: "Error al subir el comprobante de pago",
         text: "Subí un comprobante válido",
         icon: "error",
@@ -50,7 +50,7 @@ function MyRequests() {
     const allowedExtensions = [".pdf", ".jpg", ".jpeg", ".png"];
     const extension = `.${file.name.split(".").pop().toLowerCase()}`;
     if (!allowedExtensions.includes(extension)) {
-      Swal.fire({
+      swal.fire({
         title: "Error al subir el comprobante",
         text: "Solo se permiten archivos PDF, JPG o PNG",
         icon: "error",
@@ -81,7 +81,7 @@ function MyRequests() {
         ),
       );
 
-      Swal.fire({
+      swal.fire({
         title: "¡Éxito!",
         text: "Comprobante subido exitosamente",
         icon: "success",
@@ -89,7 +89,7 @@ function MyRequests() {
       });
     } catch (error) {
       console.error("Error al subir el comprobante:", error);
-      Swal.fire({
+      swal.fire({
         title: "Error al subir el comprobante",
         text: "Ocurrió un error al subir el archivo",
         icon: "error",
@@ -116,7 +116,7 @@ function MyRequests() {
       a.remove();
       URL.revokeObjectURL(url);
     } catch (error) {
-      Swal.fire({
+      swal.fire({
         icon: "error",
         title: "No se pudo descargar el comprobante",
       });

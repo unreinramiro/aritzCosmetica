@@ -17,7 +17,7 @@ import { useCart } from "../../context/CartContext";
 import { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2"; // Importar SweetAlert2
+import swal from '../../utils/swal'
 import { FaSignsPost } from "react-icons/fa6";
 
 const Header = () => {
@@ -49,8 +49,7 @@ const Header = () => {
     setIsLoggedIn(false);
     setUserId(null);
     setUserName(null);
-    setIsAdmin(false);
-    Swal.fire("Sesion cerrada");
+    swal.fire("Sesion cerrada");
     navigate("/"); // Redirige al inicio
   };
 

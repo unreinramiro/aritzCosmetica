@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import styles from "./MyRequestDetail.module.css";
 import { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosConfig";
-import Swal from "sweetalert2";
+import swal from '../../utils/swal'
 import { useSession } from "../../context/SessionContext";
 import { BiRefresh } from "react-icons/bi";
 import { AiOutlineUpload } from "react-icons/ai";
@@ -81,7 +81,7 @@ function MyRequestDetail() {
   const handleFileUpload = async (id, event) => {
     const file = event.target.files[0];
     if (!file) {
-      Swal.fire({
+      swal.fire({
         title: "Error al subir el comprobante de pago",
         text: "Subí un comprobante válido",
         icon: "error",
@@ -94,7 +94,7 @@ function MyRequestDetail() {
     const allowedExtensions = [".pdf", ".jpg", ".jpeg", ".png"];
     const extension = `.${file.name.split(".").pop().toLowerCase()}`;
     if (!allowedExtensions.includes(extension)) {
-      Swal.fire({
+      swal.fire({
         title: "Error al subir el comprobante",
         text: "Solo se permiten archivos PDF, JPG o PNG",
         icon: "error",
@@ -127,7 +127,7 @@ function MyRequestDetail() {
 
       setPath(true);
 
-      Swal.fire({
+      swal.fire({
         title: "¡Éxito!",
         text: "Comprobante subido exitosamente",
         icon: "success",
@@ -135,7 +135,7 @@ function MyRequestDetail() {
       });
     } catch (error) {
       console.error("Error al subir el comprobante:", error);
-      Swal.fire({
+      swal.fire({
         title: "Error al subir el comprobante",
         text: "Ocurrió un error al subir el archivo",
         icon: "error",
@@ -161,7 +161,7 @@ function MyRequestDetail() {
       a.remove();
       URL.revokeObjectURL(url);
     } catch (error) {
-      Swal.fire({
+      swal.fire({
         icon: "error",
         title: "No se pudo descargar el comprobante",
       });
@@ -180,10 +180,10 @@ function MyRequestDetail() {
         bodyData,
       );
       setStatus("Cancelado");
-      Swal.fire("Exito", `Se cancelo correctamente el pedido`, "success");
+      swal.fire("Exito", `Se cancelo correctamente el pedido`, "success");
     } catch (e) {
       console.log(e);
-      Swal.fire("Error", `No se pudo cancelar el pedido`, "success");
+      swal.fire("Error", `No se pudo cancelar el pedido`, "success");
     }
   };
 
