@@ -190,8 +190,8 @@ namespace Aritz.Server.Controllers
 
         [Required, MinLength(6, ErrorMessage = "La contraseña debe tener al menos 6 caracteres")]
         public string Password { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Address { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? Address { get; set; }
     }
 
     public class VerifyDto

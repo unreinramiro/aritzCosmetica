@@ -368,3 +368,4 @@ D:\aritzCosmetica\Aritz.Server\obj\Debug\net8.0\refint\Aritz.Server.dll
 D:\aritzCosmetica\Aritz.Server\obj\Debug\net8.0\Aritz.Server.pdb
 D:\aritzCosmetica\Aritz.Server\obj\Debug\net8.0\Aritz.Server.genruntimeconfig.cache
 D:\aritzCosmetica\Aritz.Server\obj\Debug\net8.0\ref\Aritz.Server.dll
+D:\aritzCosmetica\Aritz.Server\bin\Debug\net8.0\appsettings.Production.json
