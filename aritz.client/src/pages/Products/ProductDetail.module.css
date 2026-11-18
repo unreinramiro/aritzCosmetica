@@ -64,8 +64,11 @@ img {
 }
 
 .titleInfo{
+    color: var(--text-dark);
+    font-family: "Montserrat", serif;
     text-align: start;
-    font-size: 3rem;
+    font-weight: 500;
+    font-size: clamp(2rem, 7vw, 1.5rem);
 }
 
 .priceInfo{
@@ -75,13 +78,13 @@ img {
 
 .addCartInfo {
     min-height: 40px;
-    background-color: #F7F3EC;
+    background-color: var(--sage-700);
     border: none;
-    color: #000;
+    color: #fff;
 }
 
     .addCartInfo:hover {
-        color: #3f3e3e;
+        color: var(--cream-100);
     }
 
 .responsiveTitle{

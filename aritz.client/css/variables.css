@@ -1,0 +1,12 @@
+:root {
+  /* Paleta base */
+  --sage-500: #A8B5A0;   /* verde salvia (principal) */
+  --sage-300: #d2dace;   /* salvia claro */
+  --cream-100: #F2F5EF;  /* crema verdosa (fondos de sección) */
+  --cream-50:  #FAFAF7;  /* crema casi blanco (fondo general) */
+
+  /* Complementarios (no están en la paleta, los deduje del botón y el texto del mockup) */
+  --sage-700: #6B7F66;   /* botones / hover */
+  --text-dark: #2F3A2E;  /* texto principal */
+  --text-muted: #6B7568; /* texto secundario */
+}

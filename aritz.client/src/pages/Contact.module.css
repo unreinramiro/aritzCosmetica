@@ -11,6 +11,23 @@
 }
 
 .inputAnimate {
+    min-height: 100vh;
     opacity: 0;
     animation: fadeInUp 1.6s ease-out forwards;
 }
+
+input, textarea{
+    background-color: var(--cream-50) !important;
+}
+
+.btnSend{
+    background-color: var(--sage-700);
+    width: 50%;
+    border: none;
+    height: 40px;
+    align-self: center;
+}
+
+    .btnSend:hover{
+        background-color: var(--sage-500);
+    }

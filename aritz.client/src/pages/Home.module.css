@@ -1,3 +1,7 @@
+.cardsHomeContainer{
+    background-color: var(--sage-300);
+}
+
 .cardBigContainer {
     max-width: 1200px;
     margin: 0 auto;

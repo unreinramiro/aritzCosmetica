@@ -1,15 +1,16 @@
 .navbar {
     height: 10vh;
-    background-color: transparent;
+    background-color: var(--cream-100);
+    padding: 20px;
 }
 
 .aritzLogo {
     color: #000 !important;
     border-radius: 100%;
     padding: 10px;
-    font-weight: bold !important;
+    font-weight: 400;
     font-size: 3rem !important;
-    font-family: Dancing Script, cursive;
+    font-family: "Montserrat", cursive;
 }
 
 a.nav-link {
@@ -17,12 +18,16 @@ a.nav-link {
     margin: 10px;
 }
 
+.iconHomeContactProduct{
+    color: var(--text-dark);
+}
+
 .item {
     display: flex !important;
     align-items: center !important;
     gap: 5px !important;
     border-radius: 5%;
-    font-family: "Montserrat", sans-serif;;
+    font-family: "Montserrat", sans-serif;
     text-shadow: none;
 }
 
@@ -85,7 +90,7 @@ ul{
 
 .dropdownItem:hover {
     background-color: #f8f9fa; /* Fondo al pasar el mouse */
-    color: #007bff; /* Cambia el color del texto */
+    color: var(--text-muted); /* Cambia el color del texto */
 }
 
 .dropdown ul li h5 b {

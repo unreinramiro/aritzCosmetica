@@ -77,7 +77,7 @@ function Contact() {
                 <h4 className="text-center">CONTACTO</h4>
             </div>
             <div>
-                <form className="container" onSubmit={handleSubmit}>
+                <form className="container d-flex flex-column" onSubmit={handleSubmit}>
                     <div className="row mb-3 g-3">
                         <div className="col-12 col-md-4">
                             <label
@@ -167,7 +167,7 @@ function Contact() {
                         </div>
                     </div>
                     <button
-                        className="btn btn-primary"
+                        className={styles.btnSend}
                         type="submit"
                     >
                         Enviar

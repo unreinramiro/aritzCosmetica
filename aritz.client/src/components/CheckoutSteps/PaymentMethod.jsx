@@ -70,7 +70,7 @@ function PaymentInfo() {
               <img src={MercadoPagoIcon} className={styles.imgMp} />
             </button>
           </div>
-          <label className={`d-flex gap-3 ${styles.shippingLabels}`}>
+          <label className={`d-flex gap-3 ${styles.shippingLabels} ${styles.payMethodLabels}`}>
             <button onClick={back} className={styles.btnShippingBack}>
               Volver
             </button>

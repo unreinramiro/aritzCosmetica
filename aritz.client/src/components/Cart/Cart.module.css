@@ -96,14 +96,14 @@
 
 .checkoutButton {
     min-height: 40px;
-    background-color: #F7F3EC;
+    background-color: var(--sage-700);
     border: none;
     color: #000;
     width: 30%;
 }
 
     .checkoutButton:hover {
-        color: #3f3e3e;
+        background-color: var(--sage-500);
     }
 
 .cuponContainer {

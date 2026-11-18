@@ -8,6 +8,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { SessionProvider } from './context/SessionContext'
 import { CartProvider } from './context/CartContext'
 import { CheckoutProvider } from './context/CheckoutContext'
+import '../css/variables.css';
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>

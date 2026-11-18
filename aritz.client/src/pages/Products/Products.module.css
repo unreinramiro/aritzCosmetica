@@ -5,6 +5,12 @@
 }
 
 /* Contenedor principal de la p�gina */
+.mainContentProductsPage{
+    display: flex;
+    flex-direction: column;
+}
+
+
 .productsPage {
     display: flex; /* Flexbox para organizar el aside y el grid */
     padding: 20px; /* Espaciado interno */
@@ -46,6 +52,7 @@
 .carta {
     min-height: 500px !important;
     width: 100%;
+    cursor: pointer;
 }
 
 .cartaImgContainer {
@@ -69,6 +76,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    background-color: var(--cream-50);
 }
 
 .productTitle {
@@ -77,18 +85,18 @@
 }
 
     .productTitle:hover{
-        color: rgb(128, 98, 51);
+        color: var(--text-dark);
     }
 
 .cartaAddCart {
     min-height: 40px;
-    background-color: #F7F3EC;
+    background-color: var(--sage-700);
     border: none;
-    color: #000;
+    color: #fff;
 }
 
     .cartaAddCart:hover {
-        color: #3f3e3e;
+        color: var(--cream-100);
     }
 
 .containerLupita {

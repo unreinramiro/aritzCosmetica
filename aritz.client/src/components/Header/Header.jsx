@@ -276,7 +276,7 @@ const Header = () => {
                     : `${styles.item} nav-link`
                 }
               >
-                <p>LogIn / Sign In</p>
+                <p>Iniciar Sesion</p>
               </NavLink>
             )}
           </div>

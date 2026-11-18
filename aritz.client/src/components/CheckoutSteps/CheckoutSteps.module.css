@@ -24,28 +24,35 @@
     padding: 0;
 }
 
+.payMethodLabels{
+    padding: 30px;
+}
+
 .shippingInputs{
     height: 40px;
     width: 100%;
-    position: relative;
+    padding: 8px;
+    border: 1px solid #ddd; /* Borde de los inputs */
+    border-radius: 4px;
+    font-size: 1rem;
 }
 
 .btnShippingNext {
     min-height: 40px;
-    background-color: #F7F3EC;
+    background-color: var(--sage-700);
     border: none;
     color: #000;
     width: 100%;
 }
 
     .btnShippingNext:hover {
-        color: #3f3e3e;
+        background-color: var(--sage-500);
     }
 
 .btnShippingBack {
     width: 100%;
-    background-color: #fff;
-    color: #216993;
+    background-color: var(--sage-300);
+    color: var(--text-muted);
     border: none;
     padding: 1px 10px;
     cursor: pointer;
@@ -68,7 +75,7 @@
     display: flex;
     justify-content: center;
     gap: 20px;
-    padding: 50px;
+    padding: 30px;
     height: 300px;
     width: 100%;
 }
@@ -275,9 +282,9 @@ input[type=number] {
     color: #000 !important;
     border-radius: 100%;
     padding: 10px;
-    font-weight: bold !important;
     font-size: 10rem !important;
-    font-family: Dancing Script, cursive;
+    font-family: "Montserrat", cursive;
+    font-weight: 400;
 }
 
 /* MercadoPago */

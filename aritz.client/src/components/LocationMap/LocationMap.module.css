@@ -3,16 +3,20 @@
     flex-direction: column;
     width: 100%;
     height: 70vh;
-    background-color: #f9f9f9;
+    background-color:var(--cream-100);;
     text-align: center;
     align-items: center;
     justify-content: end;
     gap: 5px;
-    padding: 10px;
+    padding: 50px;
 }
 
     .mapContainer h2 {
-        color: rgb(128, 98, 51); /* Tu color de marca */
+        color: var(--text-dark); /* Tu color de marca */
+    }
+
+    .mapContainer p, b{
+        color: var(--text-muted)
     }
 
     .mapContainer iframe {

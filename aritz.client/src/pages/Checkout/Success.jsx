@@ -86,7 +86,7 @@ function Success() {
         ) : (
           <>
             <p className={styles.artizLogoCompra}>Aritz</p>
-            <FaClipboardCheck size={56} style={{ color: "rgb(128, 98, 51)" }} />
+            <FaClipboardCheck size={56} />
             <h1>¡Muchas gracias por tu compra!</h1>
             <p>
               El pedido se encuentra reservado. Recordá cargar el comprobante de

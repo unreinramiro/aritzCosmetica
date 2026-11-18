@@ -166,7 +166,7 @@ function Products() {
   };
 
   return (
-    <>
+    <div className={styles.mainContentProductsPage}>
       <BreadCrum />
       <CenteredContainer>
         {products.length == 0 ? (
@@ -233,7 +233,7 @@ function Products() {
                         className={`col-12 col-sm-6 col-lg-3 ${styles.cardAnimate}`}
                         style={{ animationDelay: `${(index % 8) * 0.1}s` }}
                       >
-                        <div className={`card h-100 ${styles.carta}`}>
+                        <div className={`card h-100 ${styles.carta}`} onClick={() => next(producto.PRD_ID)}>
                           <div className={styles.cartaImgContainer}>
                             <img
                               src={`${import.meta.env.VITE_API_URL}/images/${producto.PRD_IMAGE}`}
@@ -279,7 +279,7 @@ function Products() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
