@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosConfig";
 import { useSession } from "../../context/SessionContext";
-import Swal from "sweetalert2"; // Importar SweetAlert2
+import swal from "../../utils/swal"
 import BreadCrum from "../../components/BreadCrum/BreadCrum";
 import { CiSearch, CiFilter } from "react-icons/ci";
 import Filters from "./Filters/Filters";
@@ -110,13 +110,12 @@ function Products() {
     fetchProducts();
   }, []); // El uso de un array vacío asegura que solo se ejecute al montar el componente
 
-  if (loading) return <div>Cargando productos...</div>;
   if (error) return <div>Error: {error}</div>;
 
   const handleAddToCart = async (productId, quantity = 1) => {
     try {
       if (userId == null) {
-        Swal.fire({
+        swal.fire({
           title: "Debe iniciar sesion para agregar productos al carrito",
           icon: "error",
           confirmButtonText: "Ok",
@@ -133,7 +132,7 @@ function Products() {
       });
 
       console.log(response.data); // Muestra el mensaje del backend
-      Swal.fire({
+      swal.fire({
         title: "Producto agregado correctamente!",
         icon: "success",
         confirmButtonText: "Seguir comprando",
@@ -142,7 +141,7 @@ function Products() {
     } catch (error) {
       if (error.response && error.response.status === 400) {
         // Aquí atrapamos el "Stock insuficiente" que envía tu C#
-        Swal.fire({
+        swal.fire({
           title: "Sin Stock",
           // error.response.data suele contener el string "Stock insuficiente..." que mandaste desde C#
           text: error.response.data || "No hay suficiente stock disponible.",
@@ -164,6 +163,60 @@ function Products() {
     console.log("Dato recibido del hijo:", valorDelHijo);
     setFiltroSeleccionado(valorDelHijo);
   };
+
+  if (loading)
+    return (
+      <div
+        className={styles.mainContentProductsPage}
+        role="status"
+        aria-label="Cargando productos"
+      >
+        <BreadCrum />
+        <CenteredContainer>
+          <div>
+            <h1 className={styles.title}>Nuestros productos</h1>
+            <p style={{ color: "#777" }}>
+              Elegi los mejores productos al mejor precio.
+            </p>
+          </div>
+        </CenteredContainer>
+        <div className="d-flex justify-content-center">
+          <div className={styles.productsPage}>
+            <aside className={styles.filters} />
+            <div className="container d-flex flex-column gap-4 justify-content-start">
+              <div className={`${styles.skeleton} ${styles.skeletonSearch}`} />
+              <div className="container">
+                <div className="row g-3">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="col-12 col-sm-6 col-lg-3">
+                      <div
+                        className={`card h-100 ${styles.carta}`}
+                        style={{ cursor: "default" }}
+                      >
+                        <div
+                          className={`${styles.skeleton} ${styles.skeletonImg}`}
+                        />
+                        <div className="card-body">
+                          <div
+                            className={`${styles.skeleton} ${styles.skeletonTitle}`}
+                          />
+                          <div
+                            className={`${styles.skeleton} ${styles.skeletonPrice}`}
+                          />
+                        </div>
+                        <div
+                          className={`${styles.skeleton} ${styles.skeletonBtn}`}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
 
   return (
     <div className={styles.mainContentProductsPage}>
@@ -233,7 +286,10 @@ function Products() {
                         className={`col-12 col-sm-6 col-lg-3 ${styles.cardAnimate}`}
                         style={{ animationDelay: `${(index % 8) * 0.1}s` }}
                       >
-                        <div className={`card h-100 ${styles.carta}`} onClick={() => next(producto.PRD_ID)}>
+                        <div
+                          className={`card h-100 ${styles.carta}`}
+                          onClick={() => next(producto.PRD_ID)}
+                        >
                           <div className={styles.cartaImgContainer}>
                             <img
                               src={`${import.meta.env.VITE_API_URL}/images/${producto.PRD_IMAGE}`}

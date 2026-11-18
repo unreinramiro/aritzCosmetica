@@ -10,7 +10,7 @@ import { useState, useEffect, useRef } from "react";
 import axiosInstance from "../../api/axiosConfig";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import { useSession } from "../../context/SessionContext";
-import Swal from "sweetalert2";
+import swal from "../../utils/swal"
 import { useLocation } from "react-router";
 import { formatPrice } from "../../utils/utils";
 
@@ -119,7 +119,7 @@ function PaymentInfo() {
         },
       );
 
-      Swal.fire({
+      swal.fire({
         title: "¡Exito!",
         text: detailResponse.data.Message || "Pedido confirmado correctamente.",
         icon: "success",
@@ -130,7 +130,7 @@ function PaymentInfo() {
       navigate(`/checkout/pay-success?orderId=${orderId}`);
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        Swal.fire({
+        swal.fire({
           title: "Error al restar el producto",
           text: error.response.data || "No hay suficiente stock disponible.",
           icon: "warning",

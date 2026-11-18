@@ -8,7 +8,7 @@ import Provinces from "../../data/Provinces.json";
 import TimeLapseCheckout from "../CheckoutSteps/Timelapse/TimelapseCheckout";
 import { useSession } from "../../context/SessionContext";
 import axiosInstance from "../../api/axiosConfig";
-import Swal from "sweetalert2"; // Importar SweetAlert2
+import swal from "../../utils/swal"
 import { useLocation } from "react-router";
 import { useCart } from "../../context/CartContext";
 
@@ -44,7 +44,7 @@ function ShippingInfo() {
 
     const cp = formShipData.codpostal;
     if (!cp || !postalRegex.test(String(cp).trim())) {
-      Swal.fire(
+      swal.fire(
         "Error",
         "Ingresa un Código Postal válido de 4 dígitos",
         "warning",
@@ -64,14 +64,14 @@ function ShippingInfo() {
       setZipPrice(price);
 
       // Feedback al usuario
-      Swal.fire({
+      swal.fire({
         title: "Costo de Envío",
         text: `El costo aproximado para el CP ${cp} es: $${price}`,
         icon: "info",
       });
     } catch (error) {
       console.error(error);
-      Swal.fire("Error", "No pudimos calcular el envío", "error");
+      swal.fire("Error", "No pudimos calcular el envío", "error");
     } finally {
       setLoadingZipCode(false);
     }
@@ -172,7 +172,7 @@ function ShippingInfo() {
       });
 
       if (hayErrores) {
-        Swal.fire("Error", "Completa los campos obligatorios", "warning");
+        swal.fire("Error", "Completa los campos obligatorios", "warning");
         return;
       }
 
@@ -180,7 +180,7 @@ function ShippingInfo() {
       if (zipPrice == 0) {
         const cp = formShipData.codpostal;
         if (!cp || !postalRegex.test(String(cp).trim())) {
-          Swal.fire(
+          swal.fire(
             "Error",
             "Ingresa un Código Postal válido de 4 dígitos",
             "warning",

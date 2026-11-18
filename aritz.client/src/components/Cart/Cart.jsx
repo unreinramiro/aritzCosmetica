@@ -8,7 +8,7 @@ import TimeLapseCheckout from "../CheckoutSteps/Timelapse/TimelapseCheckout";
 import { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosConfig";
 import { useSession } from "../../context/SessionContext";
-import Swal from "sweetalert2"; // Importar SweetAlert2
+import swal from "../../utils/swal"
 import BreadCrum from "../BreadCrum/BreadCrum";
 import { useLocation } from "react-router";
 import { formatPrice } from "../../utils/utils";
@@ -62,7 +62,7 @@ function Carrito() {
 
   const handleProceedToCheckout = () => {
     //if (totalSumCart < 20000) {
-    //    Swal.fire({
+    //    swal.fire({
     //        title: 'Debe superar el monto de $20.000 para proceder con la compra',
     //        icon: 'error',
     //        confirmButtonText: 'Ok'
@@ -101,7 +101,7 @@ function Carrito() {
       );
 
       await fetchCart();
-      Swal.fire({
+      swal.fire({
         title: "Se elimino el producto",
         icon: "error",
         confirmButtonText: "Volver al carrito",
@@ -126,7 +126,7 @@ function Carrito() {
       const response = await axiosInstance.delete(`Cart/user/${userId}`);
 
       await fetchCart();
-      Swal.fire({
+      swal.fire({
         title: "Se vacio el carrito",
         icon: "error",
         confirmButtonText: "Volver al carrito",

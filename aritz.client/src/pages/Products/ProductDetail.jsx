@@ -4,7 +4,7 @@ import styles from "./ProductDetail.module.css";
 import sinImg from "../../assets/images/sinImagen.png"
 import { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosConfig";
-import Swal from 'sweetalert2'; // Importar SweetAlert2
+import swal from "../../utils/swal"
 import { useSession } from "../../context/SessionContext";
 import { useCart } from '../../context/CartContext';
 import BreadCrum from '../../components/BreadCrum/BreadCrum';
@@ -68,7 +68,7 @@ function ProductDetail() {
     const handleAddToCart = async (productId, quantity = 1) => {
         try {
             if (userId == null) {
-                Swal.fire({
+                swal.fire({
                     title: 'Debe iniciar sesion para agregar productos al carrito',
                     icon: 'error',
                     confirmButtonText: 'Ok'
@@ -89,7 +89,7 @@ function ProductDetail() {
             });
 
             console.log(response.data); // Muestra el mensaje del backend
-            Swal.fire({
+            swal.fire({
                 title: 'Producto agregado correctamente!',
                 icon: 'success',
                 confirmButtonText: 'Seguir comprando'
@@ -98,7 +98,7 @@ function ProductDetail() {
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 // Aqu� atrapamos el "Stock insuficiente" que env�a tu C#
-                Swal.fire({
+                swal.fire({
                     title: 'Sin Stock',
                     // error.response.data suele contener el string "Stock insuficiente..." que mandaste desde C#
                     text: error.response.data || 'No hay suficiente stock disponible.',

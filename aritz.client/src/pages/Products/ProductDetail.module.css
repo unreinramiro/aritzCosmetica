@@ -175,16 +175,7 @@ img {
 
     .addCartInfo {
         min-height: 40px;
-        background-color: rgb(128, 98, 51);
-        border: none;
-        color: #fff;
     }
-
-        .addCartInfo:hover {
-            background-color: #fff;
-            color: rgb(128, 98, 51);
-            border: 2px solid rgb(128, 98, 51);
-        }
 
     .responsiveTitle {
         display: block;

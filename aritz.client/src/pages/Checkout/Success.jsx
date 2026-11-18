@@ -4,7 +4,7 @@ import styles from "./Success.module.css";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineUpload } from "react-icons/ai";
 import { useCart } from "../../context/CartContext";
-import Swal from "sweetalert2";
+import swal from "../../utils/swal"
 import { NavLink } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import axiosInstance from "../../api/axiosConfig";
@@ -46,7 +46,7 @@ function Success() {
     setPageCheckout('/cart');
     fetchCountCart();
     fetchSumTotalCart();
-    Swal.fire({
+    swal.fire({
       title: "Exito!",
       text: "Pedido confirmado correctamente.",
       icon: "success",
