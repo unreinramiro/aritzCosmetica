@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Org.BouncyCastle.Asn1.X500;
 using Org.BouncyCastle.Ocsp;
+using System.Net;
 using System.Reflection.Emit;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
@@ -116,34 +117,31 @@ namespace Aritz.Server.Controllers
                 // Guardamos todo junto (Orden + Updates de Productos)
                 await _context.SaveChangesAsync();
 
-                // 6. Enviar Email al Admin
-                var emailBodyBuilder = new System.Text.StringBuilder();
-                emailBodyBuilder.AppendLine($"<h2>Nueva Orden de Compra #{newOrder.ORD_ID}</h2>");
-                emailBodyBuilder.AppendLine($"<p><strong>Cliente:</strong> {client.USR_NAME} {client.USR_SURNAME} ({client.USR_EMAIL})</p>");
-                emailBodyBuilder.AppendLine($"<h3>Total: ${total}</h3>");
-                emailBodyBuilder.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
+                // 6. Email al admin
+                var adminContent = $@"
+                <p><strong>Cliente:</strong> {WebUtility.HtmlEncode(client.USR_NAME)} {WebUtility.HtmlEncode(client.USR_SURNAME)}<br>
+                <strong>Email:</strong> {WebUtility.HtmlEncode(client.USR_EMAIL)}</p>
+                <p style=""font-size:20px;""><strong>Total: ${total:N2}</strong></p>";
 
                 var adminEmail = _configuration["EmailSettings:SenderEmail"];
 
                 _ = _emailService.SendEmailAsync(
                     adminEmail,
                     $"Te hicieron una Nueva Orden de Compra #{newOrder.ORD_ID}",
-                    emailBodyBuilder.ToString()
+                    EmailTemplates.Layout($"Nueva Orden de Compra #{newOrder.ORD_ID}", adminContent)
                 );
 
-                // 7. Enviar Email al comprador
-                var userEmailBodyBuilder = new System.Text.StringBuilder();
-                userEmailBodyBuilder.AppendLine($"<h2>¡Su orden NRO #{newOrder.ORD_ID} se generó correctamente!</h2>");
-                userEmailBodyBuilder.AppendLine($"<h3>IMPORTANTE: Recordá cargar el comprobante de pago dentro de las próximas 48 hs, de lo contrario se cancelará</h3>");
-                userEmailBodyBuilder.AppendLine($"<h3>Clickea <strong><a href='https://www.aritz.com.ar/user/my-requests/my-order/{newOrder.ORD_ID}'>acá</a></strong> para ver el estado del pedido y subir el comprobante</h3>");
-                userEmailBodyBuilder.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
-
-                var userEmail = client.USR_EMAIL;
+                // 7. Email al comprador
+                var orderUrl = $"https://www.aritz.com.ar/user/my-requests/my-order/{newOrder.ORD_ID}";
+                var userContent =
+                    EmailTemplates.Notice("<strong>IMPORTANTE:</strong> Cargá el comprobante de pago dentro de las próximas 48 hs, de lo contrario la orden se cancelará.")
+                    + "<p>Podés ver el estado del pedido y subir el comprobante desde el siguiente botón:</p>"
+                    + EmailTemplates.Button("Ver mi pedido", orderUrl);
 
                 _ = _emailService.SendEmailAsync(
-                    userEmail,
-                    $"¡Muchas gracias por su Compra!",
-                    userEmailBodyBuilder.ToString()
+                    client.USR_EMAIL,
+                    "¡Muchas gracias por su compra!",
+                    EmailTemplates.Layout($"¡Tu orden #{newOrder.ORD_ID} se generó correctamente!", userContent)
                 );
 
                 return Ok(new { Message = "Pedido creado correctamente.", OrderId = newOrder.ORD_ID });
@@ -369,20 +367,32 @@ namespace Aritz.Server.Controllers
                 var baseUrl = $"{Request.Scheme}://{Request.Host}";
                 var downloadLink = $"{baseUrl}/api/Order/{orderId}/download-receipt";
 
-                var emailBodyBuilder = new System.Text.StringBuilder();
-                emailBodyBuilder.AppendLine($"<h2>{user.USR_NAME} {user.USR_SURNAME} Subio el comprobante de pago para la orden #{order.ORD_ID}!</h2>");
-                emailBodyBuilder.AppendLine($"<p><strong>Fecha de subida del comprobante:</strong> {DateTime.Now}</p>");
-                emailBodyBuilder.AppendLine($"<p><strong>Nro de orden:</strong> {order.ORD_ID}</p>");
-                emailBodyBuilder.AppendLine($"<p>Descargar el comprobante aca: <strong><a href='{downloadLink}'>aca</a></strong></p>");
-                emailBodyBuilder.AppendLine("<hr>");
-                emailBodyBuilder.AppendLine($"<h3>Monto total de la orden: ${order.ORD_TOTAL_AMOUNT}</h3>");
+                // 6. Email al admin
+                var adminContent = $@"
+                <p><strong>Cliente:</strong> {WebUtility.HtmlEncode(user.USR_NAME)} {WebUtility.HtmlEncode(user.USR_SURNAME)}<br>
+                <p><strong>Fecha de subida del comprobante:</strong> {DateTime.Now}<br>
+                <p style=""font-size:20px;""><strong>Total: ${order.ORD_TOTAL_AMOUNT:N2}</strong></p>"
+                + EmailTemplates.Button("Descargar Comprobante", downloadLink);
 
                 var adminEmail = _configuration["EmailSettings:SenderEmail"];
 
                 _ = _emailService.SendEmailAsync(
                     adminEmail,
-                    $"Subieron el comprobante de una compra! #{order.ORD_ID}",
-                    emailBodyBuilder.ToString()
+                    $"Subieron un comprobante de pago para la orden #{order.ORD_ID}",
+                    EmailTemplates.Layout($"Comprobante de la orden #{order.ORD_ID}", adminContent)
+                );
+
+                // 7. Email al comprador
+                var orderUrl = $"https://www.aritz.com.ar/user/my-requests/my-order/{order.ORD_ID}";
+                var userContent =
+                    EmailTemplates.Notice("<strong>IMPORTANTE:</strong> Una vez chequeado el comprobante, la orden pasara a estado 'En curso' y no podra cancelarse el pedido.")
+                    + "<p>Podés ver el estado del pedido desde el siguiente botón:</p>"
+                    + EmailTemplates.Button("Ver mi pedido", orderUrl);
+
+                _ = _emailService.SendEmailAsync(
+                    user.USR_EMAIL,
+                    "¡Recibimos tu comprobante!",
+                    EmailTemplates.Layout($"¡Recibimos el comprobante que cargaste para la Orden #{order.ORD_ID}!", userContent)
                 );
 
             }
@@ -496,28 +506,33 @@ namespace Aritz.Server.Controllers
 
                 if (cancelledByUser)
                 {
-                    var body = new System.Text.StringBuilder();
-                    body.AppendLine($"<h3>Cancelaron la compra #{order.ORD_ID}</h3>");
-                    body.AppendLine($"<p>El cliente {user.USR_NAME} {user.USR_SURNAME} canceló la compra.</p>");
-                    body.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
+                    // 6. Email al admin
+                    var adminContent = $@"
+                    <p><strong>Cliente:</strong> {WebUtility.HtmlEncode(user.USR_NAME)} {WebUtility.HtmlEncode(user.USR_SURNAME)}<br>
+                    <strong>Email:</strong> {WebUtility.HtmlEncode(user.USR_EMAIL)}</p>
+                    <p style=""font-size:20px;""><strong>Total: ${order.ORD_TOTAL_AMOUNT:N2}</strong></p>";
+
+                    var adminEmail = _configuration["EmailSettings:SenderEmail"];
 
                     _ = _emailService.SendEmailAsync(
-                        _configuration["EmailSettings:SenderEmail"],
-                        $"Cancelaron la orden #{order.ORD_ID}",
-                        body.ToString());
+                        adminEmail,
+                        $"Cancelaron la Orden de Compra #{order.ORD_ID}",
+                        EmailTemplates.Layout($"Cancelaron la Orden de Compra #{order.ORD_ID}", adminContent)
+                    );
                 }
                 else
                 {
-                    var body = new System.Text.StringBuilder();
-                    body.AppendLine($"<h3>Estado de tu orden #{order.ORD_ID}</h3>");
-                    body.AppendLine($"<p><strong>Estado:</strong> El estado de tu pedido pasó a {dto.OrderStatus}</p>");
-                    body.AppendLine($"<h3>Clickea <strong><a href='https://www.aritz.com.ar/user/my-requests/my-order/{order.ORD_ID}'>acá</a></strong> para ver el estado del pedido</h3>");
-                    body.AppendLine("<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
+                    var orderUrl = $"https://www.aritz.com.ar/user/my-requests/my-order/{order.ORD_ID}";
+                    var userContent = $@"
+                        <p><strong>Estado de tu Orden:</strong># {order.ORD_ID}<br>
+                        <p>Podés ver el estado del pedido desde el siguiente botón:</p>"
+                        + EmailTemplates.Button("Ver mi pedido", orderUrl);
 
                     _ = _emailService.SendEmailAsync(
                         user.USR_EMAIL,
-                        $"Avances en tu pedido #{order.ORD_ID}",
-                        body.ToString());
+                        "¡Cambios en el estado de tu pedido!",
+                        EmailTemplates.Layout($"¡El estado de tu Orden #{order.ORD_ID} cambio a {dto.OrderStatus}!", userContent)
+                    );
                 }
             }
 

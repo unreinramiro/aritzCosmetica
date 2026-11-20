@@ -68,7 +68,6 @@ ul{
 
 .ulSubCat {
     display: flex;
-    background-color: #f9f9f9;
 }
 
 
@@ -86,6 +85,8 @@ ul{
         display: block; /* Cada item ocupa una l�nea */
         transition: background-color 0.3s ease, color 0.3s ease;
         font-size: .8rem;
+        
+    background-color: var(--cream-100);
     }
 
 .dropdownItem:hover {
@@ -193,20 +194,20 @@ ul{
 
 .carritoContador {
     position: absolute;
-    left: 10px;
+    left: 15px;
     background-color: #fff;
     border-radius: 50%;
-    width: 15px;
+    width: 20px;
     text-align: center;
     font-size: .7rem;
-    color: #000;
+    color: var(--sage-700);
 }
 
 .carrito {
     font-size: 1.4rem;
     cursor: pointer;
     text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    color: #000;
+    color: var(--text-dark);
 }
 
 /* Mostramos el dropdown al hacer hover sobre el contenedor */

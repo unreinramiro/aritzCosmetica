@@ -139,7 +139,7 @@ function ProductDetail() {
             <BreadCrum name={product.PRD_NAME} />
             <div className={styles.container}>
                 <div className={styles.imgContainer}>
-                <h3 className={styles.responsiveTitle}>{product.Category.CAT_NAME} {product.PRD_NAME}</h3>
+                <h3 className={styles.responsiveTitle}>{product.PRD_NAME}</h3>
                     <img
                         className={styles.imgMain}
                         src={`${import.meta.env.VITE_API_URL}/images/${displayImage}`}
@@ -165,7 +165,7 @@ function ProductDetail() {
                     }
                 </div>
                 <div className={styles.infoContainer}>
-                    <h3 className={styles.titleInfo}>{product.Category.CAT_NAME} {product.PRD_NAME}</h3>
+                    <h3 className={styles.titleInfo}>{product.PRD_NAME}</h3>
                     <b className={styles.priceInfo}>${formatPrice(product.PRD_PRICE)}</b>
                     <p>Stock: {product.PRD_QUANTITY}</p>
                     <p className={styles.descInfo}>{product.PRD_DESCRIPTION}</p>

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import styles from "./MyRequestDetail.module.css";
 import { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosConfig";
-import swal from '../../utils/swal'
+import swal from "../../utils/swal";
 import { useSession } from "../../context/SessionContext";
 import { BiRefresh } from "react-icons/bi";
 import { AiOutlineUpload } from "react-icons/ai";
@@ -183,7 +183,10 @@ function MyRequestDetail() {
       swal.fire("Exito", `Se cancelo correctamente el pedido`, "success");
     } catch (e) {
       console.log(e);
-      swal.fire("Error", `No se pudo cancelar el pedido`, "success");
+      const data = e.response?.data;
+      const message =
+        data?.message ?? data?.Message ?? "No se pudo cancelar el pedido";
+      swal.fire("Error", message, "error");
     }
   };
 
@@ -320,23 +323,23 @@ function MyRequestDetail() {
                 aria-hidden="true"
               >
                 <div className="modal-dialog modal-dialog-centered">
-                  <div className="modal-content">
+                  <div className={`modal-content ${styles.modalCancelContent}`}>
                     <div className="modal-header">
                       <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                        ¿Estas seguro que deseas cancelar el pedido?
+                        ¿Deseas cancelar el pedido?
                       </h1>
                     </div>
                     <div className="modal-footer">
                       <button
                         type="button"
-                        className="btn btn-secondary"
+                        className={`${styles.btnCancelOrder} ${styles.btnClose}`}
                         data-bs-dismiss="modal"
                       >
                         Close
                       </button>
                       <button
                         type="button"
-                        className="btn btn-danger"
+                        className={`${styles.btnCancelOrder} ${styles.btnCancel}`}
                         onClick={handleCancelOrdStatus}
                         data-bs-dismiss="modal"
                       >

@@ -45,14 +45,14 @@ function Home() {
 
         <motion.div {...reveal}>
           <LocationMap
-            title="Visítanos"
+            title="Visitanos"
             description="Estamos en el corazón de la ciudad"
             location="Los Manantiales 63, X5194 Villa Gral. Belgrano, Córdoba"
           />
         </motion.div>
 
         <motion.div className={styles.cardBigContainer} {...reveal}>
-          <h1>Calidad en lo nuestro</h1>
+          <h1>Calidad en lo nuestro.</h1>
           <div className={styles.cardsContainer}>
             <CardHome
               key={1}

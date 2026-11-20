@@ -4,7 +4,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: var(--surface);
+    background: var(--cream-100);
     border: 1px solid var(--border) !important;
     border-radius: 6px;
     font-family: "Montserrat", sans-serif;
@@ -30,22 +30,22 @@
     gap: 8px;
     max-height: none;
     padding: 20px;
-    background: var(--surface);
+    background: var(--cream-100);
     opacity: 1;
     text-align: left;
-    border-top: 3px solid var(--brand);
+    border-top: 3px solid var(--sage-700);
 }
 
 .cardBigSubContainer :is(h1, h2, h3, h4, h5, h6) {
     margin: 0;
     font-size: 1.05rem;
     font-weight: 600;
-    color: var(--text);
+    color: var(--text-dark);
 }
 
 .cardBigSubContainer p {
     margin: 0;
     font-size: 0.9rem;
     line-height: 1.6;
-    color: var(--muted);
+    color: var(--text-muted);
 }

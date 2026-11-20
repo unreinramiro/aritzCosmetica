@@ -1,11 +1,12 @@
 ﻿using Aritz.Server.Data;
+using Aritz.Server.Models;
 using Aritz.Server.Services;
 using MercadoPago.Resource.Order;
 using MercadoPago.Resource.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Aritz.Server.Models;
-using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 
 namespace Aritz.Server.Controllers
@@ -39,20 +40,19 @@ namespace Aritz.Server.Controllers
                     return BadRequest("El usuario no se encontro o no inicio sesion");
                 }
 
-                var emailBodyBuilder = new System.Text.StringBuilder();
-                emailBodyBuilder.AppendLine($"<h3>Asunto: {dto.affair}</h3>");
-                emailBodyBuilder.AppendLine($"<p>Cliente: {dto.name} {dto.surname}.</p>");
-                emailBodyBuilder.AppendLine($"<p>Telefono: {dto.cellphone}.</p>");
-                emailBodyBuilder.AppendLine($"<p>Email: {user.USR_EMAIL}.</p>");
-                emailBodyBuilder.AppendLine($"<p>Mensaje: {dto.comments}.</p>");
-                emailBodyBuilder.AppendLine($"<footer><strong><span>©</span> Aritz. All Rights Reserved.</strong></footer>");
+                var adminContent = $@"
+                <p><strong>Asunto:</strong> {WebUtility.HtmlEncode(dto.affair)}<br>
+                <strong>Cliente:</strong> {WebUtility.HtmlEncode(dto.name)} {WebUtility.HtmlEncode(dto.surname)}<br>
+                <strong>Telefono:</strong> {WebUtility.HtmlEncode(dto.cellphone)}<br>
+                <strong>Email:</strong> {WebUtility.HtmlEncode(user.USR_EMAIL)}<br>
+                <strong>Mensaje:</strong> {dto.comments}.</p>";
 
                 var adminEmail = _configuration["EmailSettings:SenderEmail"];
 
                 _ = _emailService.SendEmailAsync(
                     adminEmail,
                     $"Contacto Aritz Cosmetica Natural",
-                    emailBodyBuilder.ToString()
+                    EmailTemplates.Layout($"{dto.name} {dto.surname} se contacto con vos!", adminContent)
                 );
 
                 return Ok(new { Message = "Email enviado correctamente." });

@@ -249,7 +249,7 @@ function Products() {
             </ul>
           </aside>
 
-          <div className="container d-flex flex-column gap-4 justify-content-start">
+          <div className={`d-flex flex-column gap-4 justify-content-start ${styles.rightContainer}`}>
             <div className="input-group flex-nowrap">
               <span className="input-group-text" id="addon-wrapping">
                 <CiSearch />
@@ -303,7 +303,7 @@ function Products() {
                               onClick={() => next(producto.PRD_ID)}
                               className={`card-title ${styles.productTitle}`}
                             >
-                              {producto.Category.CAT_NAME} {producto.PRD_NAME}
+                              {producto.PRD_NAME}
                             </h5>
                             <p className="card-text">
                               ${formatPrice(producto.PRD_PRICE)}

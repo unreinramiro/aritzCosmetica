@@ -1,6 +1,6 @@
 .title {
     font-style: normal;
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     font-family: "Montserrat", sans-serif;
 }
 
@@ -14,14 +14,19 @@
 .productsPage {
     display: flex; /* Flexbox para organizar el aside y el grid */
     padding: 20px; /* Espaciado interno */
-    width: 90vw; /* Ancho m�ximo */
+    width: 100vw; /* Ancho m�ximo */
+    justify-content: center;
+}
+
+.rightContainer{
+    width: 60vw !important;
 }
 
 /* Aside (barra lateral para filtros) */
 .filters {
     flex: 1; /* Toma espacio proporcional */
     min-width: 350px;
-    max-width: 600px; /* Limita el ancho del aside */
+    max-width: 350px; /* Limita el ancho del aside */
     padding: 20px; /* Espaciado interno */
 }
 
@@ -50,7 +55,6 @@
 /* Grilla de productos */
 
 .carta {
-    min-height: 500px !important;
     width: 100%;
     cursor: pointer;
 }
@@ -174,5 +178,10 @@
 
     .title {
         font-size: 2rem;
+    }
+
+    .rightContainer{
+        width: 90vw !important;
+        padding: 10px;
     }
 }

@@ -3,7 +3,7 @@ import CenteredContainer from "../../components/CenteredContainer/CenteredContai
 import styles from "./MyRequests.module.css";
 import axiosInstance from "../../api/axiosConfig";
 import { useSession } from "../../context/SessionContext";
-import swal from "../../utils/swal"
+import swal from "../../utils/swal";
 import { AiOutlineUpload } from "react-icons/ai";
 import { BiRefresh } from "react-icons/bi";
 import { format } from "date-fns"; // Importa la función format
@@ -229,6 +229,14 @@ function MyRequests() {
                       ) : (
                         <p>Sin Comprobante...</p>
                       )}
+                    </td>
+                    <td data-label="Detalle">
+                      <NavLink
+                        to={`/user/my-requests/my-order/${order.ORD_ID}?payMethod=${order.PaymentMethod}`}
+                        className={styles.orderNavlink}
+                      >
+                        Ver Detalle
+                      </NavLink>
                     </td>
                   </tr>
                 ))}

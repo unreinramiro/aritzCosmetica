@@ -16,8 +16,17 @@
     animation: fadeInUp 1.6s ease-out forwards;
 }
 
+h4{
+    color: var(--text-dark);
+}
+
 input, textarea{
     background-color: var(--cream-50) !important;
+}
+
+.containerButtons{
+    display: flex;
+    gap: 20px;
 }
 
 .btnSend{
@@ -25,9 +34,18 @@ input, textarea{
     width: 50%;
     border: none;
     height: 40px;
-    align-self: center;
 }
 
     .btnSend:hover{
         background-color: var(--sage-500);
     }
+
+.btnWpp{
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: var(--sage-500);
+    color: aliceblue;
+}

@@ -8,7 +8,7 @@
 }
 
 :root {
-    --brand: rgb(128, 98, 51);
+    --sage-700: rgb(128, 98, 51);
     --text: #222;
     --muted: #6b6b6b;
     --border: #e5e5e5;
@@ -216,7 +216,7 @@
 }
 
 .refreshIcon {
-    color: var(--brand);
+    color: var(--sage-700);
 }
 
 .fileRefreshDownload .fileInput {
@@ -231,13 +231,13 @@
 .loading :global(.spinner-border) {
     width: 1.2rem;
     height: 1.2rem;
-    color: var(--brand);
+    color: var(--sage-700);
 }
 
 .downloadLink {
     background: transparent;
-    border: 1px solid var(--brand);
-    color: var(--brand);
+    border: 1px solid var(--sage-700);
+    color: var(--sage-700);
     font-size: 0.85rem;
     padding: 6px 12px;
     border-radius: 4px;
@@ -245,7 +245,7 @@
 }
 
 .downloadLink:hover {
-    background: var(--brand);
+    background: var(--sage-700);
     color: #fff;
 }
 
@@ -262,6 +262,31 @@
     border-color: #b3261e;
     background: transparent;
     color: #b3261e;
+}
+
+.modalCancelContent{
+    background-color: var(--cream-100) !important;
+}
+
+.modalCancelContent h1{
+    color: var(--text-dark);
+    text-align: center;
+}
+
+.btnCancelOrder{
+    border: none;
+    background-color: var(--sage-700);
+    padding: 10px;
+    border-radius: 5px;
+    color: aliceblue;
+}
+
+    .btnCancelOrder:hover{
+        background-color: var(--sage-500)
+    }
+
+.btnClose{
+    background-color: var(--sage-500);
 }
 
 /* Responsive */
