@@ -11,7 +11,7 @@
     .imageProductDiv img {
         width: 100%;
         max-width: 400px;
-        aspect-ratio: 4/3; /* Mantiene proporción rectangular (o usa 1/1 para cuadrado) */
+        aspect-ratio: 4/3; /* Mantiene proporciï¿½n rectangular (o usa 1/1 para cuadrado) */
         object-fit: cover;
         object-position: top;
     }
@@ -30,7 +30,7 @@
 .imageSecondaryProductDivSub img {
     width: 100%;
     max-width: 400px;
-    aspect-ratio: 4/3; /* Mantiene proporción rectangular (o usa 1/1 para cuadrado) */
+    aspect-ratio: 4/3; /* Mantiene proporciï¿½n rectangular (o usa 1/1 para cuadrado) */
     object-fit: cover;
     object-position: top;
 }
@@ -61,7 +61,7 @@
     height: 100%;
     opacity: 0; /* Lo hace invisible, pero sigue siendo clickeable */
     cursor: pointer;
-    z-index: 10; /* Asegura que esté por encima de todo */
+    z-index: 10; /* Asegura que estï¿½ por encima de todo */
 }
 
 .labelsDiv {
@@ -88,7 +88,7 @@
     .imageDeleteContainer img {
         width: 100%;
         max-width: 400px;
-        aspect-ratio: 4/3; /* Mantiene proporción rectangular (o usa 1/1 para cuadrado) */
+        aspect-ratio: 4/3; /* Mantiene proporciï¿½n rectangular (o usa 1/1 para cuadrado) */
         object-fit: cover;
         border-radius: 8px;
         object-position: top;
@@ -120,18 +120,24 @@
 }
 
 /* Modal Orders */
+.containerModalAdmOrders{
+    width: 90vw !important;
+    max-width: 1200px !important;
+    margin: auto;
+}
+
 .containerGeneralOrder {
     overflow-y: scroll;
     max-height: 80vh;
 }
 
 .orderDetailImgContainer {
-    width: 200px;
-    height: 150px;
+    width: 40%;
+    height: 400px;
     overflow: hidden;
 }
 
-    .orderDetailImgContainer img {
+    .orderDetailImgContainer img{
         object-fit: cover;
         object-position: top;
         width: 100%;
@@ -140,7 +146,7 @@
     }
 
 .infoOrderContainer{
-    width: 200px;
+    width: 50%;
     text-align: start;
 }
 

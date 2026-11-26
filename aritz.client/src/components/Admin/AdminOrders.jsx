@@ -428,6 +428,8 @@ function AdminOrders() {
         orderId={selectedOrder?.ORD_ID}
         orderTotalAmount={selectedOrder?.ORD_TOTAL_AMOUNT}
         orderStatus={selectedOrder?.ORD_STATUS}
+        orderShippingPrice={selectedOrder?.ORD_SHIPPING_AMOUNT}
+        orderDiscountAmount={selectedOrder?.ORD_DISCOUNT_AMOUNT}
       />
     </>
   );
