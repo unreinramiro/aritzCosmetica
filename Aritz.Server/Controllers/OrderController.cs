@@ -293,6 +293,8 @@ namespace Aritz.Server.Controllers
                             o.ORD_ORDER_DATE,
                             o.ORD_TOTAL_AMOUNT,
                             o.ORD_STATUS,
+                            o.ORD_SHIPPING_AMOUNT,
+                            o.ORD_DISCOUNT_AMOUNT,
                             PaymentMethod = o.PaymentMethod.PMT_NAME,
                             ReceiptPath = receipts.FirstOrDefault() != null ? receipts.FirstOrDefault().RCP_PATH : null,
                             ClientFullName = o.Users.USR_NAME + " " + o.Users.USR_SURNAME
