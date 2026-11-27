@@ -101,6 +101,8 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    flex: 1;
+    min-width: 0;
 }
 
 .itemsDetailSub h4 {
@@ -108,6 +110,8 @@
     font-size: 1rem;
     font-weight: 600;
     color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .imageContainer {
@@ -130,6 +134,7 @@
     flex-direction: column;
     margin-left: auto;
     text-align: right;
+    flex-shrink: 0;
 }
 
 .TotalPrice b {
@@ -304,6 +309,11 @@
     .aside {
         width: 100%;
     }
+
+    .principalContainer{
+        height: auto;
+    }
+    
 }
 
 @media (max-width: 576px) {
@@ -313,5 +323,9 @@
 
     .imageContainer {
         width: 72px;
+    }
+
+    .itemsContainer h4{
+        font-size: .8rem;
     }
 }

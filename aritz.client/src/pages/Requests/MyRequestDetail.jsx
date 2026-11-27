@@ -201,10 +201,15 @@ function MyRequestDetail() {
 
       <div className={styles.centeredContainer}>
         <div className={styles.items}>
-          <div className={styles.shiippingData}>
-            Llega entre el {deliveryEstimation ? deliveryEstimation.start : "*"}{" "}
-            y el {deliveryEstimation ? deliveryEstimation.end : "*"}
-          </div>
+          {status == "Enviado" ? (
+            <div className={styles.shiippingData}>
+              Llega entre el{" "}
+              {deliveryEstimation ? deliveryEstimation.start : "*"} y el{" "}
+              {deliveryEstimation ? deliveryEstimation.end : "*"}
+            </div>
+          ) : (
+            ""
+          )}
           {requestDet.map((request) => (
             <div className={styles.itemsContainer} key={request.IdOrderDetail}>
               <b>Compra #{request.IdOrderDetail}</b>
@@ -216,9 +221,7 @@ function MyRequestDetail() {
                   />
                 </div>
                 <div className={styles.itemsDetailSub}>
-                  <h4>
-                    {request.CategoryName} {request.ProductName}
-                  </h4>
+                  <h4>{request.ProductName}</h4>
                   <p>Cantidad: {request.Quantity}</p>
                   <p>c/u ${formatPrice(unitPrice)}</p>
                 </div>
@@ -242,7 +245,11 @@ function MyRequestDetail() {
             <p>Cantidad de items: {totalQuantity}</p>
             <p>Subtotal: ${formatPrice(subTotal)}</p>
             <p>Costo de envio: ${formatPrice(shippingCost)}</p>
-            <p>Descuento: -${formatPrice(discountAmount)}</p>
+            {discountAmount > 0 ? (
+              <p>Descuento: -${formatPrice(discountAmount)}</p>
+            ) : (
+              ""
+            )}
             <hr></hr>
             <p>Total del pedido: ${formatPrice(totalAmount)}</p>
           </div>
@@ -329,13 +336,16 @@ function MyRequestDetail() {
                         ¿Deseas cancelar el pedido?
                       </h1>
                     </div>
+                    <div className="modal-body text-center">
+                      <i>Esta accion no se puede deshacer</i>
+                    </div>
                     <div className="modal-footer">
                       <button
                         type="button"
                         className={`${styles.btnCancelOrder} ${styles.btnClose}`}
                         data-bs-dismiss="modal"
                       >
-                        Close
+                        Volver
                       </button>
                       <button
                         type="button"
