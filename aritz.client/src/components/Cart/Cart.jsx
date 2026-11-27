@@ -166,7 +166,7 @@ function Carrito() {
                     />
                     <div className={styles.itemDetails}>
                       <h4>
-                        {car.CAT_NAME} {car.PRD_NAME}
+                        {car.PRD_NAME}
                       </h4>
                       <p>P/u: ${formatPrice(car.PRD_PRICE)}</p>
                       <p>Cantidad: {car.CAI_QUANTITY}</p>

@@ -173,7 +173,7 @@ function PaymentInfo() {
                   <div className={styles.detailItem}>
                     <div className={styles.nameQuantity}>
                       <b className="text-start">
-                        {car.CAT_NAME} {car.PRD_NAME}
+                        {car.PRD_NAME}
                       </b>
                       <div>
                         <p>Cantidad: {car.CAI_QUANTITY}</p>
