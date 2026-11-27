@@ -224,6 +224,9 @@ function PaymentInfo() {
                     <b>CBU: 0000003100006485290527</b>
                     <b>Alias: fer.luz.rio </b>
                   </div>
+                  <div className={styles.bankAlertContainer}>
+                    <i className="text-center">Debe cargar el comprobante de pago.</i>  
+                  </div>
                 </div>
               ) : (
                 <div className={styles.mpContainer}>
@@ -235,7 +238,7 @@ function PaymentInfo() {
                       customization={{ texts: { valueProp: "smart_option" } }}
                     />
                   ) : (
-                    <div>
+                    <div className="d-flex flex-column align-items-center gap-3">
                       <div className="spinner-border" role="status">
                         <span className="visually-hidden">Loading...</span>
                       </div>

@@ -1,5 +1,5 @@
 .timeLapseContainer{
-    padding: 20px;
+    padding: 10px;
 }
 
 p {
@@ -14,11 +14,11 @@ p {
 
     .timeLapseContainer{
         padding: 5px;
-        font-size: .6rem;
+        font-size: .4rem;
     }
 
     .doubleArrow {
-        font-size: 1.6rem;
+        font-size: 1.1rem;
     }
 
 }

@@ -139,6 +139,21 @@
     padding: 20px;
 }
 
+.bankContainerSub b{
+    font-size: 1.3rem;
+}
+
+.bankAlertContainer{
+    display: flex;
+    justify-content: center;
+    background-color: #fff8e1;
+}
+
+.bankAlertContainer i{
+    font-weight: 500;
+    padding: 20px;
+}
+
 /* Boton de MercadoPago */
 .mpContainer {
     padding: 10px;
@@ -378,5 +393,9 @@ input[type=number] {
 
     .detailItem{
         flex-direction: column;
+    }
+
+    .logoAritz{
+        font-size: 7rem !important;
     }
 }

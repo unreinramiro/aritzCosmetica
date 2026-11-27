@@ -3,6 +3,7 @@
     min-height: 100vh;
     flex-direction: column;
     align-content: center;
+    padding: 20px;
 }
 
 h1{
