@@ -111,7 +111,7 @@ namespace Aritz.Server.Controllers
 
                 newOrder.ORD_TOTAL_AMOUNT = total;
                 newOrder.ORD_DISCOUNT_AMOUNT = res.Discount;
-                newOrder.ORD_DIS_ID = res.Coupon.DIS_ID;
+                newOrder.ORD_DIS_ID = res.Coupon?.DIS_ID;
 
                 _context.Orders.Add(newOrder);
                 await _context.SaveChangesAsync();

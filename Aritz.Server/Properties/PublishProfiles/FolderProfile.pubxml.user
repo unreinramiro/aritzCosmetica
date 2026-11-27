@@ -3,7 +3,7 @@
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>D:\aritzCosmetica\Aritz.Server\bin\Release\net8.0\publish\</_PublishTargetUrl>
-    <History>True|2026-11-27T01:49:15.6749166Z||;True|2026-11-26T20:43:55.4251318-03:00||;True|2026-11-26T18:54:57.6950335-03:00||;True|2026-03-02T23:31:20.7026582-03:00||;</History>
+    <History>True|2026-11-27T19:03:07.0230758Z||;True|2026-11-26T22:49:15.6749166-03:00||;True|2026-11-26T20:43:55.4251318-03:00||;True|2026-11-26T18:54:57.6950335-03:00||;True|2026-03-02T23:31:20.7026582-03:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>
