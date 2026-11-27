@@ -135,13 +135,13 @@ namespace Aritz.Server.Controllers
                     },
                     BackUrls = new PreferenceBackUrlsRequest
                     {
-                        Success = "https://localhost:5173/checkout/pay-success", // Ajusta a tu URL real
+                        Success = "https://www.aritz.com.ar/checkout/pay-success", // Ajusta a tu URL real
                         Failure = "https://www.aritz.com.ar/checkout/pay-failure",
                         Pending = "https://www.aritz.com.ar/checkout/pay-pending"
                     },
                     AutoReturn = "approved",
 
-                    NotificationUrl = "https://www.aritz.com.ar/api/MercadoPago/webhook"
+                    NotificationUrl = "https://api.aritz.com.ar/api/MercadoPago/webhook"
                 };
 
                 request.Items.Add(new PreferenceItemRequest
@@ -241,7 +241,7 @@ namespace Aritz.Server.Controllers
         {
             public int userId { get; set; }
             public int paymentMethod { get; set; }
-            public string code { get; set; }
+            public string? code { get; set; }
         }
 
         public class OrderItemDto
